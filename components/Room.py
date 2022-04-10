@@ -28,8 +28,9 @@ class Room:
         cursor.execute('SELECT name, schedule, type FROM rooms WHERE id = ?', [self.id])
         result = cursor.fetchone()
         conn.close()
+        parsedTable = Timetable.parseTableDataToView(json.loads(result[1]))
         self.parent.lineEditName.setText(str(result[0]))
-        self.table = Timetable.Timetable(self.parent.tableSchedule, json.loads(result[1]))
+        self.table = Timetable.Timetable(self.parent.tableSchedule, parsedTable)
         if result[2] == 'lec':
             self.parent.radioLec.setChecked(True)
         else:

@@ -3,6 +3,21 @@ from components import Settings
 from components import TableModel
 import json
 
+
+def parseTableDataToModel(data:list):
+    parsedData = []
+    for l in data:
+            l = ["Available" if x == "در دسترس" else "Unavailable" for x in l]
+            parsedData.append(l)
+    return parsedData
+
+def parseTableDataToView(data:list):
+    parsedData = []
+    for l in data:
+            l = ["در دسترس" if x == "Available" else "غیرقابل دسترس" for x in l]
+            parsedData.append(l)
+    return parsedData
+
 # Used for displaying toggable timetable
 # TODO: Assess for possible different version of timetable widget
 class Timetable:
@@ -39,7 +54,10 @@ class Timetable:
             self.model.setData(i, value)
 
     def getData(self):
-        return self.data
+        self.parsedData = parseTableDataToModel(self.data)
+        print(self.parsedData)
+        return self.parsedData
+
 
 # Timetable model that provides color support for availability status
 # TODO: Assess for possible different version of timetable widget
@@ -58,3 +76,5 @@ class TimetableModel(TableModel.TableModel):
         elif role != QtCore.Qt.DisplayRole:
             return QtCore.QVariant()
         return self.data[index.row()][index.column()]
+
+

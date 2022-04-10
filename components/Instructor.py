@@ -29,9 +29,10 @@ class Instructor:
         cursor.execute('SELECT name, hours, schedule FROM instructors WHERE id = ?', [self.id])
         result = cursor.fetchone()
         conn.close()
+        parsedTable = Timetable.parseTableDataToView(json.loads(result[2]))
         self.parent.lineEditName.setText(str(result[0]))
         self.parent.lineEditHours.setText(str(result[1]))
-        self.table = Timetable.Timetable(self.parent.tableSchedule, json.loads(result[2]))
+        self.table = Timetable.Timetable(self.parent.tableSchedule, parsedTable)
 
     # Save the Instructor
     def finish(self):
@@ -96,9 +97,9 @@ class Tree:
             edit.setEditable(False)
             self.model.appendRow([id, availability, name, hours, edit])
             frameEdit = QtWidgets.QFrame()
-            btnEdit = QtWidgets.QPushButton('Edit', frameEdit)
+            btnEdit = QtWidgets.QPushButton('ویرایش', frameEdit)
             btnEdit.clicked.connect(lambda state, id = instr[0]: self.edit(id))
-            btnDelete = QtWidgets.QPushButton('Delete', frameEdit)
+            btnDelete = QtWidgets.QPushButton('حذف', frameEdit)
             btnDelete.clicked.connect(lambda state, id = instr[0]: self.delete(id))
             frameLayout = QtWidgets.QHBoxLayout(frameEdit)
             frameLayout.setContentsMargins(0, 0, 0, 0)

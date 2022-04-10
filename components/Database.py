@@ -61,7 +61,18 @@ def setup():
           subjects TEXT NOT NULL,
           active BOOLEAN NOT NULL DEFAULT 1 CHECK (
             active IN (0, 1)
+          ),
+          stay BOOLEAN NOT NULL DEFAULT 0 CHECK (
+            active IN (0, 1)
           )
+        );
+    """
+    # Create Sections Sharing Table
+    create_sharing_table = """
+        CREATE TABLE IF NOT EXISTS sharings (
+          id INTEGER PRIMARY KEY,
+          subjectId INTEGER NOT NULL,
+          sections TEXT NOT NULL
         );
     """
 
@@ -70,6 +81,7 @@ def setup():
     cursor.execute(create_rooms_table)
     cursor.execute(create_subjects_table)
     cursor.execute(create_sections_table)
+    cursor.execute(create_sharing_table)
     conn.commit()
     conn.close()
 
