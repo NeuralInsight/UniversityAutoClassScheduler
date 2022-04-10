@@ -115,8 +115,8 @@ class Tree:
     def delete(self, id):
         confirm = QtWidgets.QMessageBox()
         confirm.setIcon(QtWidgets.QMessageBox.Warning)
-        confirm.setText('آیا میخواهید رکورد انتخابی را حذف کنید')
-        confirm.setWindowTitle('تایید حذف')
+        confirm.setText('آیا میخواهید استاد انتخابی را حذف کنید')
+        confirm.setWindowTitle('تایید و حذف')
         confirm.setStandardButtons(QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
         result = confirm.exec_()
         if result == 16384:
