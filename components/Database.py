@@ -37,7 +37,7 @@ def setup():
           )
         );
     """
-    # Create Subject Table
+    # Create Subjects Table
     create_subjects_table = """
         CREATE TABLE IF NOT EXISTS subjects (
           id INTEGER PRIMARY KEY,
@@ -52,11 +52,24 @@ def setup():
           type TEXT NOT NULL
         );
     """
+    # Create Sections Table
+    create_sections_table = """
+        CREATE TABLE IF NOT EXISTS sections (
+          id INTEGER PRIMARY KEY,
+          name TEXT NOT NULL,
+          schedule TEXT NOT NULL,
+          subjects TEXT NOT NULL,
+          active BOOLEAN NOT NULL DEFAULT 1 CHECK (
+            active IN (0, 1)
+          )
+        );
+    """
 
 
     cursor.execute(create_instructors_table)
     cursor.execute(create_rooms_table)
     cursor.execute(create_subjects_table)
+    cursor.execute(create_sections_table)
     conn.commit()
     conn.close()
 
