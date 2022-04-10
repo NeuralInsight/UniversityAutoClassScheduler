@@ -37,10 +37,26 @@ def setup():
           )
         );
     """
+    # Create Subject Table
+    create_subjects_table = """
+        CREATE TABLE IF NOT EXISTS subjects (
+          id INTEGER PRIMARY KEY,
+          name TEXT NOT NULL,
+          hours REAL NOT NULL,
+          code TEXT NOT NULL,
+          description TEXT NOT NULL,
+          instructors TEXT NOT NULL,
+          divisible BOOLEAN NOT NULL DEFAULT 1 CHECK (
+            divisible IN (0, 1)
+          ),
+          type TEXT NOT NULL
+        );
+    """
 
 
     cursor.execute(create_instructors_table)
     cursor.execute(create_rooms_table)
+    cursor.execute(create_subjects_table)
     conn.commit()
     conn.close()
 

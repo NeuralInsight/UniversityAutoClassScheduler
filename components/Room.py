@@ -50,11 +50,12 @@ class Room:
         conn.close()
         self.dialog.close()
 
+# Model To Show Room 
 class Tree:
     def __init__(self, tree):
         self.tree = tree
         self.model = model = QtGui.QStandardItemModel()
-        model.setHorizontalHeaderLabels(['ID', 'Available', 'Name', 'Operation'])
+        model.setHorizontalHeaderLabels(['شناسه', 'دسترسی', 'نام', 'عملکرد'])
         tree.setModel(model)
         tree.setColumnHidden(0, True)
         model.itemChanged.connect(lambda item: self.toggleAvailability(item))
