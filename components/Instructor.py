@@ -9,7 +9,7 @@ class Instructor:
         self.id = id
         # New instance of dialog
         self.dialog = dialog = QtWidgets.QDialog()
-        # Initialize custom dialog
+        # From the qt_ui generated UI
         self.parent = parent = Parent.Ui_Dialog()
         # Add parent to custom dialog
         parent.setupUi(dialog)
@@ -17,6 +17,7 @@ class Instructor:
         if id:
             self.fillForm()
         else:
+            # Create a new instance of timetable
             self.table = Timetable.Timetable(parent.tableSchedule)
         parent.btnFinish.clicked.connect(self.finish)
         parent.btnCancel.clicked.connect(self.dialog.close)
@@ -32,10 +33,12 @@ class Instructor:
         parsedTable = Timetable.parseTableDataToView(json.loads(result[2]))
         self.parent.lineEditName.setText(str(result[0]))
         self.parent.lineEditHours.setText(str(result[1]))
+        # Generate timetable from custom schedule
         self.table = Timetable.Timetable(self.parent.tableSchedule, parsedTable)
 
     # Save the Instructor
     def finish(self):
+        # Verification of input
         if not self.parent.lineEditName.text():
             return False
         name = self.parent.lineEditName.text()
@@ -45,6 +48,7 @@ class Instructor:
                 return False
         except:
             return False
+        # Update or insertion of values
         conn = db.getConnection()
         cursor = conn.cursor()
         if self.id:
@@ -66,6 +70,7 @@ class Tree:
         self.display()
 
     def toggleAvailability(self, item):
+        # Get ID of toggled instructor
         id = self.model.data(self.model.index(item.row(), 0))
         newValue = 1 if item.checkState() == 2 else 0
         conn = db.getConnection()
@@ -76,6 +81,7 @@ class Tree:
 
     # Fetch All data from Database
     def display(self):
+        # Clear model
         self.model.removeRows(0, self.model.rowCount())
         conn = db.getConnection()
         cursor = conn.cursor()
@@ -83,19 +89,26 @@ class Tree:
         result = cursor.fetchall()
         conn.close()
         for instr in result:
+            # ID Item
             id = QtGui.QStandardItem(str(instr[0]))
             id.setEditable(False)
+            # Availability Item
             availability = QtGui.QStandardItem()
             availability.setCheckable(True)
             availability.setCheckState(2 if instr[1] == 1 else 0)
             availability.setEditable(False)
+            # Hours Item
             hours = QtGui.QStandardItem(str(instr[2]))
             hours.setEditable(False)
+            # Name Item
             name = QtGui.QStandardItem(instr[3])
             name.setEditable(False)
+            # Edit Item / Container for operation buttons
             edit = QtGui.QStandardItem()
             edit.setEditable(False)
+            # Append items to model
             self.model.appendRow([id, availability, name, hours, edit])
+            # Create a widget group for edit and delete buttons
             frameEdit = QtWidgets.QFrame()
             btnEdit = QtWidgets.QPushButton('ویرایش', frameEdit)
             btnEdit.clicked.connect(lambda state, id = instr[0]: self.edit(id))
@@ -105,6 +118,7 @@ class Tree:
             frameLayout.setContentsMargins(0, 0, 0, 0)
             frameLayout.addWidget(btnEdit)
             frameLayout.addWidget(btnDelete)
+             # Append the widget group to edit item
             self.tree.setIndexWidget(edit.index(), frameEdit)
 
     # Edit Instructor
@@ -114,12 +128,14 @@ class Tree:
 
     # Delete Instructor
     def delete(self, id):
+        # Show confirm model
         confirm = QtWidgets.QMessageBox()
         confirm.setIcon(QtWidgets.QMessageBox.Warning)
         confirm.setText('آیا میخواهید استاد انتخابی را حذف کنید')
         confirm.setWindowTitle('تایید و حذف')
         confirm.setStandardButtons(QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
         result = confirm.exec_()
+        # 16384 == Confirm
         if result == 16384:
             conn = db.getConnection()
             cursor = conn.cursor()
