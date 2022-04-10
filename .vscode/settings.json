@@ -1,0 +1,11 @@
+{
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "driver": "SQLite",
+            "name": "schedulardb",
+            "database": "${workspaceFolder:UniversityClassScheduler}/database.db"
+        }
+    ],
+    "sqltools.useNodeRuntime": true
+}
