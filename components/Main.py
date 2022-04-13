@@ -3,7 +3,7 @@ import time
 from PyQt5 import QtCore
 
 from qt_ui.v1 import Main
-from components import Instructor, Room, Subject, Section, ScenarioManager, ResultViewer
+from components import Instructor, Room, Subject, Section, ScenarioManager, ResultViewer, Generate
 
 
 
@@ -14,7 +14,7 @@ class MainWindow(Main.Ui_MainWindow):
         self.connectButtons()
         self.drawTrees()
        # Tab change listener
-        self.tabWidget.currentChanged.connect(lambda idx: self.tabListener(idx))
+        self.tabWidget.currentChanged.connect(self.tabListener)
         # Select default tab index
         self.tabWidget.setCurrentIndex(4)
 
@@ -57,12 +57,15 @@ class MainWindow(Main.Ui_MainWindow):
         self.secTree.display()
 
     
-    def tabListener(self, index):
-        if index == 4:
-            self.scenTree.display()
+    def tabListener(self):
+        self.instrTree.display()
+        self.roomTree.display()
+        self.subjTree.display()
+        self.secTree.display()
+        self.scenTree.display()
 
     def openResult(self):
         ResultViewer.ResultViewer()
 
     def openGenerate(self):
-        pass
+        Generate.Generate()
