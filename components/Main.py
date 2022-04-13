@@ -1,3 +1,7 @@
+import psutil
+import time
+from PyQt5 import QtCore
+
 from qt_ui.v1 import Main
 from components import Instructor, Room, Subject, Section, ScenarioManager, ResultViewer
 
@@ -13,7 +17,6 @@ class MainWindow(Main.Ui_MainWindow):
         self.tabWidget.currentChanged.connect(lambda idx: self.tabListener(idx))
         # Select default tab index
         self.tabWidget.setCurrentIndex(4)
-        self.btnScenResult.click()
 
 
     # Connect Main component buttons to respective actions
@@ -23,6 +26,7 @@ class MainWindow(Main.Ui_MainWindow):
         self.btnSubjAdd.clicked.connect(lambda: self.openSubject())
         self.btnSecAdd.clicked.connect(lambda: self.openSection())
         self.btnScenResult.clicked.connect(lambda: self.openResult())
+        self.btnScenGenerate.clicked.connect(lambda: self.openGenerate())
 
     # Initialize trees and tables
     def drawTrees(self):
@@ -59,3 +63,6 @@ class MainWindow(Main.Ui_MainWindow):
 
     def openResult(self):
         ResultViewer.ResultViewer()
+
+    def openGenerate(self):
+        pass
