@@ -4,13 +4,22 @@ from qt_ui.v1 import Generate as Parent
 from components import Database as db
 from components import ScheduleParser
 from components.utilities import ResourceTracker
-
+from components.utilities import GeneticAlgorithm
+from components.utilities import ScenarioComposer
 class Generate:
     totalResourceUsage = {
         'cpu' : {},
         'memory' : {}
     }
     tick = 0
+    data = {
+        'results': [],
+        'rooms': [],
+        'instructors': [],
+        'sections': [],
+        'sharings': [],
+        'subjects': []
+    }
 
     def __init__(self):
         self.dialog = dialog = QtWidgets.QDialog()
@@ -39,6 +48,11 @@ class Generate:
         self.resourceWorker = ResourceTrackerWorker()
         self.resourceWorker.signal.connect(lambda resource: self.updateResource(resource))
         self.resourceWorker.start()
+        composer = ScenarioComposer.ScenarioComposer()
+        composer = composer.getScenarioData()
+        self.data.update(composer)
+        self.geneticAlgorithm = GeneticAlgorithm.GeneticAlgorithm(self.data)
+        self.geneticAlgorithm.start()
 
     def updateResource():
         self.tick += 1
@@ -54,9 +68,12 @@ class Generate:
     def cleanDatabase(self):
         conn = db.getConnection()
         cursor = conn.cursor()
-
+        # PENDING WORK
         conn.commit()
         conn.close()
+
+    def setupRooms(self):
+        pass
 
 
 class ResourceTrackerWorker(QtCore.QThread):
