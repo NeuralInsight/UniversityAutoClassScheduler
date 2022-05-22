@@ -1,15 +1,16 @@
-import json
 from PyQt5 import QtCore, QtWidgets, QtGui
 from qt_ui.v1 import Generate as Parent
 from components import Database as db
+import json
 from components import ScheduleParser
 from components.utilities import ResourceTracker
 from components.utilities import GeneticAlgorithm
 from components.utilities import ScenarioComposer
+
 class Generate:
-    totalResourceUsage = {
-        'cpu' : {},
-        'memory' : {}
+    totalResource = {
+        'cpu': [],
+        'memory': []
     }
     tick = 0
     data = {
@@ -25,26 +26,25 @@ class Generate:
         self.dialog = dialog = QtWidgets.QDialog()
         # Initialize custom dialog
         self.parent = parent = Parent.Ui_Dialog()
-        # Add Parent to Custom Dialog
+        # Add parent to custom dialog
         parent.setupUi(dialog)
         self.running = True
         parent.btnPause.clicked.connect(self.togglePause)
         self.startWorkers()
         dialog.exec_()
 
-    # Pause & Unpause process
-    def togglePause():
+    def togglePause(self):
         self.toggleState()
         self.parent.btnPause.setText('Pause Generation' if self.running else 'Resume Generation')
 
-    def toggleState():
+    def toggleState(self):
         self.running = not self.running
         if self.running:
             self.resourceWorker.running = True
         else:
             self.resourceWorker.running = False
-    
-    def startWorker():
+
+    def startWorkers(self):
         self.resourceWorker = ResourceTrackerWorker()
         self.resourceWorker.signal.connect(lambda resource: self.updateResource(resource))
         self.resourceWorker.start()
@@ -52,18 +52,17 @@ class Generate:
         composer = composer.getScenarioData()
         self.data.update(composer)
         self.geneticAlgorithm = GeneticAlgorithm.GeneticAlgorithm(self.data)
-        self.geneticAlgorithm.start()
+        # self.geneticAlgorithm.start()
 
-    def updateResource():
+    def updateResource(self, resource):
         self.tick += 1
         if self.tick == 3:
             self.tick = 0
-        else: 
-            self.totalResourceUsage['cpu'].append(resource[0])
-            self.totalResourceUsage['memory'].append(resource[1][1])
+        else:
+            self.totalResource['cpu'].append(resource[0])
+            self.totalResource['memory'].append(resource[1][1])
         self.parent.lblCPU.setText('CPU Usage: {}%'.format(resource[0]))
         self.parent.lblMemory.setText('Memory Usage: {}% - {} MB'.format(resource[1][0], resource[1][1]))
-
 
     def cleanDatabase(self):
         conn = db.getConnection()
@@ -74,7 +73,6 @@ class Generate:
 
     def setupRooms(self):
         pass
-
 
 class ResourceTrackerWorker(QtCore.QThread):
     signal = QtCore.pyqtSignal(object)

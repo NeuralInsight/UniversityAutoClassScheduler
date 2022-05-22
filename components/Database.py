@@ -1,6 +1,7 @@
 import sqlite3
 
 def checkSetup():
+    # TODO: Provide better way of checking setup
     conn = sqlite3.connect('database.db')
     cursor = conn.cursor()
     cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='instructors'")
@@ -11,9 +12,9 @@ def checkSetup():
     return True
 
 def setup():
+    # TODO: Optimize setup
     conn = sqlite3.connect('database.db')
     cursor = conn.cursor()
-    # Create Instructors Table
     create_instructors_table = """
         CREATE TABLE IF NOT EXISTS instructors (
           id INTEGER PRIMARY KEY,
@@ -25,7 +26,6 @@ def setup():
           )
         );
     """
-    # Create Rooms Table
     create_rooms_table = """
         CREATE TABLE IF NOT EXISTS rooms (
           id INTEGER PRIMARY KEY,
@@ -37,7 +37,7 @@ def setup():
           )
         );
     """
-    # Create Subjects Table
+    # TODO: Consider adding `active` in subjects table
     create_subjects_table = """
         CREATE TABLE IF NOT EXISTS subjects (
           id INTEGER PRIMARY KEY,
@@ -52,7 +52,6 @@ def setup():
           type TEXT NOT NULL
         );
     """
-    # Create Sections Table
     create_sections_table = """
         CREATE TABLE IF NOT EXISTS sections (
           id INTEGER PRIMARY KEY,
@@ -67,16 +66,16 @@ def setup():
           )
         );
     """
-    # Create Sections Sharing Table
     create_sharing_table = """
         CREATE TABLE IF NOT EXISTS sharings (
           id INTEGER PRIMARY KEY,
           subjectId INTEGER NOT NULL,
-          sections TEXT NOT NULL
+          sections TEXT NOT NULL,
+          final BOOLEAN NOT NULL DEFAULT 0 CHECK (
+            final IN (0, 1)
+          )
         );
     """
-
-
     cursor.execute(create_instructors_table)
     cursor.execute(create_rooms_table)
     cursor.execute(create_subjects_table)
