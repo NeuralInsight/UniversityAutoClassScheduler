@@ -8,7 +8,7 @@ import numpy as np
 class GeneticAlgorithm(QtCore.QThread):
     signal = QtCore.pyqtSignal(object)
     running = True
-    chromosomes = []
+    chromosomes = [] # Keep All Chromosome
     data = {
         'rooms': [],
         'instructors': [],
@@ -29,7 +29,7 @@ class GeneticAlgorithm(QtCore.QThread):
 
     def initialization(self):
         for i in range(self.settings['minimum_population']):
-            self.tempChromosome = Chromosome(self.data)
+            self.tempChromosome = Chromosome(self.data) # Create new object from Chromosome Class
             self.tempSections = sections = {key: [value[2], value[3]] for (key, value) in copy.deepcopy(self.data['sections']).items()}
             rooms = list(self.data['rooms'].keys())
             for section in sections:
