@@ -243,7 +243,9 @@ class GeneticAlgorithm(QtCore.QThread):
         # lunchBreak = self.evaluateLunchBreak(chromosome) if self.settings['lunchbreak'] else 100
         # studentRest = self.evaluateStudentRest(chromosome)
         # instructorRest = self.evaluateInstructorRest(chromosome)
-        # exit(618)
+        # idleTime = self.evaluateStudentIdleTime(chromosome)
+        # meetingPattern = self.evaluateMeetingPattern(chromosome)
+        instructorLoad = self.evaluateInstructorLoad(chromosome)
         return total
 
     # = ((subjects - unplacedSubjects) / subjects) * 100
@@ -368,7 +370,35 @@ class GeneticAlgorithm(QtCore.QThread):
         return round(((instructorTeachingDays - noRestDays) / instructorTeachingDays) * 100, 2)
 
     def evaluateStudentIdleTime(self):
-        return 1
+        sectionDays = 0
+        idleDays = 0
+        for section in chromosome.data['sections'].values():
+            week = {day: [] for day in range(6)}
+            for subject in section['details'].values():
+                if not len(subject):
+                    continue
+                # Add section subject timeslots to sections week
+                for day in subject[2]:
+                    week[day].append([timeslot for timeslot in range(subject[3], subject[3] + subject[4])])
+                    week[day].sort()
+            for day in week.values():
+                if not len(day):
+                    continue
+                sectionDays += 1
+                # For every 6 TS that the day occupies, there is 1 TS allowable break
+                allowedBreaks = round((len(list(itertools.chain.from_iterable(day))) / 6), 2)
+                # If the decimal of allowed breaks is greater than .6, consider it as an addition
+                if (allowedBreaks > 1 and allowedBreaks % 1 > 0.60) or allowedBreaks % 1 > .80:
+                    allowedBreaks += 1
+                for index, timeslots in enumerate(day):
+                    if index == len(day) - 1 or allowedBreaks < 0:
+                        continue
+                    # Consume the allowable breaks with the gap between each subject of the day
+                    if timeslots[-1] != day[index + 1][0] - 1:
+                        allowedBreaks -= timeslots[-1] + day[index + 1][0] - 1
+                    if allowedBreaks < 0:
+                        idleDays += 1
+        return round(((sectionDays - idleDays) / sectionDays) * 100, 2)
 
     def evaluateMeetingPattern(self):
         return 1
