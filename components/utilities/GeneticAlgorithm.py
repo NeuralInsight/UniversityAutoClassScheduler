@@ -414,6 +414,23 @@ class GeneticAlgorithm(QtCore.QThread):
         return round(((placedSubjects - badPattern) / placedSubjects) * 100, 2)
 
     def evaluateInstructorLoad(self):
+        activeInstructors = {}
+        activeSubjects = []
+        for section in self.data['sections'].values():
+            activeSubjects += section[2]
+        subjects = self.data['subjects']
+        sharings = self.data['sharings']
+        for subject in set(activeSubjects):
+            for instructor in subjects[subject][4]:
+                if instructor not in activeInstructors.keys():
+                    activeInstructors[instructor] = [0, 0]
+                activeInstructors[instructor][0] += int(subjects[subject][1] / .5) * solo usage + share usage
+        for instructor, details in chromosome.data['instructors'].items():
+            for timeslotRow in details:
+                for day in timeslotRow:
+                    if day:
+                        activeInstructors[instructor][1] += 1
+        print(activeInstructors)
         return 1
     #
     # EVALUATION BLOCK
