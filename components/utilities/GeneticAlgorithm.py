@@ -522,7 +522,7 @@ class GeneticAlgorithm(QtCore.QThread):
     def mutation(self):
         pass
 
-    def adapting(self):
+    def adapt(self):
         pass
 
     def run(self):
@@ -542,12 +542,13 @@ class GeneticAlgorithm(QtCore.QThread):
             self.metaSignal.emit([round(self.averageFitness, 2), generation])
             self.messageSignal.emit('Started Selection')
             self.selection()
+            exit(619)
             self.messageSignal.emit('Started Crossover')
             self.crossover()
             self.messageSignal.emit('Started Mutation')
             self.mutation()
             self.messageSignal.emit('Started Adaptation')
-            self.adapting()
+            self.adapt()
 
 
 class Chromosome:
