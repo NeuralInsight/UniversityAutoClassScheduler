@@ -10,9 +10,9 @@ class GeneticAlgorithm(QtCore.QThread):
     metaSignal = QtCore.pyqtSignal(object)
     statusSignal = QtCore.pyqtSignal(object)
 
-    averageFitness = 0
+    averageFitness = 0 # Keep Average Fitness of Chromosomes
     running = True
-    chromosomes = []
+    chromosomes = [] # List that keep all the chromosomes
     data = {
         'rooms': [],
         'instructors': [],
@@ -20,12 +20,12 @@ class GeneticAlgorithm(QtCore.QThread):
         'sharings': [],
         'subjects': []
     }
-    tempChromosome = None
-    tempSections = None
+    tempChromosome = None # Current Chromosome
+    tempSections = None # Current Section
 
     def __init__(self, data):
         self.data = data
-        self.settings = Settings.getSettings()
+        self.settings = Settings.getSettings() # Get All the Settings
         super().__init__()
 
     def __del__(self):
@@ -37,9 +37,9 @@ class GeneticAlgorithm(QtCore.QThread):
         # Generate population based on minimum population
         self.generateChromosome(self.settings['minimum_population'])
 
-    def generateChromosome(self, quantity):
-        for i in range(quantity):
-            self.messageSignal.emit('Creating #{}/{} Chromosome'.format(i, quantity))
+    def generateChromosome(self, quantity): # quantity = the number of Population
+        for i in range(quantity): # Create Population
+            self.messageSignal.emit('Creating #{}/{} Chromosome'.format(i, quantity)) # Show Creating Chromosome to User (GUI Signal)
             self.tempChromosome = Chromosome(self.data)
             # {id: [[subjectIds](, stay|roomId = False)]}
             self.tempSections = sections = {key: [value[2], value[3]] for (key, value) in
