@@ -71,7 +71,7 @@ class GeneticAlgorithm(QtCore.QThread):
             logger.debug('tempSharings: {}'.format(self.tempSharings))
             # [roomIds]
             self.rooms = rooms = list(self.data['rooms'].keys())
-            logger.debug('rooms: {}'.format(self.rooms1))
+            logger.debug('rooms: {}'.format(self.rooms))
             # Room selection for staying sections
             for section in sections:
                 if sections[section][1]:
