@@ -58,13 +58,17 @@ class GeneticAlgorithm(QtCore.QThread):
         for i in range(quantity): # Create Population
             self.messageSignal.emit('Creating #{}/{} Chromosome'.format(i, quantity)) # Show Creating Chromosome to User (GUI Signal)
             self.tempChromosome = Chromosome(self.data)
+
             # {id: [[subjectIds](, stay|roomId = False)]}
             self.tempSections = sections = {key: [value[2], value[3]] for (key, value) in
                                             copy.deepcopy(self.data['sections']).items()}
+            logger.debug('tempSections: {}'.format(self.tempSections))
             # {id: [subjectId, [sections]]}
             self.tempSharings = sharings = copy.deepcopy(self.data['sharings'])
+            logger.debug('tempSharings: {}'.format(self.tempSharings))
             # [roomIds]
             self.rooms = rooms = list(self.data['rooms'].keys())
+            logger.debug('rooms: {}'.format(self.rooms1))
             # Room selection for staying sections
             for section in sections:
                 if sections[section][1]:
