@@ -498,6 +498,24 @@ class GeneticAlgorithm(QtCore.QThread):
         self.elites = elite
         self.matingPool = matingPool
 
+    # size = int, population = [fitness]
+    def createTournament(self, size, population):
+        participants = []
+        # Select participants
+        for i in range(size):
+            candidate = False
+            while candidate is False:
+                candidate = np.random.randint(0, len(population))
+                if candidate in participants:
+                    candidate = False
+                    continue
+            participants.append(candidate)
+        winner = participants[0]
+        for participant in participants:
+            if population[participant] > population[winner]:
+                winner = participant
+        return winner
+
     def crossover(self):
         pass
 
