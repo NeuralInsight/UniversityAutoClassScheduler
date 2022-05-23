@@ -401,7 +401,17 @@ class GeneticAlgorithm(QtCore.QThread):
         return round(((sectionDays - idleDays) / sectionDays) * 100, 2)
 
     def evaluateMeetingPattern(self):
-        return 1
+        placedSubjects = 0
+        badPattern = 0
+        for section in chromosome.data['sections'].values():
+            for subject in section['details'].values():
+                if not len(subject) or len(subject[2]) == 1:
+                    continue
+                placedSubjects += 1
+                # Check if subject has unusual pattern
+                if subject[2] not in [[0, 2, 4], [1, 3]]:
+                    badPattern += 1
+        return round(((placedSubjects - badPattern) / placedSubjects) * 100, 2)
 
     def evaluateInstructorLoad(self):
         return 1
