@@ -19,6 +19,8 @@ def getCSVFile(type):
     return content
 
 def saveAs():
+    if not fileName[0]:
+        return False
     fileName = QtWidgets.QFileDialog.getSaveFileName(None,  'Save GAS Scenario', '', 'GAS Scenario (*.gas)')
     with open(fileName[0], 'w+') as file:
         conn = db.getConnection()
@@ -28,6 +30,8 @@ def saveAs():
 
 def load():
     fileName = QtWidgets.QFileDialog().getOpenFileName(None, 'Load GAS Scenario', '', 'GAS Scenario (*.gas)')
+    if not fileName[0]:
+        return False
     with open(fileName[0], 'r') as file:
         conn = db.getConnection()
         cursor = conn.cursor()
@@ -35,3 +39,11 @@ def load():
         cursor.executescript(';'.join(['DROP TABLE IF EXISTS {}'.format(table[0]) for table in tables]))
         cursor.executescript(file.read())
         conn.close()
+
+
+def removeTables():
+    conn = db.getConnection()
+    cursor = conn.cursor()
+    tables = list(cursor.execute("SELECT name FROM sqlite_master WHERE type IS 'table'"))
+    cursor.executescript(';'.join(['DROP TABLE IF EXISTS {}'.format(table[0]) for table in tables]))
+    conn.close()
