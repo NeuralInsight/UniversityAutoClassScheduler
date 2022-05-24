@@ -45,6 +45,7 @@ class Section:
         currentSubjects = []
         # Subjects that are shared to the current section
         # [(sharing_id, subject_id, sections [str of list - load using json.loads])]
+        sharedSubjects = []
         if self.id:
             cursor.execute('SELECT subjects FROM sections WHERE id = ?', [self.id])
             # Convert result into list of int
