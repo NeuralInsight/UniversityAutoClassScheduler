@@ -26,7 +26,7 @@ class MainWindow(Main.Ui_MainWindow):
         # Tab change listener
         self.tabWidget.currentChanged.connect(self.tabListener)
         # Select default tab index
-        self.tabWidget.setCurrentIndex(4)
+        self.tabWidget.setCurrentIndex(0)
 
 
     # Connect Main component buttons to respective actions
