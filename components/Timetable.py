@@ -19,7 +19,6 @@ def parseTableDataToView(data:list):
     return parsedData
 
 # Used for displaying toggable timetable
-# TODO: Assess for possible different version of timetable widget
 class Timetable:
     def __init__(self, table, data = False):
         self.table = table
