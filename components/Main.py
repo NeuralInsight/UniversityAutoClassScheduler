@@ -1,18 +1,25 @@
-import psutil
-import time
-from PyQt5 import QtCore
-from qt_ui.v1 import Main
-from components import Instructor, Room, Subject, Section, ResultViewer, Generate, Settings, Database, Timetable
+from components import Instructor
+from components import ResultViewer
+from components import Room
+from components import Section
+from components import Subject
+from components import Generate
+from components import Settings
 from components.utilities import ImportExportHandler as ioHandler
+from qt_ui.v1 import Main
 import json
-
-
-
-
+import copy
+from components import Timetable
+from PyQt5 import QtCore
+from components import Database
 
 class MainWindow(Main.Ui_MainWindow):
     matrixSum = 0
-
+    result = {
+        'data': [],
+        'time': None,
+        'resource': None
+    }
 
     def __init__(self, parent):
         super().__init__()
@@ -27,7 +34,7 @@ class MainWindow(Main.Ui_MainWindow):
         self.tabWidget.currentChanged.connect(self.tabListener)
         # Select default tab index
         self.tabWidget.setCurrentIndex(0)
-
+        self.btnScenResult.click()
 
     # Connect Main component buttons to respective actions
     def connectButtons(self):
@@ -46,7 +53,6 @@ class MainWindow(Main.Ui_MainWindow):
         self.actionExit.triggered.connect(exit)
         self.actionNew.triggered.connect(lambda: self.new())
 
-
     # Initialize trees and tables
     def drawTrees(self):
         self.instrTree = Instructor.Tree(self.treeInstr)
@@ -54,27 +60,24 @@ class MainWindow(Main.Ui_MainWindow):
         self.subjTree = Subject.Tree(self.treeSubj)
         self.secTree = Section.Tree(self.treeSec)
 
-    # Open Instructor Edit Modal
-    def openInstructor(self, id = False):
+    # Handle component openings
+
+    def openInstructor(self, id=False):
         Instructor.Instructor(id)
         self.instrTree.display()
 
-    # Open Room Edit Modal
-    def openRoom(self, id = False):
+    def openRoom(self, id=False):
         Room.Room(id)
         self.roomTree.display()
 
-    # Open Subject Edit Modal
-    def openSubject(self, id = False):
+    def openSubject(self, id=False):
         Subject.Subject(id)
         self.subjTree.display()
 
-    # Open Section Edit Modal
-    def openSection(self, id = False):
+    def openSection(self, id=False):
         Section.Section(id)
         self.secTree.display()
 
-    
     def tabListener(self):
         self.instrTree.display()
         self.roomTree.display()
@@ -82,13 +85,19 @@ class MainWindow(Main.Ui_MainWindow):
         self.secTree.display()
 
     def openResult(self):
-        ResultViewer.ResultViewer()
+        ResultViewer.ResultViewer(self.result)
 
     def openGenerate(self):
-        Generate.Generate()
-        # TODO: Data Handler for Generate to Result Viewer
+        result = Generate.Generate()
+        if not len(result.topChromosomes):
+            return False
+        self.result['data'] = copy.deepcopy(result.topChromosomes)
+        self.result['time'] = result.time.toString('hh:mm:ss')
+        self.result['resource'] = result.totalResource
+        self.result['rawData'] = result.topChromosomes[0][0].rawData
+        self.result['meta'] = result.meta
+        self.openResult()
 
-    
     def importInstructors(self):
         instructors = ioHandler.getCSVFile('instructors')
         if instructors:
