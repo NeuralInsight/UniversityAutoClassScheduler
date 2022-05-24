@@ -56,7 +56,7 @@ class GeneticAlgorithm(QtCore.QThread):
     def __init__(self, data):
         self.data = data
         self.settings = Settings.getSettings() # Get All the Settings
-        self.stopWhenAverageFitnessAt = self.settings['max_average_fitness']
+        self.stopWhenMaxFitnessAt = self.settings['maximum_fitness']
         # Calculate starting tournament size
         super().__init__()
 
@@ -485,6 +485,9 @@ class GeneticAlgorithm(QtCore.QThread):
         instructorLoadAverage = round(((instructorLoadAverage / len(activeInstructors)) / 50) * 100, 2)
         return instructorLoadAverage
 
+    def getAllFitness(self):
+        return [chromosome.fitness for chromosome in self.chromosomes]
+
 
     def adapt(self):
         deviation = self.getFitnessDeviation()
@@ -780,12 +783,8 @@ class GeneticAlgorithm(QtCore.QThread):
             self.evaluate()
 
             self.metaSignal.emit([round(self.averageFitness, 2), generation])
-            if round(self.averageFitness, 2) >= self.stopWhenAverageFitnessAt:
-                self.messageSignal.emit('Hit the required fitness!')
-                self.statusSignal.emit(1)
-                self.running = False
-                solution = True
-                break
+            fitnesses = self.getAllFitness()
+            # TODO: Process end
             self.messageSignal.emit('Tweaking Environment')
             self.adapt()
             self.messageSignal.emit('Preparing Selection')
@@ -938,6 +937,14 @@ class Chromosome:
                 for day in schedule[4]:
                     if sections[section]['schedule'][timeslotRow][day] is not None:
                         return False
+        # Check if instructor can still teach
+        maxLoad = self.rawData['instructors'][schedule[3]][1] * 2
+        for timeslotRow in instructor:
+            for day in timeslotRow:
+                if day:
+                    maxLoad -= 1
+        if maxLoad < 0:
+            return False
         return True
 
     def isInstructorTimeslotAvailable(self, schedule):
