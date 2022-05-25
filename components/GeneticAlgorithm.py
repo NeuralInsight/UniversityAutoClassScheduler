@@ -321,10 +321,12 @@ class GeneticAlgorithm(QtCore.QThread):
         for section in chromosome.data['sections'].values():
             # [roomId, instructorId, [day / s], startingTS, length]
             details = section['details']
+            logging.debug('section details: {}'.format(details))
             # A temporary map for days and lunch period
             # {day: [22, 23, 24, 25]}
             # TS 22-25 : 11 AM - 1 PM
             tempScheduleMap = {key: [22, 23, 24, 25] for key in range(6)}
+            logging.debug('tempScheduleMap: {}'.format(tempScheduleMap))
             # Days that the section used
             tempSectionDays = []
             # Loop through each subject and remove lunch period timeslots that are occupied.
