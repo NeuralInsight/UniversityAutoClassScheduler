@@ -17,5 +17,11 @@
 4. logging
 
 
-##TODO:
+## TODO:
+
+### Genetic Algorithm
+- [ ] Changing TimeSlot form 0.5 to 0.75
+
+
+### GUI
 
