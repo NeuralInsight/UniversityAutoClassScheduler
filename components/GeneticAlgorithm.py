@@ -5,6 +5,24 @@ from collections import Counter
 import copy
 import itertools
 import numpy as np
+import logging
+
+
+#Creating and Configuring Logger
+Log_Format = "%(levelname)s %(asctime)s - %(message)s"
+
+
+logging.basicConfig(filename = "logfile.log",
+                    filemode = "w",
+                    format = Log_Format, 
+                    level = logging.DEBUG,
+                    encoding='utf-8')
+
+# Logging Level = debug, info, warning, error
+
+logger = logging.getLogger()
+
+logger.info("init Genetic Algorithm")
 
 
 class GeneticAlgorithm(QtCore.QThread):
