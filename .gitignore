@@ -1,4 +1,5 @@
-__pycache__
+gas.db
+.idea
 .vscode
-database.db
-logfile.log
+*.log
+__pycache__

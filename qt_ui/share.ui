@@ -23,7 +23,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>موضوع های اشتراک گذاشته شده</string>
+   <string>Share Subject</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -34,14 +34,14 @@
      <item>
       <widget class="QPushButton" name="btnFinish">
        <property name="text">
-        <string>اشتراک گذاری</string>
+        <string>Share</string>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QPushButton" name="btnCancel">
        <property name="text">
-        <string>لعو</string>
+        <string>Cancel</string>
        </property>
       </widget>
      </item>

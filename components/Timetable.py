@@ -1,28 +1,13 @@
 from PyQt5 import QtCore, QtWidgets, QtGui
-from components import Settings
-from components import TableModel
+from components import Settings, TableModel
 import json
 
 
-def parseTableDataToModel(data:list):
-    parsedData = []
-    for l in data:
-            l = ["Available" if x == "در دسترس" else "Unavailable" for x in l]
-            parsedData.append(l)
-    return parsedData
-
-def parseTableDataToView(data:list):
-    parsedData = []
-    for l in data:
-            l = ["در دسترس" if x == "Available" else "غیرقابل دسترس" for x in l]
-            parsedData.append(l)
-    return parsedData
-
 # Used for displaying toggable timetable
 class Timetable:
-    def __init__(self, table, data = False):
+    def __init__(self, table, data=False):
         self.table = table
-        header = [['شنبه', 'یکشنبه', 'دوشنبه', 'سه شنبه', 'چهارشنبه', 'پنجشنبه']]
+        header = [['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']]
         with open('timeslots.json') as json_file:
             timeslots = json.load(json_file)['timeslots']
         settings = Settings.getSettings()
@@ -31,7 +16,7 @@ class Timetable:
         if not data:
             self.data = []
             for i in range(settings['ending_time'] + 1 - settings['starting_time']):
-                self.data.append(['در دسترس', 'در دسترس', 'در دسترس', 'در دسترس', 'در دسترس', 'در دسترس'])
+                self.data.append(['Available', 'Available', 'Available', 'Available', 'Available', 'Available'])
         self.model = TimetableModel(header, self.data)
         table.setModel(self.model)
         table.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Fixed)
@@ -45,21 +30,18 @@ class Timetable:
     def toggleCells(self):
         indexes = self.table.selectionModel().selectedIndexes()
         for i in indexes:
-            value = 'در دسترس' if self.data[i.row()][i.column()] == 'غیرقابل دسترس' else 'غیرقابل دسترس'
-            if value == 'در دسترس':
+            value = 'Available' if self.data[i.row()][i.column()] == 'Unavailable' else 'Unavailable'
+            if value == 'Available':
                 self.table.setStyleSheet('selection-background-color: rgb(46, 204, 113); selection-color: black;')
             else:
                 self.table.setStyleSheet('selection-background-color: rgb(231, 76, 60); selection-color: black;')
             self.model.setData(i, value)
 
     def getData(self):
-        self.parsedData = parseTableDataToModel(self.data)
-        print(self.parsedData)
-        return self.parsedData
+        return self.data
 
 
 # Timetable model that provides color support for availability status
-# TODO: Assess for possible different version of timetable widget
 class TimetableModel(TableModel.TableModel):
     def __init__(self, header, data):
         super().__init__(header, data)
@@ -68,8 +50,8 @@ class TimetableModel(TableModel.TableModel):
         if not index.isValid():
             return QtCore.QVariant()
         elif role == QtCore.Qt.BackgroundRole:
-            if self.data[index.row()][index.column()] == 'در دسترس':
-                return QtGui.QBrush(QtGui.QColor(46,204,113))
+            if self.data[index.row()][index.column()] == 'Available':
+                return QtGui.QBrush(QtGui.QColor(46, 204, 113))
             else:
                 return QtGui.QBrush(QtGui.QColor(231, 76, 60))
         elif role != QtCore.Qt.DisplayRole:
@@ -83,4 +65,3 @@ def generateRawTable():
     for i in range(settings['ending_time'] + 1 - settings['starting_time']):
         data.append(['Available', 'Available', 'Available', 'Available', 'Available', 'Available'])
     return data
-
