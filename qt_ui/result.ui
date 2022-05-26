@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>875</width>
-    <height>559</height>
+    <width>1024</width>
+    <height>758</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -18,8 +18,8 @@
   </property>
   <property name="maximumSize">
    <size>
-    <width>875</width>
-    <height>559</height>
+    <width>1024</width>
+    <height>758</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -120,6 +120,13 @@
          <widget class="QPushButton" name="btnExport">
           <property name="text">
            <string>Export Result</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="btnViewCompleteRes">
+          <property name="text">
+           <string>View Complete Result</string>
           </property>
          </widget>
         </item>
