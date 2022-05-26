@@ -7,7 +7,7 @@ import json
 class Timetable:
     def __init__(self, table, data=False):
         self.table = table
-        header = [['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']]
+        header = [['Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday']]
         with open('timeslots.json') as json_file:
             timeslots = json.load(json_file)['timeslots']
         settings = Settings.getSettings()
