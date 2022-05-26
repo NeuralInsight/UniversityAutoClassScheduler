@@ -122,14 +122,12 @@
            <string>Export Result</string>
           </property>
          </widget>
-        </item>
-        <item>
          <widget class="QPushButton" name="btnViewCompleteRes">
           <property name="text">
            <string>View Complete Result</string>
           </property>
          </widget>
-        </item>
+        </item> 
        </layout>
       </widget>
      </item>

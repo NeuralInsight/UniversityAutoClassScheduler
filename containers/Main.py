@@ -1,4 +1,4 @@
-from PyQt5 import QtCore
+from PyQt5 import QtCore,QtWidgets
 from containers import Generate, Instructor, ResultViewer, Room, Subject, Section
 from components import Settings, Database, Timetable, ImportExportHandler as ioHandler
 from py_ui import Main
@@ -24,7 +24,7 @@ class MainWindow(Main.Ui_MainWindow):
         self.btnRoomAdd.clicked.connect(lambda: self.openRoom())
         self.btnSubjAdd.clicked.connect(lambda: self.openSubject())
         self.btnSecAdd.clicked.connect(lambda: self.openSection())
-        self.btnScenResult.clicked.connect(lambda: self.openResult())
+        self.btnScenResult.clicked.connect(lambda: self.ExportExcelFile())
         self.btnScenGenerate.clicked.connect(lambda: self.openGenerate())
         self.btnInstrImport.clicked.connect(self.importInstructors)
         self.btnRoomImport.clicked.connect(self.importRooms)
@@ -90,8 +90,80 @@ class MainWindow(Main.Ui_MainWindow):
         conn.close()
 
     def openResult(self):
-        ResultViewer.ResultViewer()
+        # ResultViewer.ResultViewer()
+        pass
 
+    def ExportExcelFile(self):
+        directory = QtWidgets.QFileDialog().getExistingDirectory(None, 'Select Directory for Export')
+        if not directory:
+            return False
+        with open('timeslots.json') as json_file:
+            timeslots = json.load(json_file)['timeslots']
+        fieldnames = ['Time', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+        rawData = self.rawData
+        chromosome = self.result['data'][self.parent.cmbChromosome.currentIndex()]
+        # Create schedule for sections
+        with open('{}/sections_schedule.csv'.format(directory), 'w', newline='') as file:
+            writer = csv.writer(file, dialect='excel')
+            for section, subjects in chromosome['sections'].items():
+                writer.writerow([self.rawData['sections'][section][0]])
+                writer.writerow(fieldnames)
+                schedule = [['' for j in range(6)] for i in
+                            range(self.settings['ending_time'] - self.settings['starting_time'] + 1)]
+                for subject, details in subjects['details'].items():
+                    if not len(details):
+                        continue
+                    instructor = '' if not details[1] else rawData['instructors'][details[1]][0]
+                    for timeslot in range(details[3], details[3] + details[4]):
+                        for day in details[2]:
+                            schedule[timeslot][day] = '{} - {} - {}'.format(rawData['subjects'][subject][2],
+                                                                            rawData['rooms'][details[0]][0],
+                                                                            instructor)
+                for timeslot in range(self.settings['starting_time'], self.settings['ending_time'] + 1):
+                    writer.writerow([timeslots[timeslot], *schedule[timeslot - self.settings['starting_time']]])
+                writer.writerow([''])
+        # Create schedule for instructors
+        with open('{}/instructors_schedule.csv'.format(directory), 'w', newline='') as file:
+            writer = csv.writer(file, dialect='excel')
+            for instructor in rawData['instructors'].keys():
+                writer.writerow([rawData['instructors'][instructor][0]])
+                writer.writerow(fieldnames)
+                schedule = [['' for j in range(6)] for i in
+                            range(self.settings['ending_time'] - self.settings['starting_time'] + 1)]
+                for section, subjects in chromosome['sections'].items():
+                    for subject, details in subjects['details'].items():
+                        if not len(details) or details[1] != instructor:
+                            continue
+                        for timeslot in range(details[3], details[3] + details[4]):
+                            for day in details[2]:
+                                schedule[timeslot][day] = '{} - {} - {}'.format(rawData['subjects'][subject][2],
+                                                                                rawData['rooms'][details[0]][0],
+                                                                                rawData['sections'][section][0])
+                    for timeslot in range(self.settings['starting_time'], self.settings['ending_time'] + 1):
+                        writer.writerow([timeslots[timeslot], *schedule[timeslot - self.settings['starting_time']]])
+                writer.writerow([''])
+        # Create schedule for rooms
+        with open('{}/rooms_schedule.csv'.format(directory), 'w', newline='') as file:
+            writer = csv.writer(file, dialect='excel')
+            for room in rawData['rooms'].keys():
+                writer.writerow([rawData['rooms'][room][0]])
+                writer.writerow(fieldnames)
+                schedule = [['' for j in range(6)] for i in
+                            range(self.settings['ending_time'] - self.settings['starting_time'] + 1)]
+                for section, subjects in chromosome['sections'].items():
+                    for subject, details in subjects['details'].items():
+                        if not len(details) or details[0] != room:
+                            continue
+                        instructor = '' if not details[1] else rawData['instructors'][details[1]][0]
+                        for timeslot in range(details[3], details[3] + details[4]):
+                            for day in details[2]:
+                                schedule[timeslot][day] = '{} - {} - {}'.format(rawData['subjects'][subject][2],
+                                                                                rawData['sections'][section][0],
+                                                                                instructor)
+                for timeslot in range(self.settings['starting_time'], self.settings['ending_time'] + 1):
+                    writer.writerow([timeslots[timeslot], *schedule[timeslot - self.settings['starting_time']]])
+                writer.writerow([''])
+    
     def openGenerate(self):
         gc.collect()
         result = Generate.Generate()
