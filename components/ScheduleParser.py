@@ -12,7 +12,7 @@ class ScheduleParser:
     # table = QTableView, data = []
     def __init__(self, table, data):
         self.table = table
-        header = [['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']]
+        header = [['Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']]
         with open('timeslots.json') as json_file:
             self.timeslots = timeslots = json.load(json_file)['timeslots']
         self.settings = settings = Settings.getSettings()

@@ -234,7 +234,7 @@ class GeneticAlgorithm(QtCore.QThread):
         else:
             meetingPattern = [np.random.randint(0, 6)]
         # To convert hours into timetable timeslots
-        hours = hours / .5
+        # hours = hours / .5
         startingTimeslot = False
         # Starting slot selection
         startingTime = self.settings['starting_time']
@@ -321,12 +321,12 @@ class GeneticAlgorithm(QtCore.QThread):
         for section in chromosome.data['sections'].values():
             # [roomId, instructorId, [day / s], startingTS, length]
             details = section['details']
-            logging.debug('section details: {}'.format(details))
+            #logging.debug('section details: {}'.format(details))
             # A temporary map for days and lunch period
             # {day: [22, 23, 24, 25]}
             # TS 22-25 : 11 AM - 1 PM
-            tempScheduleMap = {key: [22, 23, 24, 25] for key in range(6)}
-            logging.debug('tempScheduleMap: {}'.format(tempScheduleMap))
+            tempScheduleMap = {key: [4, 5] for key in range(6)}
+            #logging.debug('tempScheduleMap: {}'.format(tempScheduleMap))
             # Days that the section used
             tempSectionDays = []
             # Loop through each subject and remove lunch period timeslots that are occupied.
@@ -450,12 +450,17 @@ class GeneticAlgorithm(QtCore.QThread):
         badPattern = 0
         for section in chromosome.data['sections'].values():
             for subject in section['details'].values():
+                logging.debug(subject)
                 if not len(subject) or len(subject[2]) == 1:
                     continue
                 placedSubjects += 1
+                logging.debug(subject)
                 # Check if subject has unusual pattern
                 if subject[2] not in [[0, 2, 4], [1, 3]]:
                     badPattern += 1
+        
+        if(placedSubjects == 0):
+            return 100
         return round(((placedSubjects - badPattern) / placedSubjects) * 100, 2)
 
     def evaluateInstructorLoad(self, chromosome):
@@ -930,17 +935,20 @@ class Chromosome:
         rooms = self.data['rooms']
         sections = self.data['sections']
         # Check for each room if on the given subject range, the section has class
+        #logging.debug(schedule)
+        #logging.debug(rooms)
         for room in rooms:
             for timeslotRow in range(schedule[5], schedule[5] + schedule[6]):
                 for day in schedule[4]:
                     roomDayTimeslot = rooms[room][timeslotRow][day]
+                    #logging.debug(roomDayTimeslot)
                     # Check if timeslot is blank
                     if roomDayTimeslot is None:
                         continue
                     # Check if section is in timeslot
-                    for section in schedule[1]:
-                        if section in roomDayTimeslot:
-                            return False
+                    # for section in schedule[1]:
+                    #     if section in roomDayTimeslot:
+                    #         return False
         # Check for section unavailable times
         for section in schedule[1]:
             for timeslotRow in range(schedule[5], schedule[5] + schedule[6]):

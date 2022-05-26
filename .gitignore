@@ -3,3 +3,4 @@ gas.db
 .vscode
 *.log
 __pycache__
+settings.json
