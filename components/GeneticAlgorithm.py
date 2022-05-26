@@ -234,7 +234,7 @@ class GeneticAlgorithm(QtCore.QThread):
         else:
             meetingPattern = [np.random.randint(0, 6)]
         # To convert hours into timetable timeslots
-        hours = hours / .5
+        # hours = hours / .5
         startingTimeslot = False
         # Starting slot selection
         startingTime = self.settings['starting_time']
