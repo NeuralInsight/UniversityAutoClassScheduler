@@ -21,7 +21,7 @@
 
 ### Genetic Algorithm
 - [ ] Changing TimeSlot form 0.5 to 0.75
-
+- [ ] Shouldn't run the Evalution with 0 point !
 
 ### GUI
 
