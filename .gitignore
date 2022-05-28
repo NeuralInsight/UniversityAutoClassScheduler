@@ -2,5 +2,6 @@ gas.db
 .idea
 .vscode
 *.log
+*.xlsx
 __pycache__
 settings.json
