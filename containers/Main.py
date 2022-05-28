@@ -167,10 +167,10 @@ class MainWindow(Main.Ui_MainWindow):
         timeslot_size = int(self.settings['ending_time'] - self.settings['starting_time'] + 1)
         number_of_rooms = len(rawData['rooms'])
         mainlogger.debug(number_of_rooms)
-        fieldnames = ["شنبه", "یکشنبه", "دوشنبه", "سه شنبه", "چهارشنبه", "پنچشنبه"]
+        dayNames = ["شنبه", "یکشنبه", "دوشنبه", "سه شنبه", "چهارشنبه", "پنچشنبه"]
         col_num = 0
         last_index = 2
-        for day in fieldnames:
+        for day in dayNames:
             first_index = last_index
             last_index += timeslot_size - 1
             first_letter = self.findColName(first_index)
@@ -181,34 +181,31 @@ class MainWindow(Main.Ui_MainWindow):
                 worksheet.write(1, first_index+i-1, timeslots[i])
             last_index += 1
         for i in range(number_of_rooms):
-            # log room name
-            mainlogger.debug(rawData['rooms'][i+1][0])
             worksheet.write(i+2, 0, rawData['rooms'][i+1][0])
 
-
-        
-
-        
-        workbook.close()
-        # Create schedule for sections
-        # with open('{}/sections_schedule.csv'.format(directory), 'w', newline='', encoding="utf-8") as file:
-        #     writer = csv.writer(file, dialect='excel')
-        
         for section, subjects in chromosome['sections'].items():
-            #mainlogger.debug([self.rawData['sections'][section][0]])
             #writer.writerow([self.rawData['sections'][section][0]])
-            #writer.writerow(fieldnames)
-            schedule = [['' for j in range(6)] for i in
-                        range(self.settings['ending_time'] - self.settings['starting_time'] + 1)]
+            #writer.writerow(dayNames)
+            schedule = {day: [['' for j in range(timeslot_size)] for i in range(number_of_rooms)] for day in range(len(dayNames))}
             for subject, details in subjects['details'].items():
+                mainlogger.debug(details)
                 if not len(details):
                     continue
                 instructor = '' if not details[1] else rawData['instructors'][details[1]][0]
+                room = details[0]
                 for timeslot in range(details[3], details[3] + details[4]):
                     for day in details[2]:
-                        schedule[timeslot][day] = '{} - {} - {}'.format(rawData['subjects'][subject][2],
-                                                                        rawData['rooms'][details[0]][0],
+                        schedule[day][room][timeslot] = '{} - {} - {}'.format(rawData['subjects'][subject][0],
+                                                                        rawData['subjects'][subject][2],
                                                                         instructor)
+            
+            for day in range(len(dayNames)):
+                for room in range(number_of_rooms):
+                    for timeslot in range(timeslot_size):
+                        worksheet.write(room+2, day*timeslot_size+timeslot+1, schedule[day][room][timeslot])
+
+        workbook.close()
+        
             # for row_num, row_data in enumerate(schedule):
             #     for col_num, col_data in enumerate(row_data):
             #         worksheet.write(row_num, col_num, col_data)
@@ -223,7 +220,7 @@ class MainWindow(Main.Ui_MainWindow):
         #     writer = csv.writer(file, dialect='excel')
         #     for instructor in rawData['instructors'].keys():
         #         writer.writerow([rawData['instructors'][instructor][0]])
-        #         writer.writerow(fieldnames)
+        #         writer.writerow(dayNames)
         #         schedule = [['' for j in range(6)] for i in
         #                     range(self.settings['ending_time'] - self.settings['starting_time'] + 1)]
         #         for section, subjects in chromosome['sections'].items():
@@ -243,7 +240,7 @@ class MainWindow(Main.Ui_MainWindow):
         #     writer = csv.writer(file, dialect='excel')
         #     for room in rawData['rooms'].keys():
         #         writer.writerow([rawData['rooms'][room][0]])
-        #         writer.writerow(fieldnames)
+        #         writer.writerow(dayNames)
         #         schedule = [['' for j in range(6)] for i in
         #                     range(self.settings['ending_time'] - self.settings['starting_time'] + 1)]
         #         for section, subjects in chromosome['sections'].items():
