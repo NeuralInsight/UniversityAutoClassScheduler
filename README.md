@@ -1,6 +1,10 @@
 # University Timetable Scheduling Using Adaptive-Elitist Genetic Algorithm
 
 
+# Installation
+first of all install all the requirements using
+    
+    pip install -r requirements.txt 
 
 ### Usage:
 1. Add instructors
