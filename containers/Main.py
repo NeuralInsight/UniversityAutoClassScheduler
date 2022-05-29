@@ -39,6 +39,8 @@ class MainWindow(Main.Ui_MainWindow):
         conn.close()
         if result:
             self.result = pickle.loads(result[0])
+            result = self.result
+            self.rawData = copy.deepcopy(result['rawData'])
         else:
             messageBox = QtWidgets.QMessageBox()
             messageBox.setWindowTitle('No Data')
@@ -47,9 +49,6 @@ class MainWindow(Main.Ui_MainWindow):
             messageBox.setStandardButtons(QtWidgets.QMessageBox.Ok)
             messageBox.exec_()
             self.run = False
-
-        result = self.result
-        self.rawData = copy.deepcopy(result['rawData'])
 
     # Connect Main component buttons to respective actions
     def connectButtons(self):
