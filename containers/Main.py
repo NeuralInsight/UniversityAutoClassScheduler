@@ -10,6 +10,7 @@ import copy
 import csv
 import logging
 import os
+import random
 
 
 
@@ -132,8 +133,23 @@ class MainWindow(Main.Ui_MainWindow):
             n, remainder = divmod(n - 1, 26)
             colName = chr(65 + remainder) + colName
         return colName
- 
+    
+    # Create Random Color Hex Code
+    def randomColor(self):
+        r = lambda: random.randint(0,255)
+        return '#%02X%02X%02X' % (r(),r(),r())
 
+    # find dark color by hex code
+    def findDarkColor(self, hex):
+        r = int(hex[1:3], 16)
+        g = int(hex[3:5], 16)
+        b = int(hex[5:7], 16)
+        if (r + g + b) > 350:
+            return '#000000'
+        else:
+            return '#ffffff'
+            
+    # Export Result to Excel file
     def ExportExcelFile(self):
 
         #Creating and Configuring Logger
@@ -159,6 +175,8 @@ class MainWindow(Main.Ui_MainWindow):
         # Create new xlsx file
         workbook = xlsxwriter.Workbook('{}/section_schedule.xlsx'.format(directory))
         worksheet = workbook.add_worksheet()
+        # Set WorkSheet right-to-left
+        worksheet.right_to_left()
         # Add column names
         with open('timeslots.json') as json_file:
             timeslots = json.load(json_file)['timeslots']
@@ -166,43 +184,63 @@ class MainWindow(Main.Ui_MainWindow):
         chromosome = self.result['data'][0]
         timeslot_size = int(self.settings['ending_time'] - self.settings['starting_time'] + 1)
         number_of_rooms = len(rawData['rooms'])
-        mainlogger.debug(number_of_rooms)
         dayNames = ["شنبه", "یکشنبه", "دوشنبه", "سه شنبه", "چهارشنبه", "پنچشنبه"]
         col_num = 0
         last_index = 2
+        first_letter = ""
+        last_letter = ""
         for day in dayNames:
             first_index = last_index
             last_index += timeslot_size - 1
             first_letter = self.findColName(first_index)
             last_letter = self.findColName(last_index)
             row_col = "{}1:{}1".format(first_letter, last_letter)
-            worksheet.merge_range(row_col, day)
+            bg_color = self.randomColor()
+            fg_color = self.findDarkColor(bg_color)
+            days_cell_format = workbook.add_format({'bg_color' : bg_color, 'font_color' : fg_color})
+            worksheet.merge_range(row_col, day, days_cell_format)
             for i in range(timeslot_size):
                 worksheet.write(1, first_index+i-1, timeslots[i])
             last_index += 1
+
         for i in range(number_of_rooms):
             worksheet.write(i+2, 0, rawData['rooms'][i+1][0])
 
         for section, subjects in chromosome['sections'].items():
-            #writer.writerow([self.rawData['sections'][section][0]])
-            #writer.writerow(dayNames)
-            schedule = {day: [['' for j in range(timeslot_size)] for i in range(number_of_rooms)] for day in range(len(dayNames))}
+            schedule = {day: [[] for i in range(number_of_rooms)] for day in range(len(dayNames))}
             for subject, details in subjects['details'].items():
-                mainlogger.debug(details)
+
                 if not len(details):
                     continue
                 instructor = '' if not details[1] else rawData['instructors'][details[1]][0]
                 room = details[0]
-                for timeslot in range(details[3], details[3] + details[4]):
-                    for day in details[2]:
-                        schedule[day][room][timeslot] = '{} - {} - {}'.format(rawData['subjects'][subject][0],
+                course_unit = details[4]
+                for day in details[2]:
+                    course_name = '{} - {} - {}'.format(rawData['subjects'][subject][0],
                                                                         rawData['subjects'][subject][2],
                                                                         instructor)
+                    schedule[day][room].append({"name" : course_name, "startingTimeslot" : details[3], "unit" :  course_unit})
             
             for day in range(len(dayNames)):
                 for room in range(number_of_rooms):
-                    for timeslot in range(timeslot_size):
-                        worksheet.write(room+2, day*timeslot_size+timeslot+1, schedule[day][room][timeslot])
+                    day_room_schedule = schedule[day][room]
+                    if not len(day_room_schedule):
+                        continue 
+                    mainlogger.debug(room)
+                    mainlogger.debug(schedule[day][room])
+                    for course in day_room_schedule:
+                        c_name = course['name']
+                        col_num = course['startingTimeslot'] + 1
+                        row_num = room + 2
+                        c_unit = course['unit']
+                        first_index = day*timeslot_size+col_num
+                        first_letter = self.findColName(first_index)
+                        last_letter = self.findColName(first_index + c_unit - 1)
+                        row_col = "{}{}:{}{}".format(first_letter, row_num, last_letter, row_num)
+                        bg_color = self.randomColor()
+                        fg_color = self.findDarkColor(bg_color)
+                        course_cell_format = workbook.add_format({'bg_color' : bg_color, "font_color" : fg_color})
+                        worksheet.merge_range(row_col, c_name, course_cell_format)
 
         workbook.close()
         
