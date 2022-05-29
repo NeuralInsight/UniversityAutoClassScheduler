@@ -2,6 +2,7 @@ from PyQt5 import QtCore,QtWidgets
 from containers import Generate, Instructor, ResultViewer, Room, Subject, Section
 from components import Settings, Database as db, Timetable, ImportExportHandler as ioHandler
 from py_ui import Main
+import re
 import xlsxwriter
 import json
 import gc
@@ -148,6 +149,11 @@ class MainWindow(Main.Ui_MainWindow):
             return '#000000'
         else:
             return '#ffffff'
+
+    # return single part of string with regex
+    def getRegex(self, string, regex):
+        return re.search(regex, string).group(0)
+
             
     # Export Result to Excel file
     def ExportExcelFile(self):
@@ -197,14 +203,33 @@ class MainWindow(Main.Ui_MainWindow):
             row_col = "{}1:{}1".format(first_letter, last_letter)
             bg_color = self.randomColor()
             fg_color = self.findDarkColor(bg_color)
-            days_cell_format = workbook.add_format({'bg_color' : bg_color, 'font_color' : fg_color})
+            days_cell_format = workbook.add_format({'bg_color' : bg_color,
+                                                        'font_color' : fg_color,
+                                                        'align' : 'center',
+                                                        'valign' : 'vcenter',
+                                                        'border' : 1,
+                                                        'bold' : True,
+                                                        'font_size' : 15})
             worksheet.merge_range(row_col, day, days_cell_format)
+            timeslot_cell_format = workbook.add_format({'bg_color' : bg_color,
+                                                        'font_color' : fg_color,
+                                                        'align' : 'right',
+                                                        'valign' : 'vcenter',
+                                                        'border' : 1,
+                                                        'bold' : True,
+                                                        'font_size' : 10})
             for i in range(timeslot_size):
-                worksheet.write(1, first_index+i-1, timeslots[i])
+                worksheet.write(1, first_index+i-1, self.getRegex(timeslots[i], "\d{1,2}:\d{2}"), timeslot_cell_format)
             last_index += 1
-
+        rooms_cell_format = workbook.add_format({'bg_color' : "#fcba03",
+                                                        'font_color' : '#000000',
+                                                        'align' : 'center',
+                                                        'valign' : 'vcenter',
+                                                        'border' : 1,
+                                                        'bold' : True,
+                                                        'font_size' : 13})
         for i in range(number_of_rooms):
-            worksheet.write(i+2, 0, rawData['rooms'][i+1][0])
+            worksheet.write(i+2, 0, rawData['rooms'][i+1][0], rooms_cell_format)
 
         for section, subjects in chromosome['sections'].items():
             schedule = {day: [[] for i in range(number_of_rooms)] for day in range(len(dayNames))}
@@ -239,7 +264,12 @@ class MainWindow(Main.Ui_MainWindow):
                         row_col = "{}{}:{}{}".format(first_letter, row_num, last_letter, row_num)
                         bg_color = self.randomColor()
                         fg_color = self.findDarkColor(bg_color)
-                        course_cell_format = workbook.add_format({'bg_color' : bg_color, "font_color" : fg_color})
+                        course_cell_format = workbook.add_format({'bg_color' : bg_color, 
+                                                                        "font_color" : fg_color,
+                                                                        'align' : 'center',
+                                                                        'valign' : 'vcenter',
+                                                                        'border' : 1,
+                                                                        'font_size' : 12})
                         worksheet.merge_range(row_col, c_name, course_cell_format)
 
         workbook.close()
