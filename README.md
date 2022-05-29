@@ -29,4 +29,5 @@ first of all install all the requirements using
 
 ### GUI
 - [X] fix tableView toggle bug
+- [ ] fix Class tree
 
