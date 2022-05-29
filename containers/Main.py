@@ -241,7 +241,7 @@ class MainWindow(Main.Ui_MainWindow):
                 room = details[0]
                 course_unit = details[4]
                 for day in details[2]:
-                    course_name = '{} - {} - {}'.format(rawData['subjects'][subject][0],
+                    course_name = "{}\n{}\n{}".format(rawData['subjects'][subject][0],
                                                                         rawData['subjects'][subject][2],
                                                                         instructor)
                     schedule[day][room].append({"name" : course_name, "startingTimeslot" : details[3], "unit" :  course_unit})
@@ -269,9 +269,14 @@ class MainWindow(Main.Ui_MainWindow):
                                                                         'align' : 'center',
                                                                         'valign' : 'vcenter',
                                                                         'border' : 1,
-                                                                        'font_size' : 12})
+                                                                        'font_size' : 12,
+                                                                        'text_wrap' : True})
+                                                                        
                         worksheet.merge_range(row_col, c_name, course_cell_format)
 
+        worksheet.set_column(1, last_index, 10)
+        for i in range(number_of_rooms + 2):
+            worksheet.set_row(i+2, 70)
         workbook.close()
         
             # for row_num, row_data in enumerate(schedule):
