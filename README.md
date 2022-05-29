@@ -1,6 +1,10 @@
 # University Timetable Scheduling Using Adaptive-Elitist Genetic Algorithm
 
 
+# Installation
+first of all install all the requirements using
+    
+    pip install -r requirements.txt 
 
 ### Usage:
 1. Add instructors
@@ -20,8 +24,9 @@
 ## TODO:
 
 ### Genetic Algorithm
-- [ ] Changing TimeSlot form 0.5 to 0.75
-- [ ] Shouldn't run the Evalution with 0 point !
+- [X] Changing TimeSlot form 0.5 to 0.75
+- [X] Shouldn't run the Evalution with 0 point !
 
 ### GUI
+- [X] fix tableView toggle bug
 

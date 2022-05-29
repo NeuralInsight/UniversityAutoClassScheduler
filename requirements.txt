@@ -1,0 +1,4 @@
+Numpy
+PyQT5
+psutil
+logging
