@@ -214,6 +214,7 @@ class GeneticAlgorithm(QtCore.QThread):
         np.random.shuffle(days)
         hours = self.data['subjects'][subject][1]
         # Check if hours can be splitted with minimum session of 1 hour or 2 timeslot
+        logger.debug(hours)
         if hours > 1.5 and ((hours / 3) % .5 == 0 or (hours / 2) % .5 == 0) and self.data['subjects'][subject][5]:
             # If hours is divisible by two and three
             if (hours / 3) % .5 == 0 and (hours / 2) % .5 == 0:

@@ -19,6 +19,7 @@ first of all install all the requirements using
 2. PyQT5
 3. psutil
 4. logging
+5. xlsxwriter
 
 
 ## TODO:

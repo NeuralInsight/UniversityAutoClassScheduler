@@ -186,9 +186,10 @@ class MainWindow(Main.Ui_MainWindow):
         with open('timeslots.json') as json_file:
             timeslots = json.load(json_file)['timeslots']
         rawData = self.rawData
-        chromosome = self.result['data'][0]
+        mainlogger.info("result: {}".format(self.result['data']))
+        chromosome = self.result['data'][-1]
         timeslot_size = int(self.settings['ending_time'] - self.settings['starting_time'] + 1)
-        number_of_rooms = len(rawData['rooms'])
+        number_of_rooms = len(rawData['rooms']) + 1
         dayNames = ["شنبه", "یکشنبه", "دوشنبه", "سه شنبه", "چهارشنبه", "پنچشنبه"]
         col_num = 0
         last_index = 2
@@ -227,7 +228,7 @@ class MainWindow(Main.Ui_MainWindow):
                                                         'border' : 1,
                                                         'bold' : True,
                                                         'font_size' : 13})
-        for i in range(number_of_rooms):
+        for i,room in enumerate(rawData['rooms']):
             worksheet.write(i+2, 0, rawData['rooms'][i+1][0], rooms_cell_format)
 
         for section, subjects in chromosome['sections'].items():
