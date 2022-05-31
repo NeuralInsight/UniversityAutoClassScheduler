@@ -134,7 +134,14 @@
          </widget>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_16" stretch="1,2,2">
+         <widget class="Line" name="line">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_16" stretch="0,2,2">
           <property name="leftMargin">
            <number>0</number>
           </property>
@@ -148,28 +155,14 @@
            <number>2</number>
           </property>
           <item>
-           <widget class="QPushButton" name="pushButton_4">
-            <property name="minimumSize">
-             <size>
-              <width>120</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="font">
-             <font>
-              <family>Vazir FD-WOL</family>
-              <pointsize>10</pointsize>
-              <weight>75</weight>
-              <bold>true</bold>
-             </font>
-            </property>
+           <widget class="QLabel" name="label">
             <property name="text">
-             <string>جست و جو</string>
+             <string>جست و جو :</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="lineEdit_4">
+           <widget class="QLineEdit" name="InstrSearch">
             <property name="font">
              <font>
               <family>B Nazanin</family>
@@ -248,7 +241,14 @@
          </widget>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_15" stretch="1,2,2">
+         <widget class="Line" name="line_2">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_15" stretch="0,2,2">
           <property name="leftMargin">
            <number>0</number>
           </property>
@@ -262,28 +262,14 @@
            <number>2</number>
           </property>
           <item>
-           <widget class="QPushButton" name="pushButton_3">
-            <property name="minimumSize">
-             <size>
-              <width>120</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="font">
-             <font>
-              <family>Vazir FD-WOL</family>
-              <pointsize>10</pointsize>
-              <weight>75</weight>
-              <bold>true</bold>
-             </font>
-            </property>
+           <widget class="QLabel" name="label_2">
             <property name="text">
-             <string>جست و جو</string>
+             <string>جست و جو :</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="lineEdit_3">
+           <widget class="QLineEdit" name="RoomSearch">
             <property name="font">
              <font>
               <family>B Nazanin</family>
@@ -366,7 +352,14 @@
          </widget>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="1,2,2">
+         <widget class="Line" name="line_3">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="0,2,2">
           <property name="leftMargin">
            <number>0</number>
           </property>
@@ -380,22 +373,14 @@
            <number>2</number>
           </property>
           <item>
-           <widget class="QPushButton" name="pushButton">
-            <property name="font">
-             <font>
-              <family>Vazir Black FD-WOL</family>
-              <pointsize>10</pointsize>
-              <weight>75</weight>
-              <bold>true</bold>
-             </font>
-            </property>
+           <widget class="QLabel" name="label_3">
             <property name="text">
-             <string>جست و جو</string>
+             <string>جست و جو :</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="lineEdit">
+           <widget class="QLineEdit" name="SubjSearch">
             <property name="font">
              <font>
               <family>B Nazanin</family>

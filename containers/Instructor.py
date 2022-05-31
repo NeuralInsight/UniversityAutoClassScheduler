@@ -1,8 +1,25 @@
-from PyQt5 import QtWidgets, QtGui
+from PyQt5 import QtWidgets, QtGui, Qt
+
 from components import Database as db, Timetable
 from py_ui import Instructor as Parent
+from containers import Main
 import json
+import logging
 
+
+#Creating and Configuring Logger
+Log_Format = "%(levelname)s %(asctime)s - %(message)s"
+
+
+logging.basicConfig(filename = "logfile.log",
+                    filemode = "w",
+                    format = Log_Format, 
+                    level = logging.DEBUG,
+                    encoding='utf-8')
+
+# Logging Level = debug, info, warning, error
+
+logger = logging.getLogger()
 
 class Instructor:
     def __init__(self, id):
@@ -65,12 +82,15 @@ class Tree:
     def __init__(self, tree):
         self.tree = tree
         self.model = model = QtGui.QStandardItemModel()
-        model.setHorizontalHeaderLabels(['ID', 'Available', 'Name', 'Hours', 'Operation'])
+        model.setHorizontalHeaderLabels(['ID', 'Available', 'Name', 'Hours', 'Operation'])        
         tree.setModel(model)
-        tree.setColumnHidden(0, True)
+        # tree.setColumnHidden(0, True)
         model.itemChanged.connect(lambda item: self.toggleAvailability(item))
         self.display()
+        Main.MainWindow.Search(self, tree)
 
+        
+        
     def toggleAvailability(self, item):
         # Get ID of toggled instructor
         id = self.model.data(self.model.index(item.row(), 0))
@@ -121,10 +141,15 @@ class Tree:
             frameLayout.addWidget(btnDelete)
             # Append the widget group to edit item
             self.tree.setIndexWidget(edit.index(), frameEdit)
-
+            
+        self.model.sort( 2, 0)
+        self.tree.resizeColumnToContents(2)
+        
     def edit(self, id):
         Instructor(id)
         self.display()
+        # self.tree.scrollTo(id)
+        # self.tree.ScrollPerItem(id, QtGui.QAbstractItemView.PositionAtTop)
 
     def delete(self, id):
         # Show confirm model

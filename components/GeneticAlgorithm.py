@@ -832,7 +832,7 @@ class Chromosome:
     #         id: [
     #             [days] // Timeslots
     #             [1, None, 1, None, 1, False] // Example
-    #             // None = Vacant, False = Unavailable
+    #             None = Vacant, False = Unavailable
     #         ]
     #     },
     #     unplaced: {

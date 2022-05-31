@@ -1,4 +1,5 @@
 from PyQt5 import QtCore,QtWidgets
+from PyQt5.QtCore import Qt, QSortFilterProxyModel
 from containers import Generate, Instructor, ResultViewer, Room, Subject, Section
 from components import Settings, Database as db, Timetable, ImportExportHandler as ioHandler
 from py_ui import Main
@@ -66,7 +67,14 @@ class MainWindow(Main.Ui_MainWindow):
         self.actionSettings.triggered.connect(lambda: self.tabWidget.setCurrentIndex(4))
         self.actionExit.triggered.connect(exit)
         self.actionNew.triggered.connect(lambda: self.new())
-
+        
+    # def Search(self, model):
+    #     filter_proxy_model = QSortFilterProxyModel()
+    #     filter_proxy_model.setSourceModel(model)
+    #     filter_proxy_model.setFilterCaseSensitivity(Qt.CaseInsensitive)
+    #     filter_proxy_model.setFilterKeyColumn(3)
+    #     self.InstrSearch.textChanged.connect(filter_proxy_model.setFilterRegExp)
+        
     # Initialize trees and tables
     def drawTrees(self):
         self.instrTree = Instructor.Tree(self.treeInstr)
@@ -376,12 +384,12 @@ class MainWindow(Main.Ui_MainWindow):
         self.tabListener(0)
 
     def loadSettings(self):
-        self.timeStarting.setTime(QtCore.QTime(int(self.settings['starting_time'] / 2), 0))
-        self.timeEnding.setTime(QtCore.QTime(int(self.settings['ending_time'] / 2) + 1, 0))
-        if self.settings['lunchbreak']:
-            self.radioLunchYes.setChecked(True)
-        else:
-            self.radioLunchNo.setChecked(True)
+        # self.timeStarting.setTime(QtCore.QTime(int(self.settings['starting_time'] / 2), 0))
+        # self.timeEnding.setTime(QtCore.QTime(int(self.settings['ending_time'] / 2) + 1, 0))
+        # if self.settings['lunchbreak']:
+        #     self.radioLunchYes.setChecked(True)
+        # else:
+        #     self.radioLunchNo.setChecked(True)
         self.editMinPop.setValue(self.settings['minimum_population'])
         self.editMaxPop.setValue(self.settings['maximum_population'])
         self.editMaxGen.setValue(self.settings['maximum_generations'])
@@ -403,9 +411,9 @@ class MainWindow(Main.Ui_MainWindow):
 
     # Handle Settings
     def handleSettings(self):
-        self.timeStarting.timeChanged.connect(self.handleStartingTime)
-        self.timeEnding.timeChanged.connect(self.handleEndingTime)
-        self.radioLunchYes.toggled.connect(lambda state: self.updateSettings('lunchbreak', state))
+        # self.timeStarting.timeChanged.connect(self.handleStartingTime)
+        # self.timeEnding.timeChanged.connect(self.handleEndingTime)
+        # self.radioLunchYes.toggled.connect(lambda state: self.updateSettings('lunchbreak', state))
         self.editMinPop.valueChanged.connect(self.handleMinPop)
         self.editMaxPop.valueChanged.connect(self.handleMaxPop)
         self.editMaxGen.valueChanged.connect(lambda value: self.updateSettings('maximum_generations', value))
