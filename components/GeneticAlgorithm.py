@@ -70,15 +70,13 @@ class GeneticAlgorithm(QtCore.QThread):
 
     def generateChromosome(self, quantity):
         for i in range(quantity):
-            self.statusSignal.emit('Creating #{} of {} Chromosomes'.format(i, quantity))
-            self.tempChromosome = Chromosome(self.data)
+            self.statusSignal.emit('Creating #{} of {} Chromosomes'.format(i, quantity)) # Display Chromosome creation
+            self.tempChromosome = Chromosome(self.data) # Create new Chromosome
             # {id: [[subjectIds](, stay|roomId = False)]}
-            self.tempSections = sections = {key: [value[2], value[3]] for (key, value) in
+            self.tempSections = sections = {key: [value[2], value[3]] for (key, value) in 
                                             copy.deepcopy(self.data['sections']).items()}
-            # {id: [subjectId, [sections]]}
-            self.tempSharings = sharings = copy.deepcopy(self.data['sharings'])
             # [roomIds]
-            self.rooms = rooms = list(self.data['rooms'].keys())
+            self.rooms = rooms = list(self.data['rooms'].keys()) # Get all roomIds
             # Distributed Room selection for staying sections
             if not len(self.stayInRoomAssignments):
                 selectedRooms = []
@@ -100,21 +98,9 @@ class GeneticAlgorithm(QtCore.QThread):
             else:
                 for section, room in self.stayInRoomAssignments.items():
                     sections[section][1] = room
-            # Remove subjects from sections that are already in sharing
-            for sharing in sharings.values():
-                for section in sharing[1]:
-                    sections[section][0].remove(sharing[0])
-            self.generateSubjectPlacementsForSharings(sharings)
+
             self.generateSubjectPlacementsForSections(sections)
             self.chromosomes.append(self.tempChromosome)
-
-    def generateSubjectPlacementsForSharings(self, sharings):
-        sharingOrder = list(sharings.keys())
-        np.random.shuffle(sharingOrder)
-        for sharing in sharingOrder:
-            result = self.generateSubjectPlacement(sharings[sharing][1], sharings[sharing][0], sharing)
-            if not result:
-                self.tempChromosome.data['unplaced']['sharings'].append(sharing)
 
     # {id: [[subjectIds](, stay|roomId = False)]}
     def generateSubjectPlacementsForSections(self, sections):
@@ -140,7 +126,7 @@ class GeneticAlgorithm(QtCore.QThread):
 
         stayInRoom = False if section[0] not in self.stayInRoomAssignments.keys() else self.stayInRoomAssignments[
             section[0]]
-        subjectDetails = self.data['subjects'][subject]
+        subjectDetails = self.data['subjects'][subject] # Get All Subject Details
 
         room = stayInRoom if stayInRoom else None
         # [[day/s], startingTimeSlot, length]
@@ -150,21 +136,25 @@ class GeneticAlgorithm(QtCore.QThread):
         while generating:
             # Control generation to avoid impossible combinations
             generationAttempt += 1
-            if generationAttempt > self.settings['generation_tolerance']:
+            #  Check to reach maximum generation attempts
+            if generationAttempt > self.settings['generation_tolerance']: # 
                 generating = False
                 return False
             # Allow random meeting patterns if generation is taking long
             forceRandomMeeting = True if generationAttempt > self.settings['generation_tolerance'] / 2 else False
             # First time generation
             if not error:
+                # Select a random room
                 if not stayInRoom or (stayInRoom and subjectDetails[6] == 'lab'):
                     room = self.selectRoom(subject)
+                # Select instructors for the subjects
                 if len(subjectDetails[4]) > 1:
-                    instructor = self.selectInstructor(subject)
+                    instructor = self.selectInstructor(subject) #Select Random Instructor
                 elif len(subjectDetails[4]):
                     instructor = subjectDetails[4][0]
                 else:
                     instructor = False
+                # Select time slot for the subject
                 timeDetails = self.selectTimeDetails(subject, forceRandomMeeting)
             else:
                 # Randomly select if choosing new entry or replacing subject time details
@@ -183,12 +173,12 @@ class GeneticAlgorithm(QtCore.QThread):
                             error = 3
                 # Select subject time details
                 elif error == 3:
+                    # timeDetails = [meetingPattern (days), startingTimeslot, int(hours)]
                     timeDetails = self.selectTimeDetails(subject, forceRandomMeeting)
 
             # [roomId, [sectionId], subjectId, instructorID, [day / s], startingTS, length(, sharingId)]
             scheduleToInsert = [room, section, subject, instructor, *timeDetails]
-            if sharing:
-                scheduleToInsert.append(sharing)
+            # Check if subject can be inserted
             error = self.tempChromosome.insertSchedule(scheduleToInsert)
             if error is False:
                 return True
@@ -214,7 +204,7 @@ class GeneticAlgorithm(QtCore.QThread):
         np.random.shuffle(days)
         hours = self.data['subjects'][subject][1]
         # Check if hours can be splitted with minimum session of 1 hour or 2 timeslot
-        logger.debug(hours)
+        # TODO: Change Split Pattern
         if hours > 1.5 and ((hours / 3) % .5 == 0 or (hours / 2) % .5 == 0) and self.data['subjects'][subject][5]:
             # If hours is divisible by two and three
             if (hours / 3) % .5 == 0 and (hours / 2) % .5 == 0:
@@ -291,28 +281,29 @@ class GeneticAlgorithm(QtCore.QThread):
     # = ((subjects - unplacedSubjects) / subjects) * 100
     def evaluateSubjectPlacements(self, chromosome):
         sections = copy.deepcopy({key: value[2] for key, value in self.data['sections'].items()})
-        sharings = self.data['sharings']
+
         chromosomeUnplacedData = chromosome.data['unplaced']
-        # Number of subjects that are in sharing
-        sharingSubjects = 0
-        # Remove section subjects that are shared
-        for sharing in sharings.values():
-            # Sharing subjects is increased based on number of sections sharing the subject
-            sharingSubjects += len(sharing[1])
-            for section in sharing[1]:
-                sections[section].remove(sharing[0])
+        chromosomePlacedData = chromosome.data['sections'][1]['details']
+        len_chromosomePlacedData = 0
+        for key in chromosomePlacedData:
+            if chromosomePlacedData[key] == []:
+                continue
+            len_chromosomePlacedData += 1
+
+        logger.debug("Placed Subject: {}".format(chromosomePlacedData))
+        logger.debug('Placed Data Length: {}'.format(len_chromosomePlacedData))
+        # get chromosome id
+        chromosomeId = self.chromosomes.index(chromosome)
+        logger.debug("chromosome {} unplaced subjects: {}".format(chromosomeId, chromosomeUnplacedData['sections'][1]))
         # Combined list of section subjects
         sectionSubjects = len(list(itertools.chain.from_iterable(sections.values())))
+        logger.debug("section subjects: {}".format(sectionSubjects))
         # Combined list of subjects
-        totalSubjects = sectionSubjects + sharingSubjects
-        # Number of shared subjects that are not placed
-        unplacedSharingSubjects = 0
-        for sharing in chromosomeUnplacedData['sharings']:
-            # Sharing subjects is increased based on number of sections sharing the subject
-            unplacedSharingSubjects += len(sharings[sharing][1])
+        totalSubjects = sectionSubjects
         # Length of unplaced section subjects
         unplacedSectionSubjects = len(list(itertools.chain.from_iterable(chromosomeUnplacedData['sections'].values())))
-        totalUnplacedSubjects = unplacedSharingSubjects + unplacedSectionSubjects
+        logger.debug("unplaced section subjects: {}".format(unplacedSectionSubjects))
+        totalUnplacedSubjects = unplacedSectionSubjects
         return round(((totalSubjects - totalUnplacedSubjects) / totalSubjects) * 100, 2)
 
     # = ((sectionDays - noLunchDays) / sectionDays) * 100
@@ -451,11 +442,9 @@ class GeneticAlgorithm(QtCore.QThread):
         badPattern = 0
         for section in chromosome.data['sections'].values():
             for subject in section['details'].values():
-                logging.debug(subject)
                 if not len(subject) or len(subject[2]) == 1:
                     continue
                 placedSubjects += 1
-                logging.debug(subject)
                 # Check if subject has unusual pattern
                 if subject[2] not in [[0, 2, 4], [1, 3]]:
                     badPattern += 1
@@ -782,7 +771,7 @@ class GeneticAlgorithm(QtCore.QThread):
 
     def run(self):
         self.statusSignal.emit('Initializing')
-        self.initialization()
+        self.initialization() # Initialize chromosomes (Create first Generation)
         generation = 0
         runThread = True
         while (runThread):
@@ -872,10 +861,6 @@ class Chromosome:
                 sectionTimetable.append([None if day == 'Available' else False for day in timeslotRow])
             self.data['sections'][section]['schedule'] = sectionTimetable
             self.data['unplaced']['sections'][section] = []
-        # {id: [subjectId: [details]]}
-        sharings = rawData['sharings']
-        for sharing in sharings:
-            self.data['sharings'][sharing] = []
         # {id: [days]}
         instructors = rawData['instructors']
         for instructor in instructors:
@@ -900,9 +885,6 @@ class Chromosome:
         data = self.data
         # [roomId, instructorId, [day/s], startingTS, length]
         subjectDetails = [schedule[0], schedule[3], schedule[4], schedule[5], schedule[6]]
-        # Check if schedule is for sharing
-        if len(schedule) > 7:
-            data['sharings'][schedule[-1]] = subjectDetails
         # Insert details into section data
         for section in schedule[1]:
             data['sections'][section]['details'][schedule[2]] = subjectDetails
