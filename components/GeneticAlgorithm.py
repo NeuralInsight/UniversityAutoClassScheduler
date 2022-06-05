@@ -268,15 +268,14 @@ class GeneticAlgorithm(QtCore.QThread):
         chromosome.fitnessDetails = copy.deepcopy([subjectPlacement, lunchBreak, studentRest, instructorRest, idleTime,
                                      meetingPattern, instructorLoad])
         matrix = self.settings['evaluation_matrix']
-        return round(
+        return (
             (subjectPlacement * matrix['subject_placement'] / 100) +
             (lunchBreak * matrix['lunch_break'] / 100) +
             (studentRest * matrix['student_rest'] / 100) +
             (instructorRest * matrix['instructor_rest'] / 100) +
             (idleTime * matrix['idle_time'] / 100) +
             (meetingPattern * matrix['meeting_pattern'] / 100) +
-            (instructorLoad * matrix['instructor_load'] / 100),
-            2
+            (instructorLoad * matrix['instructor_load'] / 100)
         )
 
     # = ((subjects - unplacedSubjects) / subjects) * 100
@@ -438,7 +437,7 @@ class GeneticAlgorithm(QtCore.QThread):
                         allowedBreaks -= timeslots[-1] + day[index + 1][0] - 1
                     if allowedBreaks < 0:
                         idleDays += 1
-        return round(((sectionDays - idleDays) / sectionDays) * 100, 2)
+        return (((sectionDays - idleDays) / sectionDays) * 100)
 
     # = ((placedSubjects - badPattern) / placedSubjects) * 100
     def evaluateMeetingPattern(self, chromosome):

@@ -82,10 +82,10 @@ class Generate:
         self.parent.boxGen.setTitle('Generation #{}'.format(details[0]))
         self.parent.lblPopulation.setText('Population: {}'.format(details[1]))
         self.parent.lblMutation.setText('Mutation Rate: {}%'.format(details[2]))
-        self.parent.lblFitness.setText('Average Fitness: {}%'.format(details[3]))
-        self.parent.lblPreviousFitness.setText('Previous Average Fitness: {}%'.format(details[4]))
-        self.parent.lblHighestFitness.setText('Highest Fitness: {}%'.format(details[5]))
-        self.parent.lblLowestFitness.setText('Lowest Fitness: {}%'.format(details[6]))
+        self.parent.lblFitness.setText('Average Fitness: {:.2f}%'.format(round(details[3], 2)))
+        self.parent.lblPreviousFitness.setText('Previous Average Fitness: {:.2f}%'.format(round(details[4], 2)))
+        self.parent.lblHighestFitness.setText('Highest Fitness: {:.2f}%'.format(round(details[5], 2)))
+        self.parent.lblLowestFitness.setText('Lowest Fitness: {:.2f}%'.format(round(details[6], 2)))
 
     def updateView(self, chromosomes):
         chromosomes.reverse()
