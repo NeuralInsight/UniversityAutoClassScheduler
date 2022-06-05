@@ -268,7 +268,7 @@ class GeneticAlgorithm(QtCore.QThread):
         chromosome.fitnessDetails = copy.deepcopy([subjectPlacement, lunchBreak, studentRest, instructorRest, idleTime,
                                      meetingPattern, instructorLoad])
         matrix = self.settings['evaluation_matrix']
-        return math.floor(
+        return round(
             (subjectPlacement * matrix['subject_placement'] / 100) +
             (lunchBreak * matrix['lunch_break'] / 100) +
             (studentRest * matrix['student_rest'] / 100) +
@@ -341,7 +341,7 @@ class GeneticAlgorithm(QtCore.QThread):
                 if not len(day):
                     noLunchDays += 1
             sectionDays += len(tempSectionDays)
-        return math.floor(((sectionDays - noLunchDays) / sectionDays) * 100, 2)
+        return round(((sectionDays - noLunchDays) / sectionDays) * 100, 2)
 
     # = ((sectionDays - noRestDays) / sectionDays) * 100
     def evaluateStudentRest(self, chromosome):
