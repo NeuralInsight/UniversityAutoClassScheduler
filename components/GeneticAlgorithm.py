@@ -284,9 +284,11 @@ class GeneticAlgorithm(QtCore.QThread):
 
         chromosomeUnplacedData = chromosome.data['unplaced']
         chromosomePlacedData = chromosome.data['sections'][1]['details']
+        len_chromosomeUnPlacedData = 0
         len_chromosomePlacedData = 0
         for key in chromosomePlacedData:
             if chromosomePlacedData[key] == []:
+                len_chromosomeUnPlacedData += 1
                 continue
             len_chromosomePlacedData += 1
 
@@ -303,8 +305,9 @@ class GeneticAlgorithm(QtCore.QThread):
         # Length of unplaced section subjects
         unplacedSectionSubjects = len(list(itertools.chain.from_iterable(chromosomeUnplacedData['sections'].values())))
         logger.debug("unplaced section subjects: {}".format(unplacedSectionSubjects))
-        totalUnplacedSubjects = unplacedSectionSubjects
-        return round(((totalSubjects - totalUnplacedSubjects) / totalSubjects) * 100, 2)
+        totalUnplacedSubjects = len_chromosomeUnPlacedData
+        logger.debug("len_chromosomeUnPlacedData: {}".format(totalUnplacedSubjects))
+        return round(((totalSubjects - totalUnplacedSubjects) / totalSubjects) * 100, 3)
 
     # = ((sectionDays - noLunchDays) / sectionDays) * 100
     def evaluateLunchBreak(self, chromosome):
@@ -821,7 +824,7 @@ class Chromosome:
     #         id: [
     #             [days] // Timeslots
     #             [1, None, 1, None, 1, False] // Example
-    #             // None = Vacant, False = Unavailable
+    #             None = Vacant, False = Unavailable
     #         ]
     #     },
     #     unplaced: {
