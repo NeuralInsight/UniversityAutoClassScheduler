@@ -907,8 +907,19 @@ class Chromosome:
             return 2
         if not self.isSectionTimeslotAvailable(schedule):
             return 3
+        if not self.isLunchTime(schedule):
+            return 4
         return True
-
+        
+    # schedule: [roomId, [sectionId], subjectId, instructorID, [day/s], startingTS, length(, sharingId)]
+    
+    # we shouldn't have any Class in 12:40 to 13:30
+    def isLunchTime(self, schedule):
+        subject_timeslot  =  [timeslots for timeslots in range(schedule[5], schedule[5]+schedule[6])] # Create list of ‌busy timeslots
+        if 6 in subject_timeslot: # if [6,7,8] or [5,6] or ...
+            return False
+        return True
+    
     def isRoomTimeslotAvailable(self, schedule):
         room = self.data['rooms'][schedule[0]]
         for timeslotRow in range(schedule[5], schedule[5] + schedule[6]):
