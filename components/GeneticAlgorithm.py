@@ -259,19 +259,21 @@ class GeneticAlgorithm(QtCore.QThread):
     # Evaluation weight depends on settings
     def evaluateAll(self, chromosome):
         matrix = self.settings['evaluation_matrix'] # Get evaluation matrix
-        if matrix['subject_placement'] !=0 : # If subject placement is enabled
-            subjectPlacement = self.evaluateSubjectPlacements(chromosome)
-        if matrix['studentRest'] !=0 : # If student rest is enabled
-            studentRest = self.evaluateStudentRest(chromosome)
-        if matrix['instructorRest'] !=0 : # If instructor rest is enabled
-            instructorRest = self.evaluateInstructorRest(chromosome)
-        if matrix['idleTime'] !=0 : # If idle time is enabled
-            idleTime = self.evaluateStudentIdleTime(chromosome)
-        if matrix['meetingPattern'] !=0 : # If meeting pattern is enabled
-            meetingPattern = self.evaluateMeetingPattern(chromosome)
-        if matrix['instructorLoad'] !=0 : # If instructor load is enabled
-            instructorLoad = self.evaluateInstructorLoad(chromosome)
-        chromosome.fitnessDetails = copy.deepcopy([subjectPlacement, studentRest, instructorRest, idleTime,
+        # If subject placement is enabled else 0
+        subjectPlacement = self.evaluateSubjectPlacements(chromosome) if matrix['subject_placement'] !=0 else 0
+        # If student rest is enabled else 0
+        studentRest = self.evaluateStudentRest(chromosome) if matrix['student_rest'] !=0 else 0
+        # If instructor rest is enabled else 0
+        instructorRest = self.evaluateInstructorRest(chromosome) if matrix['instructor_rest'] !=0 else 0
+        # If idle time is enabled else 0
+        idleTime = self.evaluateStudentIdleTime(chromosome) if matrix['idle_time'] !=0 else 0
+        # If meeting pattern is enabled else 0
+        meetingPattern = self.evaluateMeetingPattern(chromosome) if matrix['meeting_pattern'] !=0 else 0     
+        # If instructor load is enabled else 0
+        instructorLoad = self.evaluateInstructorLoad(chromosome) if matrix['instructor_load'] !=0 else 0
+        lunchBreak = 0 # TODO : Should be remove
+        
+        chromosome.fitnessDetails = copy.deepcopy([subjectPlacement, lunchBreak, studentRest, instructorRest, idleTime,
                                      meetingPattern, instructorLoad])
         return (
             (subjectPlacement * matrix['subject_placement'] / 100) +
