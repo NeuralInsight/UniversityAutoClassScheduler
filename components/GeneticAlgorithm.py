@@ -1,3 +1,4 @@
+from re import T
 from PyQt5 import QtCore
 from components import Settings
 from operator import itemgetter
@@ -226,16 +227,17 @@ class GeneticAlgorithm(QtCore.QThread):
             meetingPattern = [np.random.randint(0, 6)]
         # To convert hours into timetable timeslots
         # hours = hours / .5
-        startingTimeslot = False
+        startingTimeslot_status = False
         # Starting slot selection
         startingTime = self.settings['starting_time']
         endingTime = self.settings['ending_time']
-        while not startingTimeslot:
-            candidate = np.random.randint(0, endingTime - startingTime + 1)
+        while not startingTimeslot_status:
+            candidate = np.random.randint(startingTime, endingTime - startingTime)
             # Validate if subject will not overpass operation time
-            if (candidate + hours) < endingTime - startingTime:
+            if (candidate + hours) <= endingTime:
                 startingTimeslot = candidate
-        return [meetingPattern, startingTimeslot, int(hours)]
+                startingTimeslot_status = True
+        return [meetingPattern, int(startingTimeslot), int(hours)]
 
     def evaluate(self):
         totalChromosomeFitness = 0
@@ -889,7 +891,7 @@ class Chromosome:
     
     # we shouldn't have any Class in [12:40, 13:30]
     def isLunchTime(self, schedule):
-        subject_timeslot = [timeslots for timeslots in range(schedule[5], schedule[5]+schedule[6])] # Create list of ‌busy timeslots
+        subject_timeslot = [timeslots for timeslots in range(schedule[5], schedule[5] + schedule[6])] # Create list of ‌busy timeslots
         if 6 in subject_timeslot: # if [6,7,8] or [5,6] or ...
             return False
         return True
