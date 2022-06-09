@@ -1,4 +1,3 @@
-from re import T
 from PyQt5 import QtCore
 from components import Settings
 from operator import itemgetter
