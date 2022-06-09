@@ -258,7 +258,7 @@ class MainWindow(Main.Ui_MainWindow):
                         continue 
                     for course in day_room_schedule:
                         c_name = course['name']
-                        col_num = course['startingTimeslot'] + 1
+                        col_num = course['startingTimeslot'] + 2
                         row_num = room + 2
                         c_unit = course['unit']
                         first_index = day*timeslot_size+col_num
