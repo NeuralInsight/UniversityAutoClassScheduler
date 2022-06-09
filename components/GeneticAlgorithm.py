@@ -824,6 +824,7 @@ class Chromosome:
         self.rawData = data
         self.settings = Settings.getSettings()
         self.buildChromosome()
+        self.launchBreak = self.settings['lunchbreak']
 
     def buildChromosome(self):
         rawData = self.rawData
@@ -880,8 +881,9 @@ class Chromosome:
             return 2
         if not self.isSectionTimeslotAvailable(schedule):
             return 3
-        if not self.isLunchTime(schedule):
-            return 4
+        if self.launchBreak:
+            if not self.isLunchTime(schedule):
+                return 4
         return True
         
     # schedule: [roomId, [sectionId], subjectId, instructorID, [day/s], startingTS, length(, sharingId)]
