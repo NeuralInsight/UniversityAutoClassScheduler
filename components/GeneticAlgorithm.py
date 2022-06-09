@@ -313,7 +313,7 @@ class GeneticAlgorithm(QtCore.QThread):
         logger.debug("unplaced section subjects: {}".format(unplacedSectionSubjects))
         totalUnplacedSubjects = len_chromosomeUnPlacedData
         logger.debug("len_chromosomeUnPlacedData: {}".format(totalUnplacedSubjects))
-        return round(((totalSubjects - totalUnplacedSubjects) / totalSubjects) * 100, 3)
+        return round(((totalSubjects - totalUnplacedSubjects) / totalSubjects) * 100, 2)
 
     # = ((sectionDays - noRestDays) / sectionDays) * 100
     def evaluateStudentRest(self, chromosome):

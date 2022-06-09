@@ -243,7 +243,8 @@ class MainWindow(Main.Ui_MainWindow):
                 room = details[0]
                 course_unit = details[4]
                 for day in details[2]:
-                    course_name = "{}\n{}\n{}".format(rawData['subjects'][subject][0],
+                    course_name = "id = {}\n{}\n{}\n{}".format(subject,
+                                                                        rawData['subjects'][subject][0],
                                                                         rawData['subjects'][subject][2],
                                                                         instructor)
                     schedule[day][room].append({"name" : course_name, "startingTimeslot" : details[3], "unit" :  course_unit})
