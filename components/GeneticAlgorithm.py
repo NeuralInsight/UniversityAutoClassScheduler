@@ -173,7 +173,7 @@ class GeneticAlgorithm(QtCore.QThread):
                         else:
                             error = 3
                 # Select subject time details
-                elif error == 3:
+                elif error == 3 or error == 4:
                     # timeDetails = [meetingPattern (days), startingTimeslot, int(hours)]
                     timeDetails = self.selectTimeDetails(subject, forceRandomMeeting)
 
