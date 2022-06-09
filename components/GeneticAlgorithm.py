@@ -1,4 +1,3 @@
-import math
 from PyQt5 import QtCore
 from components import Settings
 from operator import itemgetter
@@ -298,21 +297,21 @@ class GeneticAlgorithm(QtCore.QThread):
                 continue # Continue to next iteration
             len_chromosomePlacedData += 1 # Add to placed data length
 
-        logger.debug("Placed Subject: {}".format(chromosomePlacedData))
-        logger.debug('Placed Data Length: {}'.format(len_chromosomePlacedData))
+        # logger.debug("Placed Subject: {}".format(chromosomePlacedData))
+        # logger.debug('Placed Data Length: {}'.format(len_chromosomePlacedData))
         # get chromosome id
         chromosomeId = self.chromosomes.index(chromosome)
-        logger.debug("chromosome {} unplaced subjects: {}".format(chromosomeId, chromosomeUnplacedData['sections'][1]))
+        # logger.debug("chromosome {} unplaced subjects: {}".format(chromosomeId, chromosomeUnplacedData['sections'][1]))
         # Combined list of section subjects
         sectionSubjects = len(list(itertools.chain.from_iterable(sections.values())))
-        logger.debug("section subjects: {}".format(sectionSubjects))
+        # logger.debug("section subjects: {}".format(sectionSubjects))
         # Combined list of subjects
         totalSubjects = sectionSubjects
         # Length of unplaced section subjects
         unplacedSectionSubjects = len(list(itertools.chain.from_iterable(chromosomeUnplacedData['sections'].values())))
-        logger.debug("unplaced section subjects: {}".format(unplacedSectionSubjects))
+        # logger.debug("unplaced section subjects: {}".format(unplacedSectionSubjects))
         totalUnplacedSubjects = len_chromosomeUnPlacedData
-        logger.debug("len_chromosomeUnPlacedData: {}".format(totalUnplacedSubjects))
+        # logger.debug("len_chromosomeUnPlacedData: {}".format(totalUnplacedSubjects))
         return round(((totalSubjects - totalUnplacedSubjects) / totalSubjects) * 100, 2)
 
     # = ((sectionDays - noRestDays) / sectionDays) * 100
@@ -890,7 +889,7 @@ class Chromosome:
     
     # we shouldn't have any Class in [12:40, 13:30]
     def isLunchTime(self, schedule):
-        subject_timeslot  =  [timeslots for timeslots in range(schedule[5], schedule[5]+schedule[6])] # Create list of ‌busy timeslots
+        subject_timeslot = [timeslots for timeslots in range(schedule[5], schedule[5]+schedule[6])] # Create list of ‌busy timeslots
         if 6 in subject_timeslot: # if [6,7,8] or [5,6] or ...
             return False
         return True
