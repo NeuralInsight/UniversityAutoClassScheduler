@@ -4,6 +4,7 @@ import json
 import re
 
 
+
 class PreviewScheduleParser:
     # Section / Room View
     # Subject Name + Instructor
@@ -20,7 +21,7 @@ class PreviewScheduleParser:
         vertical_header = []
         horizontal_header = []
         timeslot_size = int(self.settings['ending_time'] - self.settings['starting_time'] + 1)
-        rooms_size = len(rawData['rooms']) + 1
+        rooms_size = len(rawData['rooms'])
         dayNames = ["Sat", "Sun", "Mon", "Tue", "Wed", "Thu"]
         
         for day in dayNames:
@@ -55,8 +56,8 @@ class PreviewScheduleParser:
         for entry in data:
             entry['color'] = Utilities.colorGenerator()
             for instance in entry['instances']:
-                index = model.index(instance[2], instance[0])
-                view.setSpan(instance[2], instance[0], 1, instance[1])
+                index = model.index(instance[1], instance[0])
+                view.setSpan(instance[1], instance[0], 1, instance[2])
                 item = QtGui.QStandardItem(entry['text'])
                 item.setBackground(QtGui.QBrush(QtGui.QColor(*entry['color'])))
                 item.setForeground(QtGui.QBrush(QtGui.QColor(*Utilities.textColor(entry['color']))))

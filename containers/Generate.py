@@ -5,6 +5,22 @@ from sqlite3 import Binary
 from numpy import mean
 import pickle
 import copy
+import logging as preview_log_engine
+
+Log_Format = "%(levelname)s %(asctime)s - %(message)s"
+
+
+preview_log_engine.basicConfig(filename = "previewlog.log",
+                    filemode = "w",
+                    format = Log_Format, 
+                    level = preview_log_engine.DEBUG,
+                    encoding='utf-8')
+
+# Logging Level = debug, info, warning, error
+
+preview_logger = preview_log_engine.getLogger()
+
+preview_logger.info("init PreviewTableModel")
 
 
 class Generate:
@@ -104,11 +120,13 @@ class Generate:
         for subject, details in subjects.items():
             if not len(details):
                 continue
+            preview_logger.debug("Preview detail: {}".format(details))
             instructor = '' if not details[1] else rawData['instructors'][details[1]][0]
             data.append({'color': None, 'text': '{} \n {} \n {}'.format(rawData['subjects'][subject][0],
                                                                         rawData['rooms'][details[0]][0],
                                                                         instructor),
-                         'instances': [[day*timeslot_size+details[3], details[3] + details[4], details[0]] for day in details[2]]})
+                         'instances': [[day*timeslot_size+details[3], details[0], details[4]] for day in details[2]]})
+        preview_logger.debug("Preview data: {}".format(data))
         self.loadTable(data, rawData)
 
     def loadTable(self, data=[], rawData=None):
