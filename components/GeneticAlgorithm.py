@@ -70,15 +70,13 @@ class GeneticAlgorithm(QtCore.QThread):
 
     def generateChromosome(self, quantity):
         for i in range(quantity):
-            self.statusSignal.emit('Creating #{} of {} Chromosomes'.format(i, quantity))
-            self.tempChromosome = Chromosome(self.data)
+            self.statusSignal.emit('Creating #{} of {} Chromosomes'.format(i, quantity)) # Display Chromosome creation
+            self.tempChromosome = Chromosome(self.data) # Create new Chromosome
             # {id: [[subjectIds](, stay|roomId = False)]}
-            self.tempSections = sections = {key: [value[2], value[3]] for (key, value) in
+            self.tempSections = sections = {key: [value[2], value[3]] for (key, value) in 
                                             copy.deepcopy(self.data['sections']).items()}
-            # {id: [subjectId, [sections]]}
-            self.tempSharings = sharings = copy.deepcopy(self.data['sharings'])
             # [roomIds]
-            self.rooms = rooms = list(self.data['rooms'].keys())
+            self.rooms = rooms = list(self.data['rooms'].keys()) # Get all roomIds
             # Distributed Room selection for staying sections
             if not len(self.stayInRoomAssignments):
                 selectedRooms = []
@@ -100,21 +98,9 @@ class GeneticAlgorithm(QtCore.QThread):
             else:
                 for section, room in self.stayInRoomAssignments.items():
                     sections[section][1] = room
-            # Remove subjects from sections that are already in sharing
-            for sharing in sharings.values():
-                for section in sharing[1]:
-                    sections[section][0].remove(sharing[0])
-            self.generateSubjectPlacementsForSharings(sharings)
+
             self.generateSubjectPlacementsForSections(sections)
             self.chromosomes.append(self.tempChromosome)
-
-    def generateSubjectPlacementsForSharings(self, sharings):
-        sharingOrder = list(sharings.keys())
-        np.random.shuffle(sharingOrder)
-        for sharing in sharingOrder:
-            result = self.generateSubjectPlacement(sharings[sharing][1], sharings[sharing][0], sharing)
-            if not result:
-                self.tempChromosome.data['unplaced']['sharings'].append(sharing)
 
     # {id: [[subjectIds](, stay|roomId = False)]}
     def generateSubjectPlacementsForSections(self, sections):
@@ -140,7 +126,7 @@ class GeneticAlgorithm(QtCore.QThread):
 
         stayInRoom = False if section[0] not in self.stayInRoomAssignments.keys() else self.stayInRoomAssignments[
             section[0]]
-        subjectDetails = self.data['subjects'][subject]
+        subjectDetails = self.data['subjects'][subject] # Get All Subject Details
 
         room = stayInRoom if stayInRoom else None
         # [[day/s], startingTimeSlot, length]
@@ -150,21 +136,25 @@ class GeneticAlgorithm(QtCore.QThread):
         while generating:
             # Control generation to avoid impossible combinations
             generationAttempt += 1
-            if generationAttempt > self.settings['generation_tolerance']:
+            #  Check to reach maximum generation attempts
+            if generationAttempt > self.settings['generation_tolerance']: 
                 generating = False
                 return False
             # Allow random meeting patterns if generation is taking long
             forceRandomMeeting = True if generationAttempt > self.settings['generation_tolerance'] / 2 else False
             # First time generation
             if not error:
+                # Select a random room
                 if not stayInRoom or (stayInRoom and subjectDetails[6] == 'lab'):
                     room = self.selectRoom(subject)
+                # Select instructors for the subjects
                 if len(subjectDetails[4]) > 1:
-                    instructor = self.selectInstructor(subject)
+                    instructor = self.selectInstructor(subject) #Select Random Instructor
                 elif len(subjectDetails[4]):
                     instructor = subjectDetails[4][0]
                 else:
                     instructor = False
+                # Select time slot for the subject
                 timeDetails = self.selectTimeDetails(subject, forceRandomMeeting)
             else:
                 # Randomly select if choosing new entry or replacing subject time details
@@ -182,13 +172,13 @@ class GeneticAlgorithm(QtCore.QThread):
                         else:
                             error = 3
                 # Select subject time details
-                elif error == 3:
+                elif error == 3 or error == 4:
+                    # timeDetails = [meetingPattern (days), startingTimeslot, int(hours)]
                     timeDetails = self.selectTimeDetails(subject, forceRandomMeeting)
 
             # [roomId, [sectionId], subjectId, instructorID, [day / s], startingTS, length(, sharingId)]
             scheduleToInsert = [room, section, subject, instructor, *timeDetails]
-            if sharing:
-                scheduleToInsert.append(sharing)
+            # Check if subject can be inserted
             error = self.tempChromosome.insertSchedule(scheduleToInsert)
             if error is False:
                 return True
@@ -214,8 +204,8 @@ class GeneticAlgorithm(QtCore.QThread):
         np.random.shuffle(days)
         hours = self.data['subjects'][subject][1]
         # Check if hours can be splitted with minimum session of 1 hour or 2 timeslot
-        logger.debug(hours)
-        if hours > 1.5 and ((hours / 3) % .5 == 0 or (hours / 2) % .5 == 0) and self.data['subjects'][subject][5]:
+        # TODO: Change Split Pattern
+        if hours > 1.5 and ((hours / 3) % .5 == 0 or (hours / 2) % .5 == 0) and self.data['subjects'][subject][5]: 
             # If hours is divisible by two and three
             if (hours / 3) % .5 == 0 and (hours / 2) % .5 == 0:
                 meetingPattern = np.random.choice(meetingPatterns)
@@ -236,117 +226,94 @@ class GeneticAlgorithm(QtCore.QThread):
             meetingPattern = [np.random.randint(0, 6)]
         # To convert hours into timetable timeslots
         # hours = hours / .5
-        startingTimeslot = False
+        startingTimeslot_status = False
         # Starting slot selection
         startingTime = self.settings['starting_time']
         endingTime = self.settings['ending_time']
-        while not startingTimeslot:
-            candidate = np.random.randint(0, endingTime - startingTime + 1)
+        while not startingTimeslot_status:
+            candidate = np.random.randint(startingTime, endingTime - startingTime)
             # Validate if subject will not overpass operation time
-            if (candidate + hours) < endingTime - startingTime:
+            if (candidate + hours) <= endingTime:
                 startingTimeslot = candidate
-        return [meetingPattern, startingTimeslot, int(hours)]
+                startingTimeslot_status = True
+        return [meetingPattern, int(startingTimeslot), int(hours)]
 
     def evaluate(self):
         totalChromosomeFitness = 0
-        self.pastAverageFitness = copy.deepcopy(self.averageFitness)
+        self.pastAverageFitness = copy.deepcopy(self.averageFitness) 
         self.lowestFitness = 100
         self.highestFitness = 0
-        for index, chromosome in enumerate(self.chromosomes):
-            self.statusSignal.emit('Evaluating #{} of {} Chromosomes'.format(index + 1, len(self.chromosomes)))
+        for index, chromosome in enumerate(self.chromosomes): # For each chromosome
+            self.statusSignal.emit('Evaluating #{} of {} Chromosomes'.format(index + 1, len(self.chromosomes))) 
             chromosome.fitness = self.evaluateAll(chromosome)
-            totalChromosomeFitness += chromosome.fitness
-            self.averageFitness = totalChromosomeFitness / len(self.chromosomes)
-            self.highestFitness = chromosome.fitness if chromosome.fitness > self.highestFitness else self.highestFitness
-            self.lowestFitness = chromosome.fitness if chromosome.fitness < self.lowestFitness else self.lowestFitness
+            totalChromosomeFitness += chromosome.fitness # Add chromosome fitness to total fitness
+            self.averageFitness = totalChromosomeFitness / len(self.chromosomes) 
+            self.highestFitness = chromosome.fitness if chromosome.fitness > self.highestFitness else self.highestFitness # Update Highest Fitness
+            self.lowestFitness = chromosome.fitness if chromosome.fitness < self.lowestFitness else self.lowestFitness # Update Lowest Fitness
         chromosomeFitness = sorted(enumerate(map(lambda chromosome: chromosome.fitness, self.chromosomes)),
-                                   key=itemgetter(1))
+                                   key=itemgetter(1))  # Sort chromosomes by fitness
         # Emit top five chromosomes
         self.dataSignal.emit(
             list(map(lambda chromosome: [self.chromosomes[chromosome[0]], chromosome[1]], chromosomeFitness[-5:])))
 
     # Evaluation weight depends on settings
     def evaluateAll(self, chromosome):
-        subjectPlacement = self.evaluateSubjectPlacements(chromosome)
-        lunchBreak = self.evaluateLunchBreak(chromosome) if self.settings['lunchbreak'] else 100
-        studentRest = self.evaluateStudentRest(chromosome)
-        instructorRest = self.evaluateInstructorRest(chromosome)
-        idleTime = self.evaluateStudentIdleTime(chromosome)
-        meetingPattern = self.evaluateMeetingPattern(chromosome)
-        instructorLoad = self.evaluateInstructorLoad(chromosome)
+        matrix = self.settings['evaluation_matrix'] # Get evaluation matrix
+        # If subject placement is enabled else 0
+        subjectPlacement = self.evaluateSubjectPlacements(chromosome) if matrix['subject_placement'] !=0 else 0
+        # If student rest is enabled else 0
+        studentRest = self.evaluateStudentRest(chromosome) if matrix['student_rest'] !=0 else 0
+        # If instructor rest is enabled else 0
+        instructorRest = self.evaluateInstructorRest(chromosome) if matrix['instructor_rest'] !=0 else 0
+        # If idle time is enabled else 0
+        idleTime = self.evaluateStudentIdleTime(chromosome) if matrix['idle_time'] !=0 else 0
+        # If meeting pattern is enabled else 0
+        meetingPattern = self.evaluateMeetingPattern(chromosome) if matrix['meeting_pattern'] !=0 else 0     
+        # If instructor load is enabled else 0
+        instructorLoad = self.evaluateInstructorLoad(chromosome) if matrix['instructor_load'] !=0 else 0
+        lunchBreak = 0 # TODO : Should be remove
+        
         chromosome.fitnessDetails = copy.deepcopy([subjectPlacement, lunchBreak, studentRest, instructorRest, idleTime,
                                      meetingPattern, instructorLoad])
-        matrix = self.settings['evaluation_matrix']
-        return round(
+        return (
             (subjectPlacement * matrix['subject_placement'] / 100) +
-            (lunchBreak * matrix['lunch_break'] / 100) +
             (studentRest * matrix['student_rest'] / 100) +
             (instructorRest * matrix['instructor_rest'] / 100) +
             (idleTime * matrix['idle_time'] / 100) +
             (meetingPattern * matrix['meeting_pattern'] / 100) +
-            (instructorLoad * matrix['instructor_load'] / 100),
-            2
+            (instructorLoad * matrix['instructor_load'] / 100)
         )
 
     # = ((subjects - unplacedSubjects) / subjects) * 100
     def evaluateSubjectPlacements(self, chromosome):
         sections = copy.deepcopy({key: value[2] for key, value in self.data['sections'].items()})
-        sharings = self.data['sharings']
-        chromosomeUnplacedData = chromosome.data['unplaced']
-        # Number of subjects that are in sharing
-        sharingSubjects = 0
-        # Remove section subjects that are shared
-        for sharing in sharings.values():
-            # Sharing subjects is increased based on number of sections sharing the subject
-            sharingSubjects += len(sharing[1])
-            for section in sharing[1]:
-                sections[section].remove(sharing[0])
+
+        chromosomeUnplacedData = chromosome.data['unplaced'] # Get chromosome unplaced data
+        chromosomePlacedData = chromosome.data['sections'][1]['details'] # Get chromosome placed data
+        len_chromosomeUnPlacedData = 0
+        len_chromosomePlacedData = 0
+        for key in chromosomePlacedData: # For each chromosome placed data
+            if chromosomePlacedData[key] == []: # If chromosome placed data is empty
+                len_chromosomeUnPlacedData += 1 # Add to unplaced data length
+                continue # Continue to next iteration
+            len_chromosomePlacedData += 1 # Add to placed data length
+
+        # logger.debug("Placed Subject: {}".format(chromosomePlacedData))
+        # logger.debug('Placed Data Length: {}'.format(len_chromosomePlacedData))
+        # get chromosome id
+        chromosomeId = self.chromosomes.index(chromosome)
+        # logger.debug("chromosome {} unplaced subjects: {}".format(chromosomeId, chromosomeUnplacedData['sections'][1]))
         # Combined list of section subjects
         sectionSubjects = len(list(itertools.chain.from_iterable(sections.values())))
+        # logger.debug("section subjects: {}".format(sectionSubjects))
         # Combined list of subjects
-        totalSubjects = sectionSubjects + sharingSubjects
-        # Number of shared subjects that are not placed
-        unplacedSharingSubjects = 0
-        for sharing in chromosomeUnplacedData['sharings']:
-            # Sharing subjects is increased based on number of sections sharing the subject
-            unplacedSharingSubjects += len(sharings[sharing][1])
+        totalSubjects = sectionSubjects
         # Length of unplaced section subjects
         unplacedSectionSubjects = len(list(itertools.chain.from_iterable(chromosomeUnplacedData['sections'].values())))
-        totalUnplacedSubjects = unplacedSharingSubjects + unplacedSectionSubjects
+        # logger.debug("unplaced section subjects: {}".format(unplacedSectionSubjects))
+        totalUnplacedSubjects = len_chromosomeUnPlacedData
+        # logger.debug("len_chromosomeUnPlacedData: {}".format(totalUnplacedSubjects))
         return round(((totalSubjects - totalUnplacedSubjects) / totalSubjects) * 100, 2)
-
-    # = ((sectionDays - noLunchDays) / sectionDays) * 100
-    def evaluateLunchBreak(self, chromosome):
-        sectionDays = 0
-        noLunchDays = 0
-        for section in chromosome.data['sections'].values():
-            # [roomId, instructorId, [day / s], startingTS, length]
-            details = section['details']
-            #logging.debug('section details: {}'.format(details))
-            # A temporary map for days and lunch period
-            # {day: [22, 23, 24, 25]}
-            # TS 22-25 : 11 AM - 1 PM
-            tempScheduleMap = {key: [4, 5] for key in range(6)}
-            #logging.debug('tempScheduleMap: {}'.format(tempScheduleMap))
-            # Days that the section used
-            tempSectionDays = []
-            # Loop through each subject and remove lunch period timeslots that are occupied.
-            for subject in details.values():
-                if not len(subject):
-                    continue
-                for day in subject[2]:
-                    if day not in tempSectionDays:
-                        tempSectionDays.append(day)
-                    # Check if subject is in lunch period
-                    for timeslot in range(subject[3], subject[3] + subject[4]):
-                        if timeslot in tempScheduleMap[day]:
-                            tempScheduleMap[day].remove(timeslot)
-            # If whole day's lunch period is taken, count it as no lunch break
-            for day in tempScheduleMap.values():
-                if not len(day):
-                    noLunchDays += 1
-            sectionDays += len(tempSectionDays)
-        return round(((sectionDays - noLunchDays) / sectionDays) * 100, 2)
 
     # = ((sectionDays - noRestDays) / sectionDays) * 100
     def evaluateStudentRest(self, chromosome):
@@ -443,7 +410,7 @@ class GeneticAlgorithm(QtCore.QThread):
                         allowedBreaks -= timeslots[-1] + day[index + 1][0] - 1
                     if allowedBreaks < 0:
                         idleDays += 1
-        return round(((sectionDays - idleDays) / sectionDays) * 100, 2)
+        return (((sectionDays - idleDays) / sectionDays) * 100)
 
     # = ((placedSubjects - badPattern) / placedSubjects) * 100
     def evaluateMeetingPattern(self, chromosome):
@@ -451,11 +418,9 @@ class GeneticAlgorithm(QtCore.QThread):
         badPattern = 0
         for section in chromosome.data['sections'].values():
             for subject in section['details'].values():
-                logging.debug(subject)
                 if not len(subject) or len(subject[2]) == 1:
                     continue
                 placedSubjects += 1
-                logging.debug(subject)
                 # Check if subject has unusual pattern
                 if subject[2] not in [[0, 2, 4], [1, 3]]:
                     badPattern += 1
@@ -782,7 +747,7 @@ class GeneticAlgorithm(QtCore.QThread):
 
     def run(self):
         self.statusSignal.emit('Initializing')
-        self.initialization()
+        self.initialization() # Initialize chromosomes (Create first Generation)
         generation = 0
         runThread = True
         while (runThread):
@@ -832,7 +797,7 @@ class Chromosome:
     #         id: [
     #             [days] // Timeslots
     #             [1, None, 1, None, 1, False] // Example
-    #             // None = Vacant, False = Unavailable
+    #             None = Vacant, False = Unavailable
     #         ]
     #     },
     #     unplaced: {
@@ -859,6 +824,7 @@ class Chromosome:
         self.rawData = data
         self.settings = Settings.getSettings()
         self.buildChromosome()
+        self.launchBreak = self.settings['lunchbreak']
 
     def buildChromosome(self):
         rawData = self.rawData
@@ -872,10 +838,6 @@ class Chromosome:
                 sectionTimetable.append([None if day == 'Available' else False for day in timeslotRow])
             self.data['sections'][section]['schedule'] = sectionTimetable
             self.data['unplaced']['sections'][section] = []
-        # {id: [subjectId: [details]]}
-        sharings = rawData['sharings']
-        for sharing in sharings:
-            self.data['sharings'][sharing] = []
         # {id: [days]}
         instructors = rawData['instructors']
         for instructor in instructors:
@@ -900,9 +862,6 @@ class Chromosome:
         data = self.data
         # [roomId, instructorId, [day/s], startingTS, length]
         subjectDetails = [schedule[0], schedule[3], schedule[4], schedule[5], schedule[6]]
-        # Check if schedule is for sharing
-        if len(schedule) > 7:
-            data['sharings'][schedule[-1]] = subjectDetails
         # Insert details into section data
         for section in schedule[1]:
             data['sections'][section]['details'][schedule[2]] = subjectDetails
@@ -922,8 +881,20 @@ class Chromosome:
             return 2
         if not self.isSectionTimeslotAvailable(schedule):
             return 3
+        if self.launchBreak:
+            if not self.isLunchTime(schedule):
+                return 4
         return True
-
+        
+    # schedule: [roomId, [sectionId], subjectId, instructorID, [day/s], startingTS, length(, sharingId)]
+    
+    # we shouldn't have any Class in [12:40, 13:30]
+    def isLunchTime(self, schedule):
+        subject_timeslot = [timeslots for timeslots in range(schedule[5], schedule[5] + schedule[6])] # Create list of ‌busy timeslots
+        if 6 in subject_timeslot: # if [6,7,8] or [5,6] or ...
+            return False
+        return True
+    
     def isRoomTimeslotAvailable(self, schedule):
         room = self.data['rooms'][schedule[0]]
         for timeslotRow in range(schedule[5], schedule[5] + schedule[6]):
@@ -936,8 +907,6 @@ class Chromosome:
         rooms = self.data['rooms']
         sections = self.data['sections']
         # Check for each room if on the given subject range, the section has class
-        #logging.debug(schedule)
-        #logging.debug(rooms)
         for room in rooms:
             for timeslotRow in range(schedule[5], schedule[5] + schedule[6]):
                 for day in schedule[4]:

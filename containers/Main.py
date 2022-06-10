@@ -231,31 +231,34 @@ class MainWindow(Main.Ui_MainWindow):
         for i,room in enumerate(rawData['rooms']):
             worksheet.write(i+2, 0, rawData['rooms'][i+1][0], rooms_cell_format)
 
+        number_of_subjects = 0
         for section, subjects in chromosome['sections'].items():
             schedule = {day: [[] for i in range(number_of_rooms)] for day in range(len(dayNames))}
             for subject, details in subjects['details'].items():
 
                 if not len(details):
                     continue
+                number_of_subjects += 1
                 instructor = '' if not details[1] else rawData['instructors'][details[1]][0]
                 room = details[0]
                 course_unit = details[4]
                 for day in details[2]:
-                    course_name = "{}\n{}\n{}".format(rawData['subjects'][subject][0],
+                    course_name = "id = {}\n{}\n{}\n{}".format(subject,
+                                                                        rawData['subjects'][subject][0],
                                                                         rawData['subjects'][subject][2],
                                                                         instructor)
                     schedule[day][room].append({"name" : course_name, "startingTimeslot" : details[3], "unit" :  course_unit})
             
+            mainlogger.debug("Number of the course: {}".format(number_of_subjects))
+
             for day in range(len(dayNames)):
                 for room in range(number_of_rooms):
                     day_room_schedule = schedule[day][room]
                     if not len(day_room_schedule):
                         continue 
-                    mainlogger.debug(room)
-                    mainlogger.debug(schedule[day][room])
                     for course in day_room_schedule:
                         c_name = course['name']
-                        col_num = course['startingTimeslot'] + 1
+                        col_num = course['startingTimeslot'] + 2
                         row_num = room + 2
                         c_unit = course['unit']
                         first_index = day*timeslot_size+col_num
@@ -273,6 +276,7 @@ class MainWindow(Main.Ui_MainWindow):
                                                                         'text_wrap' : True})
                                                                         
                         worksheet.merge_range(row_col, c_name, course_cell_format)
+                    
 
         worksheet.set_column(1, last_index, 10)
         for i in range(number_of_rooms + 2):
