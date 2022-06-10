@@ -1,5 +1,5 @@
 from PyQt5 import QtCore, QtWidgets
-from components import Database as db, ResourceTracker, ScheduleParser, ScenarioComposer, GeneticAlgorithm
+from components import Database as db, ResourceTracker, PreviewScheduleParser, ScenarioComposer, GeneticAlgorithm, Settings
 from py_ui import Generate as Parent
 from sqlite3 import Binary
 from numpy import mean
@@ -26,6 +26,7 @@ class Generate:
         self.meta = []
         self.preview = True
         self.sectionKeys = []
+        self.settings = settings = Settings.getSettings()
         composer = ScenarioComposer.ScenarioComposer()
         composer = composer.getScenarioData()
         self.data.update(composer)
@@ -99,6 +100,7 @@ class Generate:
         sections = self.topChromosomes[0][0].data['sections']
         rawData = self.data
         subjects = sections[self.sectionKeys[index]]['details']
+        timeslot_size = int(self.settings['ending_time'] - self.settings['starting_time'] + 1)
         for subject, details in subjects.items():
             if not len(details):
                 continue
@@ -106,13 +108,13 @@ class Generate:
             data.append({'color': None, 'text': '{} \n {} \n {}'.format(rawData['subjects'][subject][0],
                                                                         rawData['rooms'][details[0]][0],
                                                                         instructor),
-                         'instances': [[day, details[3], details[3] + details[4]] for day in details[2]]})
-        self.loadTable(data)
+                         'instances': [[day*timeslot_size+details[3], details[3] + details[4], details[0]] for day in details[2]]})
+        self.loadTable(data, rawData)
 
-    def loadTable(self, data=[]):
+    def loadTable(self, data=[], rawData=None):
         self.table.reset()
         self.table.clearSpans()
-        ScheduleParser.ScheduleParser(self.table, data)
+        PreviewScheduleParser.PreviewScheduleParser(self.table, data, rawData)
 
     def updateOperation(self, type):
         if type == 1:
