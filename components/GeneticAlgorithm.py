@@ -353,6 +353,7 @@ class GeneticAlgorithm(QtCore.QThread):
         instructorTeachingDays = 0
         noRestDays = 0
         for instructor in chromosome.data['instructors'].values():
+            logger.debug("instructor: {}".format(instructor))
             # Instructor week
             week = {day: [] for day in range(6)}
             for timeslot, timeslotRow in enumerate(instructor):
