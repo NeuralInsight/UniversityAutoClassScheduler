@@ -122,14 +122,20 @@ class Generate:
                 continue
             preview_logger.debug("Preview detail: {}".format(details))
             instructor = '' if not details[1] else rawData['instructors'][details[1]][0]
+            instances = []
+            for day in details[2]:
+                column = day*timeslot_size+details[3]
+                row = details[0]
+                span_size = details[4]
+                instances.append([row, column, span_size])
             data.append({'color': None, 'text': '{} \n {} \n {}'.format(rawData['subjects'][subject][0],
                                                                         rawData['rooms'][details[0]][0],
                                                                         instructor),
-                         'instances': [[day*timeslot_size+details[3], details[0], details[4]] for day in details[2]]})
+                         'instances': instances})
         preview_logger.debug("Preview data: {}".format(data))
         self.loadTable(data, rawData)
 
-    def loadTable(self, data=[], rawData=None):
+    def loadTable(self, data=[], rawData=[]):
         self.table.reset()
         self.table.clearSpans()
         PreviewScheduleParser.PreviewScheduleParser(self.table, data, rawData)

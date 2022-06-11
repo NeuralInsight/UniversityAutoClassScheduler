@@ -41,7 +41,7 @@ class PreviewScheduleParser:
         temporary_row = ['' for i in vertical_header]
         for i in range(rooms_size):
             temporaryData.append(temporary_row)
-        self.model = ScheduleParserModel(header, temporaryData)
+        self.model = PreviewScheduleParserModel(header, temporaryData)
         table.setModel(self.model)
         table.setFocusPolicy(QtCore.Qt.NoFocus)
         table.setSelectionMode(QtWidgets.QAbstractItemView.NoSelection)
@@ -71,7 +71,7 @@ class PreviewScheduleParser:
         return re.search(regex, string).group(0)
 
 
-class ScheduleParserModel(PreviewTableModel.PreviewTableModel):
+class PreviewScheduleParserModel(PreviewTableModel.PreviewTableModel):
     def __init__(self, header, data):
         super().__init__(header, data)
 

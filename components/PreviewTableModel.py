@@ -31,17 +31,17 @@ class PreviewTableModel(QtCore.QAbstractTableModel):
         return self.data[index.row()][index.column()]
 
     def rowCount(self, parent=None, *args, **kwargs):
+        table_logger.debug("rowCount: {}".format(len(self.data)))
         return len(self.data)
 
     def columnCount(self, parent=None, *args, **kwargs):
+        table_logger.debug("columnCount: {}".format(len(self.data[0])))
         return len(self.data[0])
 
     def headerData(self, p_int, Qt_Orientation, role=None):
         if Qt_Orientation == QtCore.Qt.Horizontal and role == QtCore.Qt.DisplayRole:
-            table_logger.debug("Horizontal: {}".format(self.header[0][p_int]))
             return QtCore.QVariant(self.header[0][p_int])
         elif Qt_Orientation == QtCore.Qt.Vertical and role == QtCore.Qt.DisplayRole:
-            table_logger.debug("Vertical: {}".format(self.header[1][p_int]))
             return QtCore.QVariant(self.header[1][p_int])
         return QtCore.QVariant()
 
