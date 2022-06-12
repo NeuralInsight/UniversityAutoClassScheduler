@@ -266,7 +266,8 @@ class GeneticAlgorithm(QtCore.QThread):
         # If instructor rest is enabled else 0
         instructorRest = self.evaluateInstructorRest(chromosome) if matrix['instructor_rest'] !=0 else 0
         # If idle time is enabled else 0
-        idleTime = self.evaluateStudentIdleTime(chromosome) if matrix['idle_time'] !=0 else 0
+        #TODO: Change the studentIdleTime to instructorIdleTime
+        idleTime = self.evaluateInstructorIdleTime(chromosome) if matrix['idle_time'] !=0 else 0
         # If meeting pattern is enabled else 0
         meetingPattern = self.evaluateMeetingPattern(chromosome) if matrix['meeting_pattern'] !=0 else 0     
         # If instructor load is enabled else 0
@@ -413,6 +414,43 @@ class GeneticAlgorithm(QtCore.QThread):
                         idleDays += 1
         return (((sectionDays - idleDays) / sectionDays) * 100)
 
+    # = ((sectionDays - idleDays) / sectionDays) * 100
+    def evaluateInstructorIdleTime(self, chromosome):
+        gap = 0
+        InstructorDays = 0
+        IdleTimeSlot = 0
+        instructor_id = 0
+        for instructor in chromosome.data['instructors'].values():
+            # Instructor week
+            instructor_id += 1
+            week = {day: [] for day in range(6)}
+            for timeslot, timeslotRow in enumerate(instructor):
+                for day, value in enumerate(timeslotRow):
+                    # Add timeslot to instructor week if teaching
+                    # if value:
+                    #     week[day].append(timeslot)
+                    week[day].append(value)
+            for day in week.values():
+                status = False
+                status_2 = False
+                for value in day:
+                    if value == False:
+                        status = False
+                    if value == 1:
+                        status = True
+                        status_2 = False
+                    if value == None:
+                        status_2 = True
+                    if value == 1 and status == True and status_2 == True:
+                        gap = gap + 1
+                        
+            logger.debug("instructor {} week: {}".format(instructor_id,week))
+            logger.info(gap)
+            
+            return 100.00
+        
+
+
     # = ((placedSubjects - badPattern) / placedSubjects) * 100
     def evaluateMeetingPattern(self, chromosome):
         placedSubjects = 0
@@ -433,6 +471,8 @@ class GeneticAlgorithm(QtCore.QThread):
     def evaluateInstructorLoad(self, chromosome):
         activeInstructors = {}
         activeSubjects = []
+        # get empty timeslots for instructor
+        
         # Get list of active subjects
         for section in self.data['sections'].values():
             activeSubjects += section[2]

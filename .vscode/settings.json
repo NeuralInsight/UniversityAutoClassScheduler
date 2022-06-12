@@ -7,5 +7,18 @@
             "database": "${workspaceFolder:UniversityClassScheduler}/database.db"
         }
     ],
-    "sqltools.useNodeRuntime": true
+    "sqltools.useNodeRuntime": true,
+    "cSpell.words": [
+        "levelname",
+        "lunchbreak",
+        "pyqt",
+        "shareables",
+        "Shareables",
+        "sharings",
+        "Sharings",
+        "timeslot",
+        "Timeslot",
+        "timeslots",
+        "Timeslots"
+    ]
 }

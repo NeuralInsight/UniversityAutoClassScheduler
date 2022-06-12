@@ -2,6 +2,7 @@ gas.db
 .idea
 .vscode
 *.log
+test.py
 *.xlsx
 __pycache__
 settings.json
