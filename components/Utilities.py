@@ -9,6 +9,23 @@ def colorGenerator():
 def textColor(rgb):
     return [0, 0, 0] if (((rgb[0] * 299) + (rgb[1] * 587) + (rgb[2] * 114)) / 1000) > 123 else [255, 255, 255]
 
+
+# function to find 1(None)*1 Pattern in the list
+def find_IdlPattern(timeslots):
+    for i in range(len(timeslots)):
+        if timeslots[i] == [1]:
+            if timeslots[i+1] == [1]:
+                continue
+            for j in range(i+1,len(timeslots)):
+                if timeslots[j] == False:
+                    break
+                elif timeslots[j] == [1]:
+                    yield timeslots[i:j+1]
+                    break
+    return []
+
+
+
 if __name__ == '__main__':
     for i in range(3):
         settings = []

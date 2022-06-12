@@ -1,5 +1,5 @@
 from PyQt5 import QtCore
-from components import Settings
+from components import Settings,Utilities
 from operator import itemgetter
 from collections import Counter
 import copy
@@ -420,8 +420,10 @@ class GeneticAlgorithm(QtCore.QThread):
         InstructorDays = 0
         IdleTimeSlot = 0
         instructor_id = 0
+        # script to fine 1(None)*1 Pattern in the list
         for instructor in chromosome.data['instructors'].values():
             # Instructor week
+            gap = 0
             instructor_id += 1
             week = {day: [] for day in range(6)}
             for timeslot, timeslotRow in enumerate(instructor):
@@ -430,24 +432,21 @@ class GeneticAlgorithm(QtCore.QThread):
                     # if value:
                     #     week[day].append(timeslot)
                     week[day].append(value)
-            for day in week.values():
-                status = False
-                status_2 = False
-                for value in day:
-                    if value == False:
-                        status = False
-                    if value == 1:
-                        status = True
-                        status_2 = False
-                    if value == None:
-                        status_2 = True
-                    if value == 1 and status == True and status_2 == True:
-                        gap = gap + 1
-                        
+
             logger.debug("instructor {} week: {}".format(instructor_id,week))
-            logger.info(gap)
+
+            day_id = 1     
+            for day in week.values():
+                day_patterns = Utilities.find_IdlPattern(day)
+                for pattern in day_patterns:
+                    logger.debug("ins: {}, day: {}, gap={}".format(instructor_id,day_id,pattern))
+                    gap += 1
+
+                day_id += 1
+                    
+            logger.debug("ins: {}, day: {}, total_gap_number={}".format(instructor_id,day_id,gap))
             
-            return 100.00
+        return 100.00
         
 
 
