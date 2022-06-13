@@ -33,7 +33,7 @@ class PreviewScheduleParser:
         header.append(vertical_header)
 
         for i,room in enumerate(rawData['rooms']):
-            horizontal_header.append(rawData['rooms'][i+1][0]) 
+            horizontal_header.append(rawData['rooms'][i+1][1]) 
 
         header.append(horizontal_header)  
 

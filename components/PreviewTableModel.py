@@ -41,7 +41,7 @@ class PreviewTableModel(QtCore.QAbstractTableModel):
             table_logger.debug("Horizontal: {}".format(self.header[0][p_int]))
             return QtCore.QVariant(self.header[0][p_int])
         elif Qt_Orientation == QtCore.Qt.Vertical and role == QtCore.Qt.DisplayRole:
-            table_logger.debug("Vertical: {}".format(self.header[0][p_int]))
+            table_logger.debug("Vertical: {}".format(self.header[1][p_int]))
             return QtCore.QVariant(self.header[1][p_int])
         return QtCore.QVariant()
 
