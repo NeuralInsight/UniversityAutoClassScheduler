@@ -268,6 +268,7 @@ class GeneticAlgorithm(QtCore.QThread):
         # If idle time is enabled else 0
         #TODO: Change the studentIdleTime to instructorIdleTime
         idleTime = self.evaluateInstructorIdleTime(chromosome) if matrix['idle_time'] !=0 else 0
+        logger.debug("Instructor Idle fitness: {}".format(idleTime))
         # If meeting pattern is enabled else 0
         meetingPattern = self.evaluateMeetingPattern(chromosome) if matrix['meeting_pattern'] !=0 else 0     
         # If instructor load is enabled else 0
@@ -354,7 +355,7 @@ class GeneticAlgorithm(QtCore.QThread):
         instructorTeachingDays = 0
         noRestDays = 0
         for instructor in chromosome.data['instructors'].values():
-            logger.debug("instructor: {}".format(instructor))
+            #logger.debug("instructor: {}".format(instructor))
             # Instructor week
             week = {day: [] for day in range(6)}
             for timeslot, timeslotRow in enumerate(instructor):
@@ -416,14 +417,12 @@ class GeneticAlgorithm(QtCore.QThread):
 
     # = ((sectionDays - idleDays) / sectionDays) * 100
     def evaluateInstructorIdleTime(self, chromosome):
-        gap = 0
-        InstructorDays = 0
-        IdleTimeSlot = 0
+
         instructor_id = 0
         # script to fine 1(None)*1 Pattern in the list
         for instructor in chromosome.data['instructors'].values():
             # Instructor week
-            gap = 0
+            instructor_fitnesses = []
             instructor_id += 1
             week = {day: [] for day in range(6)}
             for timeslot, timeslotRow in enumerate(instructor):
@@ -433,20 +432,35 @@ class GeneticAlgorithm(QtCore.QThread):
                     #     week[day].append(timeslot)
                     week[day].append(value)
 
-            logger.debug("instructor {} week: {}".format(instructor_id,week))
+            #logger.debug("instructor {} week: {}".format(instructor_id,week))
 
-            day_id = 1     
+            day_id = 1    
+            
+            week_fitnesses = []
             for day in week.values():
-                day_patterns = Utilities.find_IdlPattern(day)
-                for pattern in day_patterns:
-                    logger.debug("ins: {}, day: {}, gap={}".format(instructor_id,day_id,pattern))
-                    gap += 1
-
+                n_day_timeslots = len(day)
+                gap_timeslots = Utilities.find_gapTimeSlot(day)
+                n_day_gapslots = gap_timeslots
+                #logger.debug("ins: {}, day: {}, gap={}".format(instructor_id,day_id,gap_timeslots))
+                day_fitness = (((n_day_timeslots - n_day_gapslots) / n_day_timeslots) * 100)
+                week_fitnesses.append(day_fitness)
                 day_id += 1
                     
-            logger.debug("ins: {}, day: {}, total_gap_number={}".format(instructor_id,day_id,gap))
+            #logger.debug("ins: {}, day: {}, total_gap_number={}".format(instructor_id,day_id,n_day_gapslots))
+            #logger.debug("ins: {}, day: {}, total_timeslots={}".format(instructor_id,day_id,n_day_timeslots))
+
+            #remove all the max elements from week_fitnesses list
+            week_fitnesses = [x for x in week_fitnesses if x != max(week_fitnesses)]
+            if week_fitnesses == []:
+                instructor_fitness = 100.00
+            else:
+                instructor_fitness = (sum(week_fitnesses) / len(week_fitnesses))
+
+            instructor_fitnesses.append(instructor_fitness)
+        
+
+        return (sum(instructor_fitnesses) / len(instructor_fitnesses))
             
-        return 100.00
         
 
 

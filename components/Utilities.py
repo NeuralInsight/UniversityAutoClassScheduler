@@ -25,6 +25,26 @@ def find_IdlPattern(timeslots):
     return []
 
 
+# function to find 1(None)*1 Pattern in the list
+def find_gapTimeSlot(timeslots):
+    gapTimeSlot = 0
+    for i in range(len(timeslots)):
+        if timeslots[i] == [1]:
+            if timeslots[i+1] == [1]:
+                continue
+            temp_gapTimeSlot = gapTimeSlot
+            for j in range(i+1,len(timeslots)):
+                if timeslots[j] == False :
+                    gapTimeSlot = temp_gapTimeSlot
+                    break
+                elif timeslots[j] == [1]:
+                    break
+                elif timeslots[j] == None:
+                  gapTimeSlot += 1
+
+    return gapTimeSlot
+
+
 
 if __name__ == '__main__':
     for i in range(3):
