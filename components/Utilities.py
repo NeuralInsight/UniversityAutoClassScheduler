@@ -44,7 +44,23 @@ def find_gapTimeSlot(timeslots):
 
     return gapTimeSlot
 
-
+def find_numberOfSubject(timeslots):
+    numberOfSubject = 0
+    for i in range(len(timeslots)):
+        if timeslots[i] == [1]:
+            if timeslots[i+1] == [1]:
+                continue
+            numberOfSubject += 1
+            for j in range(i+1,len(timeslots)):
+                if timeslots[j] == False :
+                    break
+                elif timeslots[j] == [1]:
+                    break
+                elif timeslots[j] == None:
+                    break
+        if numberOfSubject >= 2:
+            return True
+    return False
 
 if __name__ == '__main__':
     for i in range(3):

@@ -439,28 +439,26 @@ class GeneticAlgorithm(QtCore.QThread):
             week_fitnesses = []
             for day in week.values():
                 n_day_timeslots = len(day)
-                gap_timeslots = Utilities.find_gapTimeSlot(day)
-                n_day_gapslots = gap_timeslots
-                #logger.debug("ins: {}, day: {}, gap={}".format(instructor_id,day_id,gap_timeslots))
-                day_fitness = (((n_day_timeslots - n_day_gapslots) / n_day_timeslots) * 100)
-                week_fitnesses.append(day_fitness)
+                n_subjects = Utilities.find_numberOfSubject(day)
+                if n_subjects:
+                    gap_timeslots = Utilities.find_gapTimeSlot(day)
+                    n_day_gapslots = gap_timeslots
+                    # logger.debug("ins: {}, day: {}, subjects={}".format(instructor_id,day_id,n_subjects))
+                    day_fitness = (((n_day_timeslots - n_day_gapslots) / n_day_timeslots) * 100)
+                    week_fitnesses.append(day_fitness) 
                 day_id += 1
                     
-            #logger.debug("ins: {}, day: {}, total_gap_number={}".format(instructor_id,day_id,n_day_gapslots))
-            #logger.debug("ins: {}, day: {}, total_timeslots={}".format(instructor_id,day_id,n_day_timeslots))
+            # logger.debug("ins: {}, day: {}, total_gap_number={}".format(instructor_id,day_id,n_day_gapslots))
+            # logger.debug("ins: {}, day: {}, total_timeslots={}".format(instructor_id,day_id,n_day_timeslots))
 
-            #remove all the max elements from week_fitnesses list
-            week_fitnesses = [x for x in week_fitnesses if x != max(week_fitnesses)]
-            if week_fitnesses == []:
-                instructor_fitness = 100.00
-            else:
+            if len(week_fitnesses) != 0:
                 instructor_fitness = (sum(week_fitnesses) / len(week_fitnesses))
-
-            instructor_fitnesses.append(instructor_fitness)
-        
-
-        return (sum(instructor_fitnesses) / len(instructor_fitnesses))
-            
+                instructor_fitnesses.append(instructor_fitness)
+                
+        if len(instructor_fitnesses) != 0:
+            return (sum(instructor_fitnesses) / len(instructor_fitnesses))
+        else:
+            return 0.00   
         
 
 
