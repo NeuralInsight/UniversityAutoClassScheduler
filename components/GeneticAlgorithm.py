@@ -419,10 +419,10 @@ class GeneticAlgorithm(QtCore.QThread):
     def evaluateInstructorIdleTime(self, chromosome):
 
         instructor_id = 0
+        instructor_fitnesses = []
         # script to fine 1(None)*1 Pattern in the list
         for instructor in chromosome.data['instructors'].values():
-            # Instructor week
-            instructor_fitnesses = []
+            # Instructor week 
             instructor_id += 1
             week = {day: [] for day in range(6)}
             for timeslot, timeslotRow in enumerate(instructor):
@@ -433,28 +433,28 @@ class GeneticAlgorithm(QtCore.QThread):
                     week[day].append(value)
 
             #logger.debug("instructor {} week: {}".format(instructor_id,week))
-
             day_id = 1    
             
             week_fitnesses = []
             for day in week.values():
-                n_day_timeslots = len(day)
+                # find the number of None in day list
+                day_free_timeslots = [x for x in day if x is None]
+                n_free_timeslots = len(day_free_timeslots)
                 n_subjects = Utilities.find_numberOfSubject(day)
                 if n_subjects:
                     gap_timeslots = Utilities.find_gapTimeSlot(day)
                     n_day_gapslots = gap_timeslots
-                    # logger.debug("ins: {}, day: {}, subjects={}".format(instructor_id,day_id,n_subjects))
-                    day_fitness = (((n_day_timeslots - n_day_gapslots) / n_day_timeslots) * 100)
+                    day_fitness = (((n_free_timeslots - n_day_gapslots) / n_free_timeslots) * 100)
+                    logger.debug("ins: {}, day: {}, n_gapslot={}, n_freeslot={}, day_fitness={}".format(instructor_id,day_id,n_day_gapslots,n_free_timeslots,day_fitness))
                     week_fitnesses.append(day_fitness) 
                 day_id += 1
                     
-            # logger.debug("ins: {}, day: {}, total_gap_number={}".format(instructor_id,day_id,n_day_gapslots))
-            # logger.debug("ins: {}, day: {}, total_timeslots={}".format(instructor_id,day_id,n_day_timeslots))
-
+            logger.debug("ins: {}, week_fitnesses={}".format(instructor_id,week_fitnesses))
             if len(week_fitnesses) != 0:
                 instructor_fitness = (sum(week_fitnesses) / len(week_fitnesses))
                 instructor_fitnesses.append(instructor_fitness)
-                
+
+        logger.debug("ins: {}, instructor_fitnesses={}".format(instructor_id,instructor_fitnesses))      
         if len(instructor_fitnesses) != 0:
             return (sum(instructor_fitnesses) / len(instructor_fitnesses))
         else:
