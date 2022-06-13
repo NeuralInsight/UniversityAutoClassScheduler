@@ -268,7 +268,7 @@ class GeneticAlgorithm(QtCore.QThread):
         # If idle time is enabled else 0
         #TODO: Change the studentIdleTime to instructorIdleTime
         idleTime = self.evaluateInstructorIdleTime(chromosome) if matrix['idle_time'] !=0 else 0
-        logger.debug("Instructor Idle fitness: {}".format(idleTime))
+        # logger.debug("Instructor Idle fitness: {}".format(idleTime))
         # If meeting pattern is enabled else 0
         meetingPattern = self.evaluateMeetingPattern(chromosome) if matrix['meeting_pattern'] !=0 else 0     
         # If instructor load is enabled else 0
@@ -434,6 +434,8 @@ class GeneticAlgorithm(QtCore.QThread):
                 day_free_timeslots = [x for x in day if x is None]
                 n_free_timeslots = len(day_free_timeslots) # number of free timeslots
                 n_subjects = Utilities.find_numberOfSubject(day) # number of subjects
+                # x = Utilities.find_StartgapTimeSlot(day)
+                # logger.debug("instructor {} day: {} StartGap: {}".format(instructor_id, day, x))
                 # if there is atleast two subject
                 if n_subjects:  
                     n_day_gapslots = Utilities.find_gapTimeSlot(day) # number of gap timeslots
@@ -454,6 +456,9 @@ class GeneticAlgorithm(QtCore.QThread):
         else: 
             return 0.0000
 
+    def evaluateSubjectsStartTime(self, chromosome):
+        pass
+    
     # = ((placedSubjects - badPattern) / placedSubjects) * 100
     def evaluateMeetingPattern(self, chromosome):
         placedSubjects = 0

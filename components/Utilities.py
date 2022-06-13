@@ -55,6 +55,39 @@ def find_numberOfSubject(timeslots):
             return True
     return False
 
+def find_StartgapTimeSlot(timeslots):
+    temp = 0
+    gapTimeSlot = 0
+    for i in range(0, 4):
+        if timeslots[i] == [1]:
+            break
+        elif timeslots[i] == False:
+            continue
+        elif timeslots[i] == None:
+            temp += 1     
+            if timeslots[i+1] == [1]:
+                gapTimeSlot = temp
+                break
+            if timeslots[i+1] == False:
+                temp = 0
+                continue
+    temp = 0
+    for i in range(7, len(timeslots)-1):
+        if timeslots[i] == [1]:
+            break
+        elif timeslots[i] == False:
+            continue
+        elif timeslots[i] == None:
+            temp += 1     
+            if timeslots[i+1] == [1]:
+                gapTimeSlot = temp
+                break
+            if timeslots[i+1] == False:
+                temp = 0
+                continue
+    
+    return gapTimeSlot
+
 if __name__ == '__main__':
     for i in range(3):
         settings = []
