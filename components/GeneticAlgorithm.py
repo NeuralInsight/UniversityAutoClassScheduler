@@ -415,9 +415,8 @@ class GeneticAlgorithm(QtCore.QThread):
                         idleDays += 1
         return (((sectionDays - idleDays) / sectionDays) * 100)
 
-    # = ((sectionDays - idleDays) / sectionDays) * 100
+    # = ((sectionDays - idleDays) / sectionDays) * 100)
     def evaluateInstructorIdleTime(self, chromosome):
-
         instructor_id = 0
         instructor_fitnesses = []
         # script to fine 1(None)*1 Pattern in the list
@@ -427,40 +426,33 @@ class GeneticAlgorithm(QtCore.QThread):
             week = {day: [] for day in range(6)}
             for timeslot, timeslotRow in enumerate(instructor):
                 for day, value in enumerate(timeslotRow):
-                    # Add timeslot to instructor week if teaching
-                    # if value:
-                    #     week[day].append(timeslot)
                     week[day].append(value)
 
-            #logger.debug("instructor {} week: {}".format(instructor_id,week))
-            day_id = 1    
-            
             week_fitnesses = []
             for day in week.values():
                 # find the number of None in day list
                 day_free_timeslots = [x for x in day if x is None]
-                n_free_timeslots = len(day_free_timeslots)
-                n_subjects = Utilities.find_numberOfSubject(day)
-                if n_subjects:
-                    gap_timeslots = Utilities.find_gapTimeSlot(day)
-                    n_day_gapslots = gap_timeslots
-                    day_fitness = (((n_free_timeslots - n_day_gapslots) / n_free_timeslots) * 100)
-                    logger.debug("ins: {}, day: {}, n_gapslot={}, n_freeslot={}, day_fitness={}".format(instructor_id,day_id,n_day_gapslots,n_free_timeslots,day_fitness))
-                    week_fitnesses.append(day_fitness) 
-                day_id += 1
-                    
-            logger.debug("ins: {}, week_fitnesses={}".format(instructor_id,week_fitnesses))
+                n_free_timeslots = len(day_free_timeslots) # number of free timeslots
+                n_subjects = Utilities.find_numberOfSubject(day) # number of subjects
+                # if there is atleast two subject
+                if n_subjects:  
+                    n_day_gapslots = Utilities.find_gapTimeSlot(day) # number of gap timeslots
+                    day_fitness = (((n_free_timeslots - n_day_gapslots) / n_free_timeslots) * 100) # fitness of day
+                    week_fitnesses.append(day_fitness) # add fitness of day to week fitnesses
+            
+            # if there is atleast one day with valid fitness       
             if len(week_fitnesses) != 0:
+                # find the average fitness of the week
                 instructor_fitness = (sum(week_fitnesses) / len(week_fitnesses))
+                # add fitness of week to instructor fitnesses
                 instructor_fitnesses.append(instructor_fitness)
-
-        logger.debug("ins: {}, instructor_fitnesses={}".format(instructor_id,instructor_fitnesses))      
+                
+        # if there is atleast one instructor with valid fitness
         if len(instructor_fitnesses) != 0:
+            # find the average fitness of the instructor
             return (sum(instructor_fitnesses) / len(instructor_fitnesses))
-        else:
-            return 0.00   
-        
-
+        else: 
+            return 0.0000
 
     # = ((placedSubjects - badPattern) / placedSubjects) * 100
     def evaluateMeetingPattern(self, chromosome):
