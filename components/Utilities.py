@@ -51,14 +51,7 @@ def find_numberOfSubject(timeslots):
             if timeslots[i+1] == [1]:
                 continue
             numberOfSubject += 1
-            for j in range(i+1,len(timeslots)):
-                if timeslots[j] == False :
-                    break
-                elif timeslots[j] == [1]:
-                    break
-                elif timeslots[j] == None:
-                    break
-        if numberOfSubject >= 2:
+        if numberOfSubject == 2:
             return True
     return False
 
