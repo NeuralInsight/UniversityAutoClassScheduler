@@ -211,6 +211,7 @@ class Tree:
             frameLayout.addWidget(btnEdit)
             frameLayout.addWidget(btnDelete)
             self.tree.setIndexWidget(edit.index(), frameEdit)
+        self.tree.resizeColumnToContents(2)
 
     def edit(self, id):
         Section(id)

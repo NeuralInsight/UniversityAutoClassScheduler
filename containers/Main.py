@@ -68,13 +68,6 @@ class MainWindow(Main.Ui_MainWindow):
         self.actionExit.triggered.connect(exit)
         self.actionNew.triggered.connect(lambda: self.new())
         
-    # def Search(self, model):
-    #     filter_proxy_model = QSortFilterProxyModel()
-    #     filter_proxy_model.setSourceModel(model)
-    #     filter_proxy_model.setFilterCaseSensitivity(Qt.CaseInsensitive)
-    #     filter_proxy_model.setFilterKeyColumn(3)
-    #     self.InstrSearch.textChanged.connect(filter_proxy_model.setFilterRegExp)
-        
     # Initialize trees and tables
     def drawTrees(self):
         self.instrTree = Instructor.Tree(self.treeInstr)

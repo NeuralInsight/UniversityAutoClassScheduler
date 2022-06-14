@@ -87,7 +87,6 @@ class Tree:
         # tree.setColumnHidden(0, True)
         model.itemChanged.connect(lambda item: self.toggleAvailability(item))
         self.display()
-        Main.MainWindow.Search(self, tree)
 
         
         
