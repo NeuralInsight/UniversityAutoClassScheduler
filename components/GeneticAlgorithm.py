@@ -521,13 +521,14 @@ class GeneticAlgorithm(QtCore.QThread):
         return [chromosome.fitness for chromosome in self.chromosomes]
 
     def adapt(self):
-        deviation = self.getFitnessDeviation()
+        deviation = self.getFitnessDeviation() # it returns sigma & sigma instances
         self.alignPopulation(deviation[0], deviation[1])
         self.adjustMutationRate()
 
+    # Function to find Mean Deviation of fitnesses
     # sigma = [sigma], sigmaInstances = {sigma: instance%}
     def getFitnessDeviation(self):
-        populationCount = len(self.chromosomes)
+        populationCount = len(self.chromosomes) # find number of population
         fitnesses = [chromosome.fitness for chromosome in self.chromosomes]
         mean = np.mean(fitnesses)
         sigmas = [int(fitness - mean) for fitness in fitnesses]
@@ -536,9 +537,9 @@ class GeneticAlgorithm(QtCore.QThread):
         return [sigmas, sigmaInstances]
 
     def alignPopulation(self, sigmas, sigmaInstances):
-        populationCount = len(self.chromosomes)
-        sigmaStartingInstance = list(sigmaInstances.values())[0]
-        if sigmaStartingInstance > self.lowVariety:
+        populationCount = len(self.chromosomes) # find number of population
+        sigmaStartingInstance = list(sigmaInstances.values())[0] # get first sigmaInstance value
+        if sigmaStartingInstance > self.lowVariety: #TODO: Check lowVariety
             # Add the excess percentage of instances on first sigma to population
             generate = int((int(sigmaStartingInstance - self.lowVariety) / 100) * populationCount)
             while generate + populationCount > self.settings['maximum_population']:
@@ -555,20 +556,28 @@ class GeneticAlgorithm(QtCore.QThread):
 
     # Increase mutation rate for low performing generations and decrease for good performance
     def adjustMutationRate(self):
+        # Three condition will increase the mutationRate
+        ## 1) PastFitnessAverage is Greater than currentFitnessAverage
+        ## 2) fitness Difference is lower than mutation_rate_trigger_adjustment
+        
+        # if mutationRate Increment >= 100 mutationRate will Decrease
         if (self.averageFitness - self.pastAverageFitness < 0) or (
                 abs(self.averageFitness - self.pastAverageFitness) <= self.settings[
             'mutation_rate_adjustment_trigger']) and not self.mutationRate >= 100:
             self.mutationRate += .05
         elif self.mutationRate > .10:
             self.mutationRate -= .05
+
+        # Round the mutationRate
         self.mutationRate = round(self.mutationRate, 2)
 
     # Selects top 5% of population and performs tournament to generate remaining candidates
     def selection(self):
         population = len(self.chromosomes)
+        # Get All Chromosome Fitnesses
         chromosomeFitness = [self.chromosomes[chromosome].fitness for chromosome in range(len(self.chromosomes))]
         # Select number of elites that will ensure there will be even offspring to be generated
-        eliteCount = round(population * self.elitePercent)
+        eliteCount = round(population * self.elitePercent) # Calculate Elite population
         if population % 2 == 0:
             eliteCount = eliteCount if eliteCount % 2 == 0 else eliteCount + 1
         else:
