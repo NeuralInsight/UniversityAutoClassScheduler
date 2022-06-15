@@ -564,9 +564,9 @@ class GeneticAlgorithm(QtCore.QThread):
         if (self.averageFitness - self.pastAverageFitness < 0) or (
                 abs(self.averageFitness - self.pastAverageFitness) <= self.settings[
             'mutation_rate_adjustment_trigger']) and not self.mutationRate >= 100:
-            self.mutationRate += .05
+            self.mutationRate += .1
         elif self.mutationRate > .10:
-            self.mutationRate -= .05
+            self.mutationRate -= .1
 
         # Round the mutationRate
         self.mutationRate = round(self.mutationRate, 2)
@@ -715,6 +715,7 @@ class GeneticAlgorithm(QtCore.QThread):
                 mutationCandidates['sections'].pop(section)
         # Randomly select chromosomes to mutate
         for index, chromosome in enumerate(copy.deepcopy(self.chromosomes)):
+            #TODO: Change the random condition of mutation
             if np.random.randint(100) > (self.mutationRate * 100) - 1:
                 continue
             self.statusSignal.emit('Mutating Chromosome #{}'.format(index + 1))
