@@ -48,11 +48,10 @@ class PreviewTableModel(QtCore.QAbstractTableModel):
     def setData(self, index, value, role=None):
         if not index.isValid():
             return False
-        elif role != QtCore.Qt.EditRole:
-            return False 
         else:
             self.data[index.row()][index.column()] = value
             self.dataChanged.emit(index, index)
+            return True
             
         self.data[index.row()][index.column()] = value
         self.dataChanged.emit(index, index)
