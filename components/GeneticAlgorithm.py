@@ -262,29 +262,13 @@ class GeneticAlgorithm(QtCore.QThread):
         matrix = self.settings['evaluation_matrix'] # Get evaluation matrix
         # If subject placement is enabled else 0
         subjectPlacement = self.evaluateSubjectPlacements(chromosome) if matrix['subject_placement'] !=0 else 0
-        # If student rest is enabled else 0
-        studentRest = self.evaluateStudentRest(chromosome) if matrix['student_rest'] !=0 else 0
-        # If instructor rest is enabled else 0
-        instructorRest = self.evaluateInstructorRest(chromosome) if matrix['instructor_rest'] !=0 else 0
         # If idle time is enabled else 0
-        #TODO: Change the studentIdleTime to instructorIdleTime
         idleTime = self.evaluateInstructorIdleTime(chromosome) if matrix['idle_time'] !=0 else 0
-        # logger.debug("Instructor Idle fitness: {}".format(idleTime))
-        # If meeting pattern is enabled else 0
-        meetingPattern = self.evaluateMeetingPattern(chromosome) if matrix['meeting_pattern'] !=0 else 0     
-        # If instructor load is enabled else 0
-        instructorLoad = self.evaluateInstructorLoad(chromosome) if matrix['instructor_load'] !=0 else 0
-        lunchBreak = 0 # TODO : Should be remove
         
-        chromosome.fitnessDetails = copy.deepcopy([subjectPlacement, lunchBreak, studentRest, instructorRest, idleTime,
-                                     meetingPattern, instructorLoad])
+        chromosome.fitnessDetails = copy.deepcopy([subjectPlacement, idleTime])
         return (
             (subjectPlacement * matrix['subject_placement'] / 100) +
-            (studentRest * matrix['student_rest'] / 100) +
-            (instructorRest * matrix['instructor_rest'] / 100) +
-            (idleTime * matrix['idle_time'] / 100) +
-            (meetingPattern * matrix['meeting_pattern'] / 100) +
-            (instructorLoad * matrix['instructor_load'] / 100)
+            (idleTime * matrix['idle_time'] / 100) 
         )
 
     # = ((subjects - unplacedSubjects) / subjects) * 100
