@@ -1,5 +1,6 @@
 from PyQt5 import QtCore,QtWidgets
 from PyQt5.QtCore import Qt, QSortFilterProxyModel
+from PyQt5.QtGui import QFontDatabase
 from containers import Generate, Instructor, ResultViewer, Room, Subject, Section
 from components import Settings, Database as db, Timetable, ImportExportHandler as ioHandler
 from py_ui import Main
@@ -19,6 +20,8 @@ import random
 class MainWindow(Main.Ui_MainWindow):
     def __init__(self, parent):
         super().__init__()
+        QFontDatabase.addApplicationFont('./Fonts/Vazir-Black.ttf')
+        QFontDatabase.addApplicationFont('./Fonts/B-NAZANIN.TTF')
         self.parent = parent
         self.setupUi(parent)
         self.connectButtons()
