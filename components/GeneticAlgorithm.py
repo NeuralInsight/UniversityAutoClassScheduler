@@ -50,7 +50,6 @@ class GeneticAlgorithm(QtCore.QThread):
         self.stayInRoomAssignments = {}
         self.tournamentSize = .04
         self.elitePercent = .05
-        self.mutationRate = .10
         self.lowVariety = 55
         self.highestFitness = 0
         self.lowestFitness = 100
@@ -62,6 +61,8 @@ class GeneticAlgorithm(QtCore.QThread):
         self.data = data
         self.settings = Settings.getSettings()
         self.stopWhenMaxFitnessAt = self.settings['maximum_fitness']
+        self.mutationRate = self.settings['mutation_rate_base']
+        self.mutationRateStep = self.settings['mutation_rate_step']
         super().__init__()
 
     def initialization(self):

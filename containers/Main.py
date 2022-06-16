@@ -396,6 +396,8 @@ class MainWindow(Main.Ui_MainWindow):
         self.editMaxGen.setValue(self.settings['maximum_generations'])
         self.editMaxCreation.setValue(self.settings['generation_tolerance'])
         self.editMut.setValue(self.settings['mutation_rate_adjustment_trigger'])
+        self.editBaseMut.setValue(self.settings['mutation_rate_base'])
+        self.editMutStep.setValue(self.settings['mutation_rate_step'])
         self.editMaxFit.setValue(self.settings['maximum_fitness'])
         self.editElite.setValue(int(self.settings['elite_percent'] * 100))
         self.editDev.setValue(self.settings['deviation_tolerance'])
@@ -414,6 +416,10 @@ class MainWindow(Main.Ui_MainWindow):
         self.editMaxCreation.valueChanged.connect(lambda value: self.updateSettings('generation_tolerance', value))
         self.editMut.valueChanged.connect(
             lambda value: self.updateSettings('mutation_rate_adjustment_trigger', round(value, 2)))
+        self.editBaseMut.valueChanged.connect(
+            lambda value: self.updateSettings('mutation_rate_base', round(value, 2)))
+        self.editMutStep.valueChanged.connect(
+            lambda value: self.updateSettings('mutation_rate_step', round(value, 2)))
         self.editMaxFit.valueChanged.connect(lambda value: self.updateSettings('maximum_fitness', value))
         self.editElite.valueChanged.connect(lambda value: self.updateSettings('elite_percent', round(value / 100, 2)))
         self.editDev.valueChanged.connect(lambda value: self.updateSettings('deviation_tolerance', value))
