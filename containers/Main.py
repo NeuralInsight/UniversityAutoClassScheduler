@@ -29,6 +29,9 @@ class MainWindow(Main.Ui_MainWindow):
         self.tabWidget.setCurrentIndex(0)
         self.result = { 'data': [] }
         self.getLastResult()
+        self.txtEditInsSearch.textChanged.connect(lambda value: self.instrTree.onSearchTextChanged(value))
+        
+
 
 
     def getLastResult(self):
@@ -451,6 +454,9 @@ class MainWindow(Main.Ui_MainWindow):
     def updateSettings(self, key, value, secondKey=False):
         Settings.setSettings(key, value, secondKey)
         self.settings = Settings.getSettings()
+
+    def onInsSearchChanged(self,value):
+        self.instrTree.onSearchTextChanged(value)
 
     def new(self):
         ioHandler.removeTables()
