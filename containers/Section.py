@@ -30,7 +30,7 @@ class Section:
         # Setup subjects tree view
         self.tree = tree = self.parent.treeSubjects
         self.model = model = QtGui.QStandardItemModel()
-        model.setHorizontalHeaderLabels(['ID', 'Available', 'Shared', 'Subject Code', 'Subject Name', 'Share ID'])
+        model.setHorizontalHeaderLabels(['ID', 'Available', 'Subject Code', 'Subject Name'])
         tree.setModel(model)
         tree.setColumnHidden(0, True)
         tree.setColumnHidden(5, True)
@@ -43,17 +43,10 @@ class Section:
         # Subjects that the current section have
         currentSubjects = []
         # Subjects that are shared to the current section
-        # [(sharing_id, subject_id, sections [str of list - load using json.loads])]
-        sharedSubjects = []
         if self.id:
             cursor.execute('SELECT subjects FROM sections WHERE id = ?', [self.id])
             # Convert result into list of int
             currentSubjects = list(map(lambda id: int(id), json.loads(cursor.fetchall()[0][0])))
-            # Get active sharing by subject
-            for id in currentSubjects:
-                cursor.execute('SELECT id, subjectId, sections FROM sharings WHERE subjectId = ? AND final = 1', [id])
-                sharedSubjects.append(cursor.fetchone())
-            sharedSubjects = [sharing for sharing in sharedSubjects if sharing]
             # Get section names
             # {id: name}
             sectionNames = []
@@ -67,27 +60,11 @@ class Section:
             availability.setCheckable(True)
             availability.setEditable(False)
             availability.setCheckState(2 if subject[0] in currentSubjects else 0)
-            shared = QtGui.QStandardItem('')
-            shared.setCheckable(True)
-            shared.setEditable(False)
-            shareId = QtGui.QStandardItem()
-            shareId.setEditable(False)
-            for sharing in sharedSubjects:
-                if sharing[1] != subject[0]:
-                    continue
-                sectionList = list(map(lambda id: int(id), json.loads(sharing[2])))
-                if self.id not in sectionList:
-                    continue
-                sectionList.remove(self.id)
-                sectionList = ', '.join(list(map(lambda id: sectionNames[id], sectionList)))
-                shared.setText(sectionList)
-                shared.setCheckState(2)
-                shareId.setText(str(sharing[0]))
             code = QtGui.QStandardItem(subject[2])
             code.setEditable(False)
             name = QtGui.QStandardItem(subject[1])
             name.setEditable(False)
-            model.appendRow([subjectId, availability, shared, code, name, shareId])
+            model.appendRow([subjectId, availability, code, name])
         model.itemChanged.connect(lambda item: self.toggleSharing(item))
 
     def toggleSharing(self, item):
