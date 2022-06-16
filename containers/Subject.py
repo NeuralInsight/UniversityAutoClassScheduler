@@ -197,15 +197,15 @@ class Tree:
             btnEdit = QtWidgets.QPushButton('', frameEdit)
             btnEdit.setFlat(True)
             btnEdit.setIcon(QtGui.QIcon(os.path.join(icon_path, 'icons8-edit-64.png')))
-            btnEdit.setIconSize(QtCore.QSize(25, 25))
-            btnEdit.setFixedSize(QtCore.QSize(25, 25))
+            btnEdit.setIconSize(QtCore.QSize(32, 32))
+            btnEdit.setFixedSize(QtCore.QSize(50, 32))
             btnEdit.clicked.connect(lambda state, id=entry[0]: self.edit(id))
             # Delete buttons
             btnDelete = QtWidgets.QPushButton('', frameEdit)
             btnDelete.setFlat(True)
             btnDelete.setIcon(QtGui.QIcon(os.path.join(icon_path, 'icons8-delete-64.png')))
-            btnDelete.setIconSize(QtCore.QSize(25, 25))
-            btnDelete.setFixedSize(QtCore.QSize(25, 25))
+            btnDelete.setIconSize(QtCore.QSize(32, 32))
+            btnDelete.setFixedSize(QtCore.QSize(50, 32))
             btnDelete.clicked.connect(lambda state, id=entry[0]: self.delete(id))
             
             frameLayout = QtWidgets.QHBoxLayout(frameEdit)
@@ -216,6 +216,7 @@ class Tree:
             self.tree.setIndexWidget(self.proxyModel.mapFromSource(edit.index()), frameEdit)
         
         self.tree.setSortingEnabled(True)
+        self.tree.setColumnWidth(4, 280)
         self.tree.resizeColumnToContents(2)
 
     def onSearchTextChanged(self, text):

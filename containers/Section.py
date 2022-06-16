@@ -1,9 +1,11 @@
-from PyQt5 import QtWidgets, QtGui
+from PyQt5 import QtWidgets, QtGui, QtCore
 from containers import Share
 from components import Database as db, Timetable
 from py_ui import Section as Parent
 import json
+import os
 
+icon_path = os.path.join(os.getcwd(), 'assets/icons')
 
 class Section:
     def __init__(self, id):
@@ -142,9 +144,10 @@ class Tree:
     def __init__(self, tree):
         self.tree = tree
         self.model = model = QtGui.QStandardItemModel()
-        model.setHorizontalHeaderLabels(['ID', 'Available', 'Name', 'Stay in Room', 'Operation'])
+        model.setHorizontalHeaderLabels(['ID', 'Available', 'Name', 'Operation'])
         tree.setModel(model)
         tree.setColumnHidden(0, True)
+        # tree.setColumnHidden(3, True)
         model.itemChanged.connect(lambda item: self.toggleAvailability(item))
         self.display()
 
@@ -161,7 +164,7 @@ class Tree:
         self.model.removeRows(0, self.model.rowCount())
         conn = db.getConnection()
         cursor = conn.cursor()
-        cursor.execute('SELECT id, active, name, stay FROM sections')
+        cursor.execute('SELECT id, active, name FROM sections')
         result = cursor.fetchall()
         conn.close()
         for instr in result:
@@ -172,23 +175,34 @@ class Tree:
             availability.setCheckState(2 if instr[1] == 1 else 0)
             availability.setEditable(False)
             name = QtGui.QStandardItem(instr[2])
-            stay = QtGui.QStandardItem('TRUE' if instr[3] == 1 else 'FALSE')
-            stay.setEditable(False)
             name.setEditable(False)
             edit = QtGui.QStandardItem()
             edit.setEditable(False)
-            self.model.appendRow([id, availability, name, stay, edit])
+            self.model.appendRow([id, availability, name, edit])
             frameEdit = QtWidgets.QFrame()
-            btnEdit = QtWidgets.QPushButton('Edit', frameEdit)
+            # Edit buttons
+            btnEdit = QtWidgets.QPushButton('', frameEdit)
+            btnEdit.setFlat(True)
+            btnEdit.setIcon(QtGui.QIcon(os.path.join(icon_path, 'icons8-edit-64.png')))
+            btnEdit.setIconSize(QtCore.QSize(32, 32))
+            btnEdit.setFixedSize(QtCore.QSize(50, 32))
             btnEdit.clicked.connect(lambda state, id=instr[0]: self.edit(id))
-            btnDelete = QtWidgets.QPushButton('Delete', frameEdit)
+            # Delete buttons
+            btnDelete = QtWidgets.QPushButton('', frameEdit)
+            btnDelete.setFlat(True)
+            btnDelete.setIcon(QtGui.QIcon(os.path.join(icon_path, 'icons8-delete-64.png')))
+            btnDelete.setIconSize(QtCore.QSize(32, 32))
+            btnDelete.setFixedSize(QtCore.QSize(50, 32))
             btnDelete.clicked.connect(lambda state, id=instr[0]: self.delete(id))
+            
             frameLayout = QtWidgets.QHBoxLayout(frameEdit)
             frameLayout.setContentsMargins(0, 0, 0, 0)
             frameLayout.addWidget(btnEdit)
             frameLayout.addWidget(btnDelete)
             self.tree.setIndexWidget(edit.index(), frameEdit)
-            self.tree.setSortingEnabled(True)
+        
+        self.tree.setSortingEnabled(True)
+        self.tree.setColumnWidth(2, 500)
 
     def edit(self, id):
         Section(id)
