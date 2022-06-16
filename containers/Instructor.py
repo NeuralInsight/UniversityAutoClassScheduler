@@ -89,7 +89,6 @@ class Tree:
             tree, recursiveFilteringEnabled=True
         )
         self.proxyModel.setSourceModel(self.model)
-        self.tree.setModel(self.proxyModel)
         tree.setModel(proxyModel)
         tree.setColumnHidden(0, True)
         model.itemChanged.connect(lambda item: self.toggleAvailability(item))
@@ -151,8 +150,6 @@ class Tree:
 
     def onSearchTextChanged(self, text):
         self.proxyModel.setFilterByColumn(text,2)
-
-
 
     def edit(self, id):
         Instructor(id)

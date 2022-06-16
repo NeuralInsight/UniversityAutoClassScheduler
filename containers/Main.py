@@ -30,6 +30,9 @@ class MainWindow(Main.Ui_MainWindow):
         self.result = { 'data': [] }
         self.getLastResult()
         self.txtEditInsSearch.textChanged.connect(lambda value: self.instrTree.onSearchTextChanged(value))
+        self.txtSearchSubject.textChanged.connect(lambda value: self.subjTree.onSearchTextChanged(value))
+        self.txtSearchRoom.textChanged.connect(lambda value: self.roomTree.onSearchTextChanged(value))
+        
         
 
 

@@ -1,4 +1,4 @@
-from PyQt5 import QtWidgets, QtGui
+from PyQt5 import QtWidgets, QtGui, QtCore
 from components import Database as db
 from py_ui import Subject as Parent
 import json
@@ -14,13 +14,16 @@ class Subject:
         # Add parent to custom dialog
         parent.setupUi(dialog)
         parent.radioLec.setChecked(True)
-        parent.radioYes.setChecked(True)
+        #parent.radioYes.setChecked(True)
         if id:
             self.fillForm()
         self.setupInstructors()
         parent.btnFinish.clicked.connect(self.finish)
         parent.btnCancel.clicked.connect(self.dialog.close)
+        parent.txtSelectIns.textChanged.connect(lambda value: self.onSearchTextChanged(value))
+
         dialog.exec_()
+
 
     def fillForm(self):
         conn = db.getConnection()
@@ -47,7 +50,11 @@ class Subject:
         self.tree = tree = self.parent.treeSchedule
         self.model = model = QtGui.QStandardItemModel()
         model.setHorizontalHeaderLabels(['ID', 'Available', 'Name'])
-        tree.setModel(model)
+        self.proxyModel = proxyModel = SortFilterProxyModel(
+            tree, recursiveFilteringEnabled=True
+        )
+        self.proxyModel.setSourceModel(model)
+        tree.setModel(proxyModel)
         tree.setColumnHidden(0, True)
         conn = db.getConnection()
         cursor = conn.cursor()
@@ -100,6 +107,9 @@ class Subject:
         self.insertSubject(data)
         self.dialog.close()
 
+    def onSearchTextChanged(self, text):
+        self.proxyModel.setFilterByColumn(text,2)
+
     @staticmethod
     def insertSubject(data):
         conn = db.getConnection()
@@ -116,12 +126,34 @@ class Subject:
         conn.close()
 
 
+class SortFilterProxyModel(QtCore.QSortFilterProxyModel):
+    def __init__(self, *args, **kwargs):
+        QtCore.QSortFilterProxyModel.__init__(self, *args, **kwargs)
+        self.filters = {}
+
+    def setFilterByColumn(self, regex, column):
+        self.filters[column] = regex
+        self.invalidateFilter()
+
+    def filterAcceptsRow(self, source_row, source_parent):
+        for key, regex in self.filters.items():
+            ix = self.sourceModel().index(source_row, key, source_parent)
+            if ix.isValid():
+                text = self.sourceModel().data(ix)
+                if not regex in text:
+                    return False
+        return True
+
 class Tree:
     def __init__(self, tree):
         self.tree = tree
         self.model = model = QtGui.QStandardItemModel()
         model.setHorizontalHeaderLabels(['ID', 'Code', 'Name', 'Type', 'Instructors', 'Operation'])
-        tree.setModel(model)
+        self.proxyModel = proxyModel = SortFilterProxyModel(
+            tree, recursiveFilteringEnabled=True
+        )
+        self.proxyModel.setSourceModel(self.model)
+        tree.setModel(proxyModel)
         tree.setColumnHidden(0, True)
         self.display()
 
@@ -170,6 +202,9 @@ class Tree:
             self.tree.setSortingEnabled(True)
 
         self.tree.resizeColumnToContents(2)
+
+    def onSearchTextChanged(self, text):
+        self.proxyModel.setFilterByColumn(text,2)
 
     def edit(self, id):
         Subject(id)

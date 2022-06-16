@@ -1,4 +1,4 @@
-from PyQt5 import QtWidgets, QtGui
+from PyQt5 import QtWidgets, QtGui, QtCore
 from components import Database as db, Timetable
 from py_ui import Room as Parent
 import json
@@ -57,13 +57,34 @@ class Room:
         conn.commit()
         conn.close()
 
+class SortFilterProxyModel(QtCore.QSortFilterProxyModel):
+    def __init__(self, *args, **kwargs):
+        QtCore.QSortFilterProxyModel.__init__(self, *args, **kwargs)
+        self.filters = {}
+
+    def setFilterByColumn(self, regex, column):
+        self.filters[column] = regex
+        self.invalidateFilter()
+
+    def filterAcceptsRow(self, source_row, source_parent):
+        for key, regex in self.filters.items():
+            ix = self.sourceModel().index(source_row, key, source_parent)
+            if ix.isValid():
+                text = self.sourceModel().data(ix)
+                if not regex in text:
+                    return False
+        return True
 
 class Tree:
     def __init__(self, tree):
         self.tree = tree
         self.model = model = QtGui.QStandardItemModel()
         model.setHorizontalHeaderLabels(['ID', 'Available', 'Name', 'Operation'])
-        tree.setModel(model)
+        self.proxyModel = proxyModel = SortFilterProxyModel(
+            tree, recursiveFilteringEnabled=True
+        )
+        self.proxyModel.setSourceModel(self.model)
+        tree.setModel(proxyModel)
         tree.setColumnHidden(0, True)
         model.itemChanged.connect(lambda item: self.toggleAvailability(item))
         self.display()
@@ -107,6 +128,9 @@ class Tree:
             frameLayout.addWidget(btnDelete)
             self.tree.setIndexWidget(edit.index(), frameEdit)
             self.tree.setSortingEnabled(True)
+
+    def onSearchTextChanged(self, text):
+        self.proxyModel.setFilterByColumn(text,2)
 
     def edit(self, id):
         Room(id)
