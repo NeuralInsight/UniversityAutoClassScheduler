@@ -133,11 +133,22 @@ class Tree:
             # Append items to model
             self.model.appendRow([id, availability, name, hours, edit])
             # Create a widget group for edit and delete buttons
+            # Edit buttons
             frameEdit = QtWidgets.QFrame()
-            btnEdit = QtWidgets.QPushButton('Edit', frameEdit)
+            btnEdit = QtWidgets.QPushButton('', frameEdit)
+            btnEdit.setFlat(True)
+            btnEdit.setIcon(QtGui.QIcon(('/home/arfr/prj/UniversityAutoClassScheduler/containers/icons/icons8-edit-64.png')))
+            btnEdit.setIconSize(QtCore.QSize(25, 25))
+            btnEdit.setFixedSize(QtCore.QSize(25, 25))
             btnEdit.clicked.connect(lambda state, id=instr[0]: self.edit(id))
-            btnDelete = QtWidgets.QPushButton('Delete', frameEdit)
+            # Delete buttons
+            btnDelete = QtWidgets.QPushButton('', frameEdit)
+            btnDelete.setFlat(True)
+            btnDelete.setIcon(QtGui.QIcon(('/home/arfr/prj/UniversityAutoClassScheduler/containers/icons/icons8-delete-64.png')))
+            btnDelete.setIconSize(QtCore.QSize(25, 25))
+            btnDelete.setFixedSize(QtCore.QSize(25, 25))
             btnDelete.clicked.connect(lambda state, id=instr[0]: self.delete(id))
+            
             frameLayout = QtWidgets.QHBoxLayout(frameEdit)
             frameLayout.setContentsMargins(0, 0, 0, 0)
             frameLayout.addWidget(btnEdit)
@@ -147,7 +158,7 @@ class Tree:
             self.tree.setSortingEnabled(True)
             
         self.tree.resizeColumnToContents(2)
-
+        
     def onSearchTextChanged(self, text):
         self.proxyModel.setFilterByColumn(text,2)
 
