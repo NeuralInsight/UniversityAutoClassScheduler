@@ -40,7 +40,7 @@ class PreviewTableModel(QtCore.QAbstractTableModel):
 
     def headerData(self, p_int, Qt_Orientation, role=None):
         if Qt_Orientation == QtCore.Qt.Horizontal and role == QtCore.Qt.DisplayRole:
-            return QtCore.QVariant(self.header[0][p_int])
+            return QtCore.QVariant(self.header[0][p_int]) # 0 = header row
         elif Qt_Orientation == QtCore.Qt.Vertical and role == QtCore.Qt.DisplayRole:
             return QtCore.QVariant(self.header[1][p_int])
         return QtCore.QVariant()
@@ -48,6 +48,12 @@ class PreviewTableModel(QtCore.QAbstractTableModel):
     def setData(self, index, value, role=None):
         if not index.isValid():
             return False
+        elif role != QtCore.Qt.EditRole:
+            return False 
+        else:
+            self.data[index.row()][index.column()] = value
+            self.dataChanged.emit(index, index)
+            
         self.data[index.row()][index.column()] = value
         self.dataChanged.emit(index, index)
         return True
