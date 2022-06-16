@@ -220,6 +220,7 @@ class Tree:
 
     def onSearchTextChanged(self, text):
         self.proxyModel.setFilterByColumn(text,2)
+        self.display()
 
     def edit(self, id):
         Subject(id)
