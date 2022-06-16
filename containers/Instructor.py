@@ -2,6 +2,9 @@ from PyQt5 import QtWidgets, QtGui, QtCore
 from components import Database as db, Timetable
 from py_ui import Instructor as Parent
 import json
+import os 
+
+icon_path = os.path.join(os.getcwd(), 'assets/icons')
 
 
 class Instructor:
@@ -93,6 +96,7 @@ class Tree:
         tree.setColumnHidden(0, True)
         model.itemChanged.connect(lambda item: self.toggleAvailability(item))
         self.display()
+        
 
     def toggleAvailability(self, item):
         # Get ID of toggled instructor
@@ -132,19 +136,20 @@ class Tree:
             edit.setEditable(False)
             # Append items to model
             self.model.appendRow([id, availability, name, hours, edit])
+
             # Create a widget group for edit and delete buttons
             # Edit buttons
             frameEdit = QtWidgets.QFrame()
             btnEdit = QtWidgets.QPushButton('', frameEdit)
             btnEdit.setFlat(True)
-            btnEdit.setIcon(QtGui.QIcon(('/home/arfr/prj/UniversityAutoClassScheduler/containers/icons/icons8-edit-64.png')))
+            btnEdit.setIcon(QtGui.QIcon(os.path.join(icon_path, 'icons8-edit-64.png')))
             btnEdit.setIconSize(QtCore.QSize(25, 25))
             btnEdit.setFixedSize(QtCore.QSize(25, 25))
             btnEdit.clicked.connect(lambda state, id=instr[0]: self.edit(id))
             # Delete buttons
             btnDelete = QtWidgets.QPushButton('', frameEdit)
             btnDelete.setFlat(True)
-            btnDelete.setIcon(QtGui.QIcon(('/home/arfr/prj/UniversityAutoClassScheduler/containers/icons/icons8-delete-64.png')))
+            btnDelete.setIcon(QtGui.QIcon(os.path.join(icon_path, 'icons8-delete-64.png')))
             btnDelete.setIconSize(QtCore.QSize(25, 25))
             btnDelete.setFixedSize(QtCore.QSize(25, 25))
             btnDelete.clicked.connect(lambda state, id=instr[0]: self.delete(id))
@@ -154,10 +159,11 @@ class Tree:
             frameLayout.addWidget(btnEdit)
             frameLayout.addWidget(btnDelete)
             # Append the widget group to edit item
-            self.tree.setIndexWidget(edit.index(), frameEdit)
-            self.tree.setSortingEnabled(True)
-            
+            self.tree.setIndexWidget(self.proxyModel.mapFromSource(edit.index()), frameEdit)
+        
+        self.tree.setSortingEnabled(True)  
         self.tree.resizeColumnToContents(2)
+
         
     def onSearchTextChanged(self, text):
         self.proxyModel.setFilterByColumn(text,2)
