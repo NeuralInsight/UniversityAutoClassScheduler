@@ -169,6 +169,8 @@ class Tree:
             self.tree.setIndexWidget(edit.index(), frameEdit)
             self.tree.setSortingEnabled(True)
 
+        self.tree.resizeColumnToContents(2)
+
     def edit(self, id):
         Subject(id)
         self.display()

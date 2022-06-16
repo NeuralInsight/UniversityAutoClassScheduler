@@ -91,7 +91,7 @@ class Tree:
         self.proxyModel.setSourceModel(self.model)
         self.tree.setModel(self.proxyModel)
         tree.setModel(proxyModel)
-        #tree.setColumnHidden(0, True)
+        tree.setColumnHidden(0, True)
         model.itemChanged.connect(lambda item: self.toggleAvailability(item))
         self.display()
 
@@ -145,8 +145,9 @@ class Tree:
             frameLayout.addWidget(btnDelete)
             # Append the widget group to edit item
             self.tree.setIndexWidget(edit.index(), frameEdit)
-            # Set sorting by click on header
             self.tree.setSortingEnabled(True)
+            
+        self.tree.resizeColumnToContents(2)
 
     def onSearchTextChanged(self, text):
         self.proxyModel.setFilterByColumn(text,2)
