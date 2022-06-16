@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>800</width>
-    <height>600</height>
+    <height>767</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -101,7 +101,7 @@
            <item>
             <widget class="QPushButton" name="btnInstrImport">
              <property name="text">
-              <string>Import from CSV</string>
+              <string>Import from Excel</string>
              </property>
             </widget>
            </item>
@@ -134,7 +134,7 @@
            <item>
             <widget class="QPushButton" name="btnRoomImport">
              <property name="text">
-              <string>Import from CSV</string>
+              <string>Import from Excel</string>
              </property>
             </widget>
            </item>
@@ -167,7 +167,7 @@
            <item>
             <widget class="QPushButton" name="btnSubjImport">
              <property name="text">
-              <string>Import from CSV</string>
+              <string>Import from Excel</string>
              </property>
             </widget>
            </item>
@@ -235,7 +235,7 @@
            <item>
             <widget class="QPushButton" name="btnScenResult">
              <property name="text">
-              <string>View Results</string>
+              <string>Export Results</string>
              </property>
             </widget>
            </item>
@@ -245,10 +245,20 @@
         <item>
          <widget class="QGroupBox" name="groupBox_6">
           <property name="title">
-           <string>School Operation Settings</string>
+           <string>Operation Settings</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_2">
-           <item row="2" column="1">
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_6">
+             <property name="toolTip">
+              <string>Assess for lunch break for sections.</string>
+             </property>
+             <property name="text">
+              <string>Lunchbreak</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
             <widget class="QGroupBox" name="groupBox_7">
              <property name="styleSheet">
               <string notr="true">border: none</string>
@@ -299,83 +309,6 @@
                </widget>
               </item>
              </layout>
-            </widget>
-           </item>
-           <item row="2" column="0">
-            <widget class="QLabel" name="label_6">
-             <property name="toolTip">
-              <string>Assess for lunch break for sections.</string>
-             </property>
-             <property name="text">
-              <string>Lunchbreak</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="0">
-            <widget class="QLabel" name="label_4">
-             <property name="toolTip">
-              <string>The opening time of the school.</string>
-             </property>
-             <property name="text">
-              <string>Operation Starting Time</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="1">
-            <widget class="QTimeEdit" name="timeStarting">
-             <property name="currentSection">
-              <enum>QDateTimeEdit::HourSection</enum>
-             </property>
-             <property name="displayFormat">
-              <string>h AP</string>
-             </property>
-             <property name="time">
-              <time>
-               <hour>8</hour>
-               <minute>0</minute>
-               <second>0</second>
-              </time>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="2">
-            <spacer name="horizontalSpacer_2">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item row="1" column="0">
-            <widget class="QLabel" name="label_5">
-             <property name="toolTip">
-              <string>The closing time of the school.</string>
-             </property>
-             <property name="text">
-              <string>Operation Ending Time</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1">
-            <widget class="QTimeEdit" name="timeEnding">
-             <property name="displayFormat">
-              <string>h AP</string>
-             </property>
-             <property name="calendarPopup">
-              <bool>true</bool>
-             </property>
-             <property name="time">
-              <time>
-               <hour>18</hour>
-               <minute>0</minute>
-               <second>0</second>
-              </time>
-             </property>
             </widget>
            </item>
           </layout>
@@ -640,53 +573,13 @@
            <string>Evaluation Matrix</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_4">
-           <item row="2" column="0">
-            <widget class="QLabel" name="label_15">
-             <property name="toolTip">
-              <string>The weight of section rest (There must be a rest for every consecutive 3 hours of session)</string>
+           <item row="1" column="1">
+            <widget class="QSpinBox" name="editIdle">
+             <property name="maximum">
+              <number>100</number>
              </property>
-             <property name="text">
-              <string>Section Rest</string>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="0">
-            <widget class="QLabel" name="label_18">
-             <property name="toolTip">
-              <string>The weight of sections having less idle time.</string>
-             </property>
-             <property name="text">
-              <string>Section Idle Time</string>
-             </property>
-            </widget>
-           </item>
-           <item row="5" column="0">
-            <widget class="QLabel" name="label_19">
-             <property name="toolTip">
-              <string>The weight of having all instructors have normalized teaching load.</string>
-             </property>
-             <property name="text">
-              <string>Instructor Load Balance</string>
-             </property>
-            </widget>
-           </item>
-           <item row="7" column="0">
-            <widget class="QLabel" name="label_17">
-             <property name="toolTip">
-              <string>The weight of having correct meeting patterns for subject placement.</string>
-             </property>
-             <property name="text">
-              <string>Meeting Pattern</string>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="0">
-            <widget class="QLabel" name="label_16">
-             <property name="toolTip">
-              <string>The weight of instructor rest (There must be a rest for every consecutive 3 hours of session)</string>
-             </property>
-             <property name="text">
-              <string>Instructor Rest</string>
+             <property name="value">
+              <number>5</number>
              </property>
             </widget>
            </item>
@@ -700,6 +593,16 @@
              </property>
             </widget>
            </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_18">
+             <property name="toolTip">
+              <string>The weight of sections having less idle time.</string>
+             </property>
+             <property name="text">
+              <string>Instructor Idle Time</string>
+             </property>
+            </widget>
+           </item>
            <item row="0" column="0">
             <widget class="QLabel" name="label_13">
              <property name="toolTip">
@@ -707,16 +610,6 @@
              </property>
              <property name="text">
               <string>Subject Placement</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="0">
-            <widget class="QLabel" name="label_14">
-             <property name="toolTip">
-              <string>The weight of having a lunch break.</string>
-             </property>
-             <property name="text">
-              <string>Lunch Break</string>
              </property>
             </widget>
            </item>
@@ -733,67 +626,7 @@
              </property>
             </spacer>
            </item>
-           <item row="1" column="1">
-            <widget class="QSpinBox" name="editLun">
-             <property name="maximum">
-              <number>100</number>
-             </property>
-             <property name="value">
-              <number>5</number>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="1">
-            <widget class="QSpinBox" name="editSec">
-             <property name="maximum">
-              <number>100</number>
-             </property>
-             <property name="value">
-              <number>5</number>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="1">
-            <widget class="QSpinBox" name="editInstrRest">
-             <property name="maximum">
-              <number>100</number>
-             </property>
-             <property name="value">
-              <number>5</number>
-             </property>
-            </widget>
-           </item>
-           <item row="5" column="1">
-            <widget class="QSpinBox" name="editInstrLoad">
-             <property name="maximum">
-              <number>100</number>
-             </property>
-             <property name="value">
-              <number>5</number>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="1">
-            <widget class="QSpinBox" name="editIdle">
-             <property name="maximum">
-              <number>100</number>
-             </property>
-             <property name="value">
-              <number>5</number>
-             </property>
-            </widget>
-           </item>
-           <item row="7" column="1">
-            <widget class="QSpinBox" name="editMeet">
-             <property name="maximum">
-              <number>100</number>
-             </property>
-             <property name="value">
-              <number>5</number>
-             </property>
-            </widget>
-           </item>
-           <item row="8" column="0">
+           <item row="3" column="0">
             <widget class="QLabel" name="lblTotal">
              <property name="text">
               <string>TextLabel</string>
@@ -828,7 +661,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -980,8 +813,6 @@
    </property>
   </action>
  </widget>
- <resources>
-  <include location="../../PyQTTesting/testing.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

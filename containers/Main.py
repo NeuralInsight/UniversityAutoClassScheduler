@@ -116,8 +116,6 @@ class MainWindow(Main.Ui_MainWindow):
         cursor.execute('SELECT id FROM subjects LIMIT 1')
         if cursor.fetchone():
             disabled = True
-        self.timeStarting.setDisabled(disabled)
-        self.timeEnding.setDisabled(disabled)
         self.btnScenGenerate.setDisabled(not disabled)
         conn.close()
 
@@ -342,34 +340,37 @@ class MainWindow(Main.Ui_MainWindow):
         self.openResult()
 
     def importInstructors(self):
-        instructors = ioHandler.getCSVFile('instructors')
-        if instructors:
-            instructors.pop(0)
-            instructors.pop(0)
-            blankSchedule = json.dumps(Timetable.generateRawTable())
-            for instructor in instructors:
-                Instructor.Instructor.insertInstructor([instructor[0], float(instructor[1]), blankSchedule])
-            self.tabListener(0)
+        # instructors = ioHandler.getCSVFile('instructors')
+        # if instructors:
+        #     instructors.pop(0)
+        #     instructors.pop(0)
+        #     blankSchedule = json.dumps(Timetable.generateRawTable())
+        #     for instructor in instructors:
+        #         Instructor.Instructor.insertInstructor([instructor[0], float(instructor[1]), blankSchedule])
+        #     self.tabListener(0)
+        pass
 
     def importRooms(self):
-        rooms = ioHandler.getCSVFile('rooms')
-        if rooms:
-            rooms.pop(0)
-            rooms.pop(0)
-            blankSchedule = json.dumps(Timetable.generateRawTable())
-            for room in rooms:
-                Room.Room.insertRoom([room[0], blankSchedule, room[1]])
-            self.tabListener(1)
+        # rooms = ioHandler.getCSVFile('rooms')
+        # if rooms:
+        #     rooms.pop(0)
+        #     rooms.pop(0)
+        #     blankSchedule = json.dumps(Timetable.generateRawTable())
+        #     for room in rooms:
+        #         Room.Room.insertRoom([room[0], blankSchedule, room[1]])
+        #     self.tabListener(1)
+        pass
 
     def importSubjects(self):
-        subjects = ioHandler.getCSVFile('subjects')
-        if subjects:
-            subjects.pop(0)
-            subjects.pop(0)
-            for subject in subjects:
-                Subject.Subject.insertSubject(
-                    [subject[1], float(subject[3]), subject[0], '', json.dumps([]), int(subject[4]), subject[2]])
-        self.tabListener(2)
+        # subjects = ioHandler.getCSVFile('subjects')
+        # if subjects:
+        #     subjects.pop(0)
+        #     subjects.pop(0)
+        #     for subject in subjects:
+        #         Subject.Subject.insertSubject(
+        #             [subject[1], float(subject[3]), subject[0], '', json.dumps([]), int(subject[4]), subject[2]])
+        # self.tabListener(2)
+        pass
 
     def saveAs(self):
         ioHandler.saveAs()
@@ -380,8 +381,6 @@ class MainWindow(Main.Ui_MainWindow):
         self.tabListener(0)
 
     def loadSettings(self):
-        self.timeStarting.setTime(QtCore.QTime(int(self.settings['starting_time'] / 2), 0))
-        self.timeEnding.setTime(QtCore.QTime(int(self.settings['ending_time'] / 2) + 1, 0))
         if self.settings['lunchbreak']:
             self.radioLunchYes.setChecked(True)
         else:
@@ -396,19 +395,12 @@ class MainWindow(Main.Ui_MainWindow):
         self.editDev.setValue(self.settings['deviation_tolerance'])
         self.matrix = matrix = self.settings['evaluation_matrix']
         self.editSbj.setValue(matrix['subject_placement'])
-        self.editLun.setValue(matrix['lunch_break'])
-        self.editSec.setValue(matrix['student_rest'])
         self.editIdle.setValue(matrix['idle_time'])
-        self.editInstrRest.setValue(matrix['instructor_rest'])
-        self.editInstrLoad.setValue(matrix['instructor_load'])
-        self.editMeet.setValue(matrix['meeting_pattern'])
         self.matrixSum = sum(matrix.values())
         self.lblTotal.setText('Total: {}%'.format(self.matrixSum))
 
     # Handle Settings
     def handleSettings(self):
-        self.timeStarting.timeChanged.connect(self.handleStartingTime)
-        self.timeEnding.timeChanged.connect(self.handleEndingTime)
         self.radioLunchYes.toggled.connect(lambda state: self.updateSettings('lunchbreak', state))
         self.editMinPop.valueChanged.connect(self.handleMinPop)
         self.editMaxPop.valueChanged.connect(self.handleMaxPop)
@@ -420,14 +412,7 @@ class MainWindow(Main.Ui_MainWindow):
         self.editElite.valueChanged.connect(lambda value: self.updateSettings('elite_percent', round(value / 100, 2)))
         self.editDev.valueChanged.connect(lambda value: self.updateSettings('deviation_tolerance', value))
         self.editSbj.valueChanged.connect(lambda value: self.handleMatrix('subject_placement', value, self.editSbj))
-        self.editLun.valueChanged.connect(lambda value: self.handleMatrix('lunch_break', value, self.editLun))
-        self.editSec.valueChanged.connect(lambda value: self.handleMatrix('student_rest', value, self.editSec))
         self.editIdle.valueChanged.connect(lambda value: self.handleMatrix('idle_time', value, self.editIdle))
-        self.editInstrRest.valueChanged.connect(
-            lambda value: self.handleMatrix('instructor_rest', value, self.editInstrRest))
-        self.editInstrLoad.valueChanged.connect(
-            lambda value: self.handleMatrix('instructor_load', value, self.editInstrLoad))
-        self.editMeet.valueChanged.connect(lambda value: self.handleMatrix('meeting_pattern', value, self.editMeet))
 
     def handleStartingTime(self, time):
         if time.hour() * 2 >= self.settings['ending_time']:
