@@ -121,6 +121,9 @@ class Tree:
             frameLayout.addWidget(btnDelete)
             # Append the widget group to edit item
             self.tree.setIndexWidget(edit.index(), frameEdit)
+            # Set sorting by click on header
+            self.tree.setSortingEnabled(True)
+
 
     def edit(self, id):
         Instructor(id)

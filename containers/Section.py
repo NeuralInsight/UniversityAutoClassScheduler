@@ -188,6 +188,7 @@ class Tree:
             frameLayout.addWidget(btnEdit)
             frameLayout.addWidget(btnDelete)
             self.tree.setIndexWidget(edit.index(), frameEdit)
+            self.tree.setSortingEnabled(True)
 
     def edit(self, id):
         Section(id)
