@@ -732,7 +732,7 @@ class GeneticAlgorithm(QtCore.QThread):
                 self.evaluate()
                 self.detailsSignal.emit(
                     [generation, len(self.chromosomes), int(self.mutationRate * 100), round(self.averageFitness, 2),
-                     round(self.pastAverageFitness, 2), self.highestFitness, self.lowestFitness])
+                     round(self.pastAverageFitness, 2), self.highestFitness, self.lowestFitness, round((self.highestFitness / self.settings['maximum_fitness']) * 100,2)])
                 if self.highestFitness >= self.settings['maximum_fitness']:
                     self.statusSignal.emit('Reached the Highest Fitness')
                     self.operationSignal.emit(1)

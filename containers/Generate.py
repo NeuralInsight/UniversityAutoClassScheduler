@@ -49,6 +49,7 @@ class Generate:
             self.sectionKeys.append(section)
             parent.cmbSection.addItem(details[0])
         parent.cmbSection.currentIndexChanged.connect(self.changePreview)
+        self.parent.progressBar.setValue(0)
         self.startWorkers()
         dialog.exec_()
 
@@ -86,6 +87,7 @@ class Generate:
         self.parent.lblPreviousFitness.setText('Previous Average Fitness: {:.2f}%'.format(round(details[4], 2)))
         self.parent.lblHighestFitness.setText('Highest Fitness: {:.2f}%'.format(round(details[5], 2)))
         self.parent.lblLowestFitness.setText('Lowest Fitness: {:.2f}%'.format(round(details[6], 2)))
+        self.parent.progressBar.setValue(int(details[7]))
 
     def updateView(self, chromosomes):
         chromosomes.reverse()
