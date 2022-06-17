@@ -20,7 +20,7 @@ class Ui_Dialog(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(Dialog.sizePolicy().hasHeightForWidth())
         Dialog.setSizePolicy(sizePolicy)
-        Dialog.setMinimumSize(QtCore.QSize(712, 605))
+        Dialog.setMinimumSize(QtCore.QSize(712, 655))
         Dialog.setMaximumSize(QtCore.QSize(712, 655))
         Dialog.setFocusPolicy(QtCore.Qt.NoFocus)
         Dialog.setModal(False)
