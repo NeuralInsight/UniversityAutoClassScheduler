@@ -1,5 +1,4 @@
 from PyQt5 import QtWidgets, QtGui, QtCore
-from containers import Share
 from components import Database as db, Timetable
 from py_ui import Section as Parent
 import json
@@ -10,10 +9,6 @@ icon_path = os.path.join(os.getcwd(), 'assets/icons')
 class Section:
     def __init__(self, id):
         self.id = id
-        # Array of share IDs to be finalized
-        self.shareId = []
-        # Array of share IDs to be removed
-        self.removeShareId = []
         self.dialog = dialog = QtWidgets.QDialog()
         # From the qt_ui generated UI
         self.parent = parent = Parent.Ui_Dialog()
@@ -69,46 +64,19 @@ class Section:
             model.appendRow([subjectId, availability, code, name])
         model.itemChanged.connect(lambda item: self.toggleSharing(item))
 
-    def toggleSharing(self, item):
-        if item.column() == 2:
-            subjectId = self.model.data(self.model.index(item.row(), 0))
-            shareToggle = self.model.item(item.row(), 2).checkState()
-            if shareToggle == 2 and not self.model.item(item.row(), 2).text():
-                shareData = Share.Share(subjectId, self.id).getShareData()
-                if not shareData[0]:
-                    self.model.item(item.row(), 2).setCheckState(0)
-                    return False
-                shareId = shareData[0]
-                self.shareId.append(shareId)
-                self.model.item(item.row(), 5).setText(str(shareId))
-                self.model.item(item.row(), 2).setText(shareData[1])
-                self.model.item(item.row(), 1).setCheckState(2)
-            elif shareToggle == 0 and self.model.item(item.row(), 2).text():
-                if int(self.model.item(item.row(), 5).text()) in self.shareId:
-                    self.shareId.remove(int(self.model.item(item.row(), 5).text()))
-                else:
-                    self.removeShareId.append(int(self.model.item(item.row(), 5).text()))
-                self.model.item(item.row(), 5).setText('')
-                self.model.item(item.row(), 2).setText('')
-        elif item.column() == 1:
-            if self.model.item(item.row(), 1).checkState() == 0 and self.model.item(item.row(), 5).text():
-                self.model.item(item.row(), 2).setCheckState(0)
-
     def fillForm(self):
         conn = db.getConnection()
         cursor = conn.cursor()
-        cursor.execute('SELECT name, schedule, stay FROM sections WHERE id = ?', [self.id])
+        cursor.execute('SELECT name, schedule FROM sections WHERE id = ?', [self.id])
         result = cursor.fetchone()
         conn.close()
         self.parent.lineEditName.setText(str(result[0]))
-        self.parent.checkStay.setChecked(result[2])
         self.table = Timetable.Timetable(self.parent.tableSchedule, json.loads(result[1]))
 
     def finish(self):
         if not self.parent.lineEditName.text():
             return False
         name = self.parent.lineEditName.text()
-        stay = 1 if self.parent.checkStay.isChecked() else 0
         schedule = json.dumps(self.table.getData())
         subjects = []
         for row in range(self.model.rowCount()):
@@ -117,24 +85,12 @@ class Section:
         subjects = json.dumps(subjects)
         conn = db.getConnection()
         cursor = conn.cursor()
-        if self.removeShareId:
-            for id in self.removeShareId:
-                cursor.execute('SELECT sections FROM sharings WHERE id = ?', [id])
-                result = list(map(int, json.loads(cursor.fetchone()[0])))
-                if len(result) > 2:
-                    result.remove(self.id)
-                    cursor.execute('UPDATE sharings SET sections = ? WHERE id = ?', [json.dumps(result), id])
-                else:
-                    cursor.execute('UPDATE sharings SET final = 0 WHERE id = ?', [id])
-        if self.shareId:
-            for id in self.shareId:
-                cursor.execute('UPDATE sharings SET final = 1 WHERE id = ?', [id])
         if self.id:
-            cursor.execute('UPDATE sections SET name = ?, schedule = ?, subjects = ?, stay = ? WHERE id = ?',
-                           [name, schedule, subjects, stay, self.id])
+            cursor.execute('UPDATE sections SET name = ?, schedule = ?, subjects = ? WHERE id = ?',
+                           [name, schedule, subjects, self.id])
         else:
-            cursor.execute('INSERT INTO sections (name, schedule, subjects, stay) VALUES (?, ?, ?, ?)',
-                           [name, schedule, subjects, stay])
+            cursor.execute('INSERT INTO sections (name, schedule, subjects) VALUES (?, ?, ?)',
+                           [name, schedule, subjects])
         conn.commit()
         conn.close()
         self.dialog.close()

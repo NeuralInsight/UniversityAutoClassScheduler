@@ -34,13 +34,6 @@ class ScenarioComposer:
         sections = self.stringToInt(sections, 2)
         return sections
 
-    def getSharings(self):
-        self.cursor.execute('SELECT id, subjectId, sections FROM sharings WHERE final = 1')
-        sharings = self.listToDictionary(self.cursor.fetchall())
-        sharings = self.jsonToList(sharings, 1)
-        sharings = self.stringToInt(sharings, 1)
-        return sharings
-
     def listToDictionary(self, toDict):
         return {entry[0]: list(entry[1:]) for entry in toDict}
 
@@ -61,7 +54,6 @@ class ScenarioComposer:
     def getScenarioData(self):
         data = {
             'instructors': self.getInstructors(),
-            'sharings': self.getSharings(),
             'sections': self.getSections(),
             'subjects': self.getSubjects(),
             'rooms': self.getRooms()
