@@ -6,6 +6,24 @@ import os
 
 icon_path = os.path.join(os.getcwd(), 'assets/icons')
 
+class SortFilterProxyModel(QtCore.QSortFilterProxyModel):
+    def __init__(self, *args, **kwargs):
+        QtCore.QSortFilterProxyModel.__init__(self, *args, **kwargs)
+        self.filters = {}
+
+    def setFilterByColumn(self, regex, column):
+        self.filters[column] = regex
+        self.invalidateFilter()
+
+    def filterAcceptsRow(self, source_row, source_parent):
+        for key, regex in self.filters.items():
+            ix = self.sourceModel().index(source_row, key, source_parent)
+            if ix.isValid():
+                text = self.sourceModel().data(ix)
+                if not regex in text:
+                    return False
+        return True
+    
 class Section:
     def __init__(self, id):
         self.id = id
@@ -21,14 +39,37 @@ class Section:
         self.setupSubjects()
         parent.btnFinish.clicked.connect(self.finish)
         parent.btnCancel.clicked.connect(self.dialog.close)
+        parent.txtSelectSubject.textChanged.connect(lambda value: self.onSearchTextChanged(value))
         dialog.exec_()
+        
+    def onSearchTextChanged(self, text):
+        self.proxyModel.setFilterByColumn(text,2)   
+           
+    def onInsSearchChanged(self,value):
+        self.onSearchTextChanged(value)
 
+    def setFilterByColumn(self, regex, column):
+        self.filters[column] = regex
+        self.invalidateFilter()
+
+    def filterAcceptsRow(self, source_row, source_parent):
+        for key, regex in self.filters.items():
+            ix = self.sourceModel().index(source_row, key, source_parent)
+            if ix.isValid():
+                text = self.sourceModel().data(ix)
+                if not regex in text:
+                    return False
+        return True
+    
     def setupSubjects(self):
         # Setup subjects tree view
         self.tree = tree = self.parent.treeSubjects
         self.model = model = QtGui.QStandardItemModel()
         model.setHorizontalHeaderLabels(['ID', 'Available', 'Subject Code', 'Subject Name'])
-        tree.setModel(model)
+        self.proxyModel = proxyModel = SortFilterProxyModel(
+            tree, recursiveFilteringEnabled = True
+        )
+        tree.setModel(proxyModel)
         tree.setColumnHidden(0, True)
         tree.setColumnHidden(5, True)
         # Populate tree with values
