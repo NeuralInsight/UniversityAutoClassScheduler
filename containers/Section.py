@@ -67,8 +67,9 @@ class Section:
         self.model = model = QtGui.QStandardItemModel()
         model.setHorizontalHeaderLabels(['ID', 'Available', 'Subject Code', 'Subject Name'])
         self.proxyModel = proxyModel = SortFilterProxyModel(
-            tree, recursiveFilteringEnabled = True
+            self.tree, recursiveFilteringEnabled = True
         )
+        self.proxyModel.setSourceModel(self.model)
         tree.setModel(proxyModel)
         tree.setColumnHidden(0, True)
         tree.setColumnHidden(5, True)
@@ -135,6 +136,9 @@ class Section:
         conn.commit()
         conn.close()
         self.dialog.close()
+
+    def onSearchTextChanged(self, text):
+        self.proxyModel.setFilterByColumn(text,3)
 
 
 class Tree:
