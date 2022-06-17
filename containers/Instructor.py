@@ -136,11 +136,11 @@ class Tree:
             edit.setEditable(False)
             # Append items to model
             self.model.appendRow([id, availability, name, hours, edit])
-
             # Create a widget group for edit and delete buttons
             # Edit buttons
             frameEdit = QtWidgets.QFrame()
             btnEdit = QtWidgets.QPushButton('', frameEdit)
+            btnEdit.setObjectName("btnEdit")
             btnEdit.setFlat(True)
             btnEdit.setIcon(QtGui.QIcon(os.path.join(icon_path, 'icons8-edit-64.png')))
             btnEdit.setIconSize(QtCore.QSize(32, 32))
@@ -148,6 +148,7 @@ class Tree:
             btnEdit.clicked.connect(lambda state, id=instr[0]: self.edit(id))
             # Delete buttons
             btnDelete = QtWidgets.QPushButton('', frameEdit)
+            btnDelete.setObjectName("btnDelete")
             btnDelete.setFlat(True)
             btnDelete.setIcon(QtGui.QIcon(os.path.join(icon_path, 'icons8-delete-64.png')))
             btnDelete.setIconSize(QtCore.QSize(32, 32))
