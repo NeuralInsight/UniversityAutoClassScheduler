@@ -104,8 +104,8 @@ class Section:
             name = QtGui.QStandardItem(subject[1])
             name.setEditable(False)
             model.appendRow([subjectId, availability, code, name])
-        model.itemChanged.connect(lambda item: self.toggleSharing(item))
-
+        self.tree.setSortingEnabled(True)
+        
     def fillForm(self):
         conn = db.getConnection()
         cursor = conn.cursor()
