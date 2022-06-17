@@ -125,7 +125,8 @@ class Tree:
             availability.setCheckState(2 if instr[1] == 1 else 0)
             availability.setEditable(False)
             # Hours Item
-            hours = QtGui.QStandardItem(str(instr[2]))
+            hours = QtGui.QStandardItem()
+            hours.setData(instr[2], QtCore.Qt.DisplayRole)
             hours.setEditable(False)
             # Name Item
             name = QtGui.QStandardItem(instr[3])
