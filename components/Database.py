@@ -45,9 +45,6 @@ def setup():
           code TEXT NOT NULL,
           description TEXT NOT NULL,
           instructors TEXT NOT NULL,
-          divisible BOOLEAN NOT NULL DEFAULT 1 CHECK (
-            divisible IN (0, 1)
-          ),
           type TEXT NOT NULL
         );
     """

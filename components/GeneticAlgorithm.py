@@ -140,8 +140,6 @@ class GeneticAlgorithm(QtCore.QThread):
             if generationAttempt > self.settings['generation_tolerance']: 
                 generating = False
                 return False
-            # Allow random meeting patterns if generation is taking long
-            forceRandomMeeting = True if generationAttempt > self.settings['generation_tolerance'] / 2 else False
             # First time generation
             if not error:
                 # Select a random room
@@ -155,7 +153,7 @@ class GeneticAlgorithm(QtCore.QThread):
                 else:
                     instructor = False
                 # Select time slot for the subject
-                timeDetails = self.selectTimeDetails(subject, forceRandomMeeting)
+                timeDetails = self.selectTimeDetails(subject)
             else:
                 # Randomly select if choosing new entry or replacing subject time details
                 if error == 1 or error == 2:
@@ -174,7 +172,7 @@ class GeneticAlgorithm(QtCore.QThread):
                 # Select subject time details
                 elif error == 3 or error == 4:
                     # timeDetails = [meetingPattern (days), startingTimeslot, int(hours)]
-                    timeDetails = self.selectTimeDetails(subject, forceRandomMeeting)
+                    timeDetails = self.selectTimeDetails(subject)
 
             # [roomId, [sectionId], subjectId, instructorID, [day / s], startingTS, length]
             scheduleToInsert = [room, section, subject, instructor, *timeDetails]
@@ -198,32 +196,12 @@ class GeneticAlgorithm(QtCore.QThread):
             instructor = np.random.choice(subjectInstructors)
         return instructor
 
-    def selectTimeDetails(self, subject, forceRandomMeeting):
-        meetingPatterns = [[0, 2, 4], [1, 3]]
+    def selectTimeDetails(self, subject):
         days = [0, 1, 2, 3, 4, 5]
         np.random.shuffle(days)
         hours = self.data['subjects'][subject][1]
         # Check if hours can be splitted with minimum session of 1 hour or 2 timeslot
-        # TODO: Change Split Pattern
-        if hours > 1.5 and ((hours / 3) % .5 == 0 or (hours / 2) % .5 == 0) and self.data['subjects'][subject][5]: 
-            # If hours is divisible by two and three
-            if (hours / 3) % .5 == 0 and (hours / 2) % .5 == 0:
-                meetingPattern = np.random.choice(meetingPatterns)
-                if len(meetingPattern) == 3:
-                    meetingPattern = days[0:3] if forceRandomMeeting else meetingPattern
-                    hours = hours / 3
-                else:
-                    meetingPattern = days[0:2] if forceRandomMeeting else meetingPattern
-                    hours = hours / 2
-            elif (hours / 3) % .5 == 0:
-                meetingPattern = days[0:3] if forceRandomMeeting else meetingPatterns[0]
-                hours = hours / 3
-            else:
-                meetingPattern = days[0:2] if forceRandomMeeting else meetingPatterns[1]
-                hours = hours / 2
-        # Select random day slot
-        else:
-            meetingPattern = [np.random.randint(0, 6)]
+        selected_day = [np.random.randint(0, 6)]
         # To convert hours into timetable timeslots
         # hours = hours / .5
         startingTimeslot_status = False
@@ -236,7 +214,7 @@ class GeneticAlgorithm(QtCore.QThread):
             if (candidate + hours) <= endingTime:
                 startingTimeslot = candidate
                 startingTimeslot_status = True
-        return [meetingPattern, int(startingTimeslot), int(hours)]
+        return [selected_day, int(startingTimeslot), int(hours)]
 
     def evaluate(self):
         totalChromosomeFitness = 0
@@ -345,7 +323,7 @@ class GeneticAlgorithm(QtCore.QThread):
     def evaluateSubjectsStartTime(self, chromosome):
         pass
     
-    
+
     def getAllFitness(self):
         return [chromosome.fitness for chromosome in self.chromosomes]
 
