@@ -56,9 +56,6 @@ def setup():
           subjects TEXT NOT NULL,
           active BOOLEAN NOT NULL DEFAULT 1 CHECK (
             active IN (0, 1)
-          ),
-          stay BOOLEAN NOT NULL DEFAULT 0 CHECK (
-            active IN (0, 1)
           )
         );
     """

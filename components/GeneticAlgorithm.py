@@ -46,7 +46,6 @@ class GeneticAlgorithm(QtCore.QThread):
             'sections': [],
             'subjects': []
         }
-        self.stayInRoomAssignments = {}
         self.tournamentSize = .04
         self.elitePercent = .05
         self.lowVariety = 55
@@ -72,37 +71,16 @@ class GeneticAlgorithm(QtCore.QThread):
         for i in range(quantity):
             self.statusSignal.emit('Creating #{} of {} Chromosomes'.format(i, quantity)) # Display Chromosome creation
             self.tempChromosome = Chromosome(self.data) # Create new Chromosome
-            # {id: [[subjectIds](, stay|roomId = False)]}
+            # {id: [[subjectIds](roomId)]}
             self.tempSections = sections = {key: [value[2], value[3]] for (key, value) in 
                                             copy.deepcopy(self.data['sections']).items()}
             # [roomIds]
             self.rooms = rooms = list(self.data['rooms'].keys()) # Get all roomIds
-            # Distributed Room selection for staying sections
-            if not len(self.stayInRoomAssignments):
-                selectedRooms = []
-                for section in sections:
-                    if sections[section][1]:
-                        room = False
-                        attempts = 0
-                        while not room:
-                            attempts += 1
-                            candidate = np.random.choice(rooms)
-                            if attempts == self.settings['generation_tolerance']:
-                                room = candidate
-                            if self.data['rooms'][candidate][1] == 'lec':
-                                if candidate not in selectedRooms:
-                                    selectedRooms.append(copy.deepcopy(candidate))
-                                    room = candidate
-                        sections[section][1] = room
-                        self.stayInRoomAssignments[section] = room
-            else:
-                for section, room in self.stayInRoomAssignments.items():
-                    sections[section][1] = room
 
             self.generateSubjectPlacementsForSections(sections)
             self.chromosomes.append(self.tempChromosome)
 
-    # {id: [[subjectIds](, stay|roomId = False)]}
+    # {id: [[subjectIds](roomId]}
     def generateSubjectPlacementsForSections(self, sections):
         # Maximum length of section subjects
         maxSubjects = max(len(subjects[0]) for subjects in sections.values())
@@ -124,11 +102,9 @@ class GeneticAlgorithm(QtCore.QThread):
         generationAttempt = 0
         error = None
 
-        stayInRoom = False if section[0] not in self.stayInRoomAssignments.keys() else self.stayInRoomAssignments[
-            section[0]]
         subjectDetails = self.data['subjects'][subject] # Get All Subject Details
 
-        room = stayInRoom if stayInRoom else None
+        room = None
         # [[day/s], startingTimeSlot, length]
         timeDetails = []
         instructor = None
@@ -143,8 +119,7 @@ class GeneticAlgorithm(QtCore.QThread):
             # First time generation
             if not error:
                 # Select a random room
-                if not stayInRoom or (stayInRoom and subjectDetails[6] == 'lab'):
-                    room = self.selectRoom(subject)
+                room = self.selectRoom(subject)
                 # Select instructors for the subjects
                 if len(subjectDetails[4]) > 1:
                     instructor = self.selectInstructor(subject) #Select Random Instructor
@@ -160,10 +135,7 @@ class GeneticAlgorithm(QtCore.QThread):
                     if np.random.randint(0, 2):
                         error = 3
                     elif error == 1:
-                        if not stayInRoom or (stayInRoom and subjectDetails[6] == 'lab'):
-                            room = self.selectRoom(subject)
-                        else:
-                            error = 3
+                        room = self.selectRoom(subject)
                     else:
                         if len(subjectDetails[4]) > 1:
                             instructor = self.selectInstructor(subject)
