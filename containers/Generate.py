@@ -120,7 +120,6 @@ class Generate:
         if type == 1:
             self.stopOperation()
 
-
     def updateTime(self):
         self.time = self.time.addSecs(1)
         self.parent.lblTime.setText('Elapsed Time: {}'.format(self.time.toString('hh:mm:ss')))
@@ -153,6 +152,7 @@ class Generate:
                              pickle.HIGHEST_PROTOCOL))])
             conn.commit()
             conn.close()
+            self.parent.progressBar.setValue(100)
         else:
             self.dialog.close()
 

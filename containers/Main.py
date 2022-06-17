@@ -161,6 +161,9 @@ class MainWindow(Main.Ui_MainWindow):
     # Export Result to Excel file
     def ExportExcelFile(self):
 
+        # Get Last result data
+        self.getLastResult()
+        
         #Creating and Configuring Logger
         Log_Format = "%(levelname)s %(asctime)s - %(message)s"
         logging.basicConfig(filename = "mainlog.log",
