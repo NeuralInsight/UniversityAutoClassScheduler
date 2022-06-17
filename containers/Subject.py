@@ -31,20 +31,16 @@ class Subject:
     def fillForm(self):
         conn = db.getConnection()
         cursor = conn.cursor()
-        cursor.execute('SELECT name, hours, code, description, divisible, type FROM subjects WHERE id = ?', [self.id])
+        cursor.execute('SELECT name, hours, code, description, type FROM subjects WHERE id = ?', [self.id])
         result = cursor.fetchone()
         conn.close()
         self.parent.lineEditName.setText(str(result[0]))
         self.parent.lineEditHours.setText(str(result[1]))
         self.parent.lineEditCode.setText(str(result[2]))
         self.parent.lineEditDescription.setText(str(result[3]))
-        if result[4]:
-            self.parent.radioYes.setChecked(True)
-        else:
-            self.parent.radioNo.setChecked(True)
-        if result[5] == 'lec':
+        if result[4] == 'lec':
             self.parent.radioLec.setChecked(True)
-        elif result[5] == 'lab':
+        elif result[4] == 'lab':
             self.parent.radioLab.setChecked(True)
         else:
             self.parent.radioAny.setChecked(True)
