@@ -93,14 +93,13 @@ class Subject:
         code = self.parent.lineEditCode.text()
         hours = self.parent.lineEditHours.text()
         description = self.parent.lineEditDescription.text()
-        divisible = 1 if self.parent.radioYes.isChecked() else 0
         if self.parent.radioLec.isChecked():
             type = 'lec'
         elif self.parent.radioLab.isChecked():
             type = 'lab'
         else:
             type = 'any'
-        data = [name, hours, code, description, json.dumps(instructors), divisible, type, self.id]
+        data = [name, hours, code, description, json.dumps(instructors), type, self.id]
         if not self.id:
             data.pop()
         self.insertSubject(data)
@@ -113,13 +112,13 @@ class Subject:
     def insertSubject(data):
         conn = db.getConnection()
         cursor = conn.cursor()
-        if len(data) > 7:
+        if len(data) > 6:
             cursor.execute(
-                'UPDATE subjects SET name = ?, hours = ?, code = ?, description = ?, instructors = ?, divisible = ?, type = ? WHERE id = ?',
+                'UPDATE subjects SET name = ?, hours = ?, code = ?, description = ?, instructors = ?, type = ? WHERE id = ?',
                 data)
         else:
             cursor.execute(
-                'INSERT INTO subjects (name, hours, code, description, instructors, divisible, type) VALUES (?, ?, ?, ?, ?, ?, ?)',
+                'INSERT INTO subjects (name, hours, code, description, instructors, type) VALUES (?, ?, ?, ?, ?, ?)',
                 data)
         conn.commit()
         conn.close()
