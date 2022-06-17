@@ -40,27 +40,8 @@ class Section:
         parent.btnFinish.clicked.connect(self.finish)
         parent.btnCancel.clicked.connect(self.dialog.close)
         parent.txtSelectSubject.textChanged.connect(lambda value: self.onSearchTextChanged(value))
-        dialog.exec_()
-        
-    def onSearchTextChanged(self, text):
-        self.proxyModel.setFilterByColumn(text,2)   
-           
-    def onInsSearchChanged(self,value):
-        self.onSearchTextChanged(value)
+        dialog.exec_()          
 
-    def setFilterByColumn(self, regex, column):
-        self.filters[column] = regex
-        self.invalidateFilter()
-
-    def filterAcceptsRow(self, source_row, source_parent):
-        for key, regex in self.filters.items():
-            ix = self.sourceModel().index(source_row, key, source_parent)
-            if ix.isValid():
-                text = self.sourceModel().data(ix)
-                if not regex in text:
-                    return False
-        return True
-    
     def setupSubjects(self):
         # Setup subjects tree view
         self.tree = tree = self.parent.treeSubjects
