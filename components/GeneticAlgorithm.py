@@ -44,7 +44,6 @@ class GeneticAlgorithm(QtCore.QThread):
             'rooms': [],
             'instructors': [],
             'sections': [],
-            'sharings': [],
             'subjects': []
         }
         self.stayInRoomAssignments = {}
@@ -120,7 +119,7 @@ class GeneticAlgorithm(QtCore.QThread):
                 sections[section][0].pop(subjectToPlace)
 
     # Section = [id], Subject = int (id)
-    def generateSubjectPlacement(self, section, subject, sharing=False):
+    def generateSubjectPlacement(self, section, subject):
         generating = True
         generationAttempt = 0
         error = None
@@ -177,7 +176,7 @@ class GeneticAlgorithm(QtCore.QThread):
                     # timeDetails = [meetingPattern (days), startingTimeslot, int(hours)]
                     timeDetails = self.selectTimeDetails(subject, forceRandomMeeting)
 
-            # [roomId, [sectionId], subjectId, instructorID, [day / s], startingTS, length(, sharingId)]
+            # [roomId, [sectionId], subjectId, instructorID, [day / s], startingTS, length]
             scheduleToInsert = [room, section, subject, instructor, *timeDetails]
             # Check if subject can be inserted
             error = self.tempChromosome.insertSchedule(scheduleToInsert)
@@ -470,7 +469,6 @@ class GeneticAlgorithm(QtCore.QThread):
         for section in self.data['sections'].values():
             activeSubjects += section[2]
         subjects = self.data['subjects']
-        sharings = self.data['sharings']
         # Get list of active instructors and their potential load
         for subject in activeSubjects:
             # Exclude subjects that have less than 1 candidate instructor
@@ -629,7 +627,7 @@ class GeneticAlgorithm(QtCore.QThread):
         parentAShareables = {
             'sections': {}
         }
-        # Raw list of parent A sections with reduced subjects from sharings
+        
         parentASections = {}
         for section, value in copy.deepcopy(parentA.data['sections']).items():
             parentASections[section] = value['details']
@@ -692,7 +690,7 @@ class GeneticAlgorithm(QtCore.QThread):
         mutationCandidates = {
             'sections': {},
         }
-        # Prepare clean list of subject placement with consideration for sharing
+        
         for section, data in copy.deepcopy(sections).items():
             mutationCandidates['sections'][section] = data[2]
         for section in copy.deepcopy(mutationCandidates['sections']):
@@ -755,7 +753,7 @@ class GeneticAlgorithm(QtCore.QThread):
 
 class Chromosome:
     # data = {
-    #     sections && sharings: {
+    #     sections: {
     #         id: {
     #             details: {
     #                 subject: [roomId,
@@ -776,7 +774,6 @@ class Chromosome:
     #         ]
     #     },
     #     unplaced: {
-    #         'sharings': [], // List of unplaced sharings
     #         'sections': {
     #             id: [] // Section ID and unplaced subjects
     #         }
@@ -788,11 +785,9 @@ class Chromosome:
         self.fitnessDetails = []
         self.data = {
             'sections': {},
-            'sharings': {},
             'instructors': {},
             'rooms': {},
             'unplaced': {
-                'sharings': [],
                 'sections': {}
             }
         }
@@ -828,7 +823,7 @@ class Chromosome:
                 roomTimetable.append([None if day == 'Available' else False for day in timeslotRow])
             self.data['rooms'][room] = roomTimetable
 
-    # [roomId, [sectionId], subjectId, instructorID, [day/s], startingTS, length(, sharingId)]
+    # [roomId, [sectionId], subjectId, instructorID, [day/s], startingTS, length]
     def insertSchedule(self, schedule):
         # Validate schedule details
         isValid = self.validateSchedule(copy.deepcopy(schedule))
@@ -861,7 +856,7 @@ class Chromosome:
                 return 4
         return True
         
-    # schedule: [roomId, [sectionId], subjectId, instructorID, [day/s], startingTS, length(, sharingId)]
+    # schedule: [roomId, [sectionId], subjectId, instructorID, [day/s], startingTS, length]
     
     # we shouldn't have any Class in [12:40, 13:30]
     def isLunchTime(self, schedule):
