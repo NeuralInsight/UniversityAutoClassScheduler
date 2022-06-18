@@ -10,12 +10,16 @@ QMainWindow {
     background-color: #f0f0f0;
 }
 
-QTreeView::indicator,QCheckBox {
+QTreeView::indicator {
     height: 18px;
     width: 18px;
     border: 1px solid rgb(246, 134, 86);
     border-radius: 4px;
     background-color: rgb(255, 255, 255);
+}
+
+QCheckBox {
+    padding: 5px;
 }
 
 QTreeView::indicator:hover,QCheckBox:hover {
@@ -32,7 +36,7 @@ QTreeView::indicator:checked,QCheckBox::indicator:checked {
 }
 
 QCheckBox::indicator:unchecked {
-    border: 1px solid rgb(246, 134, 86);
+    border-width: 1px solid rgb(246, 134, 86);
     border-radius: 4px;
     background-color: rgb(255, 255, 255);
 }
