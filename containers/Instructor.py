@@ -137,6 +137,7 @@ class Tree:
             edit.setEditable(False)
             # Append items to model
             self.model.appendRow([id, availability, name, hours, edit])
+            # self.model.setObjectName("test")
             # Create a widget group for edit and delete buttons
             # Edit buttons
             frameEdit = QtWidgets.QFrame()
@@ -160,11 +161,13 @@ class Tree:
             frameLayout.setContentsMargins(0, 0, 0, 0)
             frameLayout.addWidget(btnEdit)
             frameLayout.addWidget(btnDelete)
+            frameLayout.setObjectName("test")
             # Append the widget group to edit item
             self.tree.setIndexWidget(self.proxyModel.mapFromSource(edit.index()), frameEdit)
         
         self.tree.setSortingEnabled(True) 
         self.tree.setColumnWidth(2, 400)
+        self.tree.setAlternatingRowColors(True)
         
     def onSearchTextChanged(self, text):
         self.proxyModel.setFilterByColumn(text,2)

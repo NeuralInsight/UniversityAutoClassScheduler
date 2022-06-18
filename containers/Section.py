@@ -87,6 +87,7 @@ class Section:
             name.setEditable(False)
             model.appendRow([subjectId, availability, code, name])
         self.tree.setSortingEnabled(True)
+        self.tree.setAlternatingRowColors(True)
         
     def fillForm(self):
         conn = db.getConnection()
@@ -189,6 +190,7 @@ class Tree:
         
         self.tree.setSortingEnabled(True)
         self.tree.setColumnWidth(2, 500)
+        self.tree.setAlternatingRowColors(True)
 
     def edit(self, id):
         Section(id)
