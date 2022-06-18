@@ -49,6 +49,7 @@ class Ui_Dialog(object):
         self.gridLayout.addWidget(self.groupBox_2, 0, 2, 1, 1)
         self.verticalLayout.addLayout(self.gridLayout)
         self.tableSchedule = QtWidgets.QTableView(Dialog)
+        self.tableSchedule.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.tableSchedule.setObjectName("tableSchedule")
         self.verticalLayout.addWidget(self.tableSchedule)
         self.horizontalLayout = QtWidgets.QHBoxLayout()

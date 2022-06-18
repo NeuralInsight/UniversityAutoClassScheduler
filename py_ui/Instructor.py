@@ -55,7 +55,7 @@ class Ui_Dialog(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.tableSchedule.sizePolicy().hasHeightForWidth())
         self.tableSchedule.setSizePolicy(sizePolicy)
-        self.tableSchedule.setLayoutDirection(QtCore.Qt.RightToLeft)
+        self.tableSchedule.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.tableSchedule.setLocale(QtCore.QLocale(QtCore.QLocale.Persian, QtCore.QLocale.Iran))
         self.tableSchedule.setObjectName("tableSchedule")
         self.verticalLayout.addWidget(self.tableSchedule)

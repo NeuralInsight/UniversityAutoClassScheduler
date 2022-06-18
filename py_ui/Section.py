@@ -56,6 +56,7 @@ class Ui_Dialog(object):
         self.treeSubjects.setObjectName("treeSubjects")
         self.verticalLayout.addWidget(self.treeSubjects)
         self.tableSchedule = QtWidgets.QTableView(Dialog)
+        self.tableSchedule.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.tableSchedule.setMinimumSize(QtCore.QSize(694, 509))
         self.tableSchedule.setMaximumSize(QtCore.QSize(694, 509))
         self.tableSchedule.setObjectName("tableSchedule")
