@@ -46,7 +46,7 @@ class Section:
         # Setup subjects tree view
         self.tree = tree = self.parent.treeSubjects
         self.model = model = QtGui.QStandardItemModel()
-        model.setHorizontalHeaderLabels(['ID', 'Available', 'Subject Code', 'Subject Name'])
+        model.setHorizontalHeaderLabels(['ID', 'فعال', 'کد درس', 'نام درس'])
         self.proxyModel = proxyModel = SortFilterProxyModel(
             self.tree, recursiveFilteringEnabled = True
         )
@@ -54,6 +54,7 @@ class Section:
         tree.setModel(proxyModel)
         tree.setColumnHidden(0, True)
         tree.setColumnHidden(5, True)
+        tree.header().setDefaultAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignVCenter)
         # Populate tree with values
         conn = db.getConnection()
         cursor = conn.cursor()

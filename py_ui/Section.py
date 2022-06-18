@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file './qt_ui/section_2.ui'
+# Form implementation generated from reading ui file './qt_ui/section_fa.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.6
 #
@@ -17,6 +17,8 @@ class Ui_Dialog(object):
         Dialog.resize(714, 864)
         Dialog.setMinimumSize(QtCore.QSize(714, 864))
         Dialog.setMaximumSize(QtCore.QSize(714, 16777215))
+        Dialog.setLayoutDirection(QtCore.Qt.RightToLeft)
+        Dialog.setLocale(QtCore.QLocale(QtCore.QLocale.Persian, QtCore.QLocale.Iran))
         self.verticalLayout_2 = QtWidgets.QVBoxLayout(Dialog)
         self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout_2.setSpacing(0)
@@ -81,9 +83,19 @@ class Ui_Dialog(object):
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
-        self.lblName_2.setText(_translate("Dialog", " Name :"))
-        self.groupBox.setTitle(_translate("Dialog", "Search"))
-        self.txtSelectSubject.setPlaceholderText(_translate("Dialog", "Search ..."))
-        self.btnFinish.setText(_translate("Dialog", "Finish"))
+        self.lblName_2.setText(_translate("Dialog", "نام گروه"))
+        self.groupBox.setTitle(_translate("Dialog", "جست و جو در واحد ها"))
+        self.txtSelectSubject.setPlaceholderText(_translate("Dialog", "جست و جو ..."))
+        self.btnFinish.setText(_translate("Dialog", "ایجاد"))
         self.btnFinish.setShortcut(_translate("Dialog", "Ctrl+S"))
-        self.btnCancel.setText(_translate("Dialog", "Cancel"))
+        self.btnCancel.setText(_translate("Dialog", "بستن"))
+
+
+if __name__ == "__main__":
+    import sys
+    app = QtWidgets.QApplication(sys.argv)
+    Dialog = QtWidgets.QDialog()
+    ui = Ui_Dialog()
+    ui.setupUi(Dialog)
+    Dialog.show()
+    sys.exit(app.exec_())
