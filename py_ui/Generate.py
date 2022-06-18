@@ -112,7 +112,7 @@ class Ui_Dialog(object):
         self.progressBar.setProperty("value", 24)
         self.progressBar.setObjectName("progressBar")
         self.lblProgressStatus = QtWidgets.QLabel(self.groupBox_2)
-        self.lblProgressStatus.setGeometry(QtCore.QRect(820, 30, 141, 20))
+        self.lblProgressStatus.setGeometry(QtCore.QRect(10, 30, 951, 20))
         self.lblProgressStatus.setObjectName("lblProgressStatus")
         self.verticalLayout_5.addWidget(self.groupBox_2)
 

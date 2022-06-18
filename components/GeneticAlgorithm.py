@@ -34,6 +34,10 @@ class GeneticAlgorithm(QtCore.QThread):
     operationSignal = QtCore.pyqtSignal(int)
     # List of chromosomes for preview
     dataSignal = QtCore.pyqtSignal(list)
+    # Operation ProgressBar
+    progressBarSignal = QtCore.pyqtSignal(int)
+    # Operation Progress Status
+    progressSignal = QtCore.pyqtSignal(str)
 
     def __init__(self, data):
         self.averageFitness = 0
@@ -68,8 +72,10 @@ class GeneticAlgorithm(QtCore.QThread):
         self.generateChromosome(self.settings['minimum_population'])
 
     def generateChromosome(self, quantity):
+        self.progressBarSignal.emit(0)
         for i in range(quantity):
-            self.statusSignal.emit('Creating #{} of {} Chromosomes'.format(i, quantity)) # Display Chromosome creation
+            self.statusSignal.emit('ایجاد #{} از {} کروموزوم'.format(i, quantity)) # Display Chromosome creation
+            self.progressBarSignal.emit(int(i * 100 / quantity))
             self.tempChromosome = Chromosome(self.data) # Create new Chromosome
             # {id: [[subjectIds](roomId)]}
             self.tempSections = sections = {key: [value[2], value[3]] for (key, value) in 
@@ -193,8 +199,10 @@ class GeneticAlgorithm(QtCore.QThread):
         self.pastAverageFitness = copy.deepcopy(self.averageFitness) 
         self.lowestFitness = 100
         self.highestFitness = 0
+        self.progressBarSignal.emit(0)
         for index, chromosome in enumerate(self.chromosomes): # For each chromosome
-            self.statusSignal.emit('Evaluating #{} of {} Chromosomes'.format(index + 1, len(self.chromosomes))) 
+            self.statusSignal.emit('ارزیابی کروموزم #{} از {}'.format(index + 1, len(self.chromosomes)))
+            self.progressBarSignal.emit(int((index + 1) * 100 / len(self.chromosomes)))
             chromosome.fitness = self.evaluateAll(chromosome)
             totalChromosomeFitness += chromosome.fitness # Add chromosome fitness to total fitness
             self.averageFitness = totalChromosomeFitness / len(self.chromosomes) 
@@ -361,7 +369,8 @@ class GeneticAlgorithm(QtCore.QThread):
             eliteCount = eliteCount if eliteCount % 2 == 0 else eliteCount + 1
         else:
             eliteCount = eliteCount if eliteCount % 2 != 0 else eliteCount + 1
-        self.statusSignal.emit('Selecting {} Elites'.format(eliteCount))
+        self.progressBarSignal.emit(100)
+        self.statusSignal.emit('انتخاب {} Elites'.format(eliteCount))
         sortedFitness = sorted(enumerate(chromosomeFitness), key=itemgetter(1))
         elites = list(map(lambda chromosome: chromosome[0], sortedFitness[eliteCount * -1:]))
         matingPool = []
@@ -370,8 +379,10 @@ class GeneticAlgorithm(QtCore.QThread):
         if tournamentSize > 25:
             tournamentSize = 25
         # Fill mating pool with couples selected by multiple tournaments
+        self.progressBarSignal.emit(0)
         for i in range(matingPoolSize):
-            self.statusSignal.emit('Creating #{} of {} Couples'.format(i + 1, matingPoolSize))
+            self.statusSignal.emit('ایجاد #{} از {} زوج'.format(i + 1, matingPoolSize))
+            self.progressBarSignal.emit(int((i / matingPoolSize) * 100))
             couple = []
             while len(couple) != 2:
                 winner = self.createTournament(tournamentSize, chromosomeFitness)
@@ -404,12 +415,14 @@ class GeneticAlgorithm(QtCore.QThread):
         self.offsprings = []
         for couple in self.matingPool:
             self.statusSignal.emit(
-                'Creating #{} of {} Offsprings'.format(offspringCount, len(self.chromosomes) - len(self.elites)))
+                'ایجاد #{} از {} فرزند'.format(offspringCount, len(self.chromosomes) - len(self.elites)))
+            self.progressBarSignal.emit(int((offspringCount / (len(self.chromosomes) - len(self.elites))) * 100))
             self.offsprings.append(self.createOffspring(couple))
             offspringCount += 1
             couple.reverse()
             self.statusSignal.emit(
-                'Creating #{} of {} Offsprings'.format(offspringCount, len(self.chromosomes) - len(self.elites)))
+                'ایجاد #{} از {} فرزند'.format(offspringCount, len(self.chromosomes) - len(self.elites)))
+            self.progressBarSignal.emit(int((offspringCount / (len(self.chromosomes) - len(self.elites))) * 100))
             self.offsprings.append(self.createOffspring(couple))
             offspringCount += 1
         self.elites = list(map(lambda elite: copy.deepcopy(self.chromosomes[elite]), self.elites))
@@ -493,11 +506,14 @@ class GeneticAlgorithm(QtCore.QThread):
             if not len(mutationCandidates['sections'][section]):
                 mutationCandidates['sections'].pop(section)
         # Randomly select chromosomes to mutate
+        self.progressBarSignal.emit(0)
+        self.progressSignal.emit('ایجاد جهش در کروموزوم ها')
         for index, chromosome in enumerate(copy.deepcopy(self.chromosomes)):
             #TODO: Change the random condition of mutation
             if np.random.randint(100) > (self.mutationRate * 100) - 1:
                 continue
-            self.statusSignal.emit('Mutating Chromosome #{}'.format(index + 1))
+            self.statusSignal.emit('جهش کروموزوم #{}'.format(index + 1))
+            self.progressBarSignal.emit(int((index / len(self.chromosomes)) * 100))
             self.tempChromosome = Chromosome(self.data)
             # Select a gene to mutate
             section = np.random.choice(list(mutationCandidates['sections'].keys()))
@@ -515,35 +531,46 @@ class GeneticAlgorithm(QtCore.QThread):
             self.chromosomes[index] = copy.deepcopy(self.tempChromosome)
 
     def run(self):
-        self.statusSignal.emit('Initializing')
+        self.progressBarSignal.emit(0)
+        self.statusSignal.emit('آماده سازی')
+        self.progressSignal.emit('آماده سازی')
         self.initialization() # Initialize chromosomes (Create first Generation)
         generation = 0
         runThread = True
         while (runThread):
             if self.running:
                 generation += 1
-                self.statusSignal.emit('Preparing Evaluation')
+                self.statusSignal.emit('آماده شدن برای ارزیابی')
+                self.progressSignal.emit('آماده شدن برای ارزیابی')
                 self.evaluate()
                 self.detailsSignal.emit(
                     [generation, len(self.chromosomes), int(self.mutationRate * 100), round(self.averageFitness, 2),
                      round(self.pastAverageFitness, 2), self.highestFitness, self.lowestFitness, round((self.highestFitness / self.settings['maximum_fitness']) * 100,2)])
                 if self.highestFitness >= self.settings['maximum_fitness']:
-                    self.statusSignal.emit('Reached the Highest Fitness')
+                    self.statusSignal.emit('رسیدن به بالاترین حد فیتنس')
+                    self.progressSignal.emit('پایان عملیات')
+                    self.progressBarSignal.emit(100)
                     self.operationSignal.emit(1)
                     self.running = runThread = False
                     break
                 if self.settings['maximum_generations'] < generation - 1:
-                    self.statusSignal.emit('Hit Maximum Generations')
+                    self.statusSignal.emit('رسیدن به بالاترین حد ایجاد نسل')
+                    self.progressSignal.emit('پایان عملیات')
+                    self.progressBarSignal.emit(100)
                     self.operationSignal.emit(1)
                     self.running = runThread = False
                     break
-                self.statusSignal.emit('Tweaking Environment')
+                self.statusSignal.emit('بهبود محیط')
+                self.progressSignal.emit('بهبود محیط')
                 self.adapt()
-                self.statusSignal.emit('Preparing Selection')
+                self.statusSignal.emit('آماده سازی برای selection')
+                self.progressSignal.emit('آماده سازی برای selection')
                 self.selection()
-                self.statusSignal.emit('Preparing Crossover')
+                self.statusSignal.emit('ایجاد Cross Over')
+                self.progressSignal.emit('ایجاد Cross Over')
                 self.crossover()
-                self.statusSignal.emit('Preparing Mutation')
+                self.statusSignal.emit('آماده سازی برای مرحله جهش')
+                self.progressSignal.emit('آماده سازی برای مرحله جهش')
                 self.mutation()
 
 

@@ -49,7 +49,7 @@ class Generate:
             self.sectionKeys.append(section)
             parent.cmbSection.addItem(details[0])
         parent.cmbSection.currentIndexChanged.connect(self.changePreview)
-        self.parent.progressBar.setValue(0)
+        self.updateProgressBar(0)
         self.startWorkers()
         dialog.exec_()
 
@@ -74,6 +74,8 @@ class Generate:
         self.geneticAlgorithm.detailsSignal.connect(self.updateDetails)
         self.geneticAlgorithm.dataSignal.connect(self.updateView)
         self.geneticAlgorithm.operationSignal.connect(self.updateOperation)
+        self.geneticAlgorithm.progressBarSignal.connect(self.updateProgressBar)
+        self.geneticAlgorithm.progressSignal.connect(self.updateProgressStatus)
         self.geneticAlgorithm.start()
 
     def updateStatus(self, status):
@@ -87,7 +89,6 @@ class Generate:
         self.parent.lblPreviousFitness.setText('میانگین فیتنس نسل قبل: {:.2f}%'.format(round(details[4], 2)))
         self.parent.lblHighestFitness.setText('بالاترین فیتنس: {:.2f}%'.format(round(details[5], 2)))
         self.parent.lblLowestFitness.setText('پایین ترین فیتنس: {:.2f}%'.format(round(details[6], 2)))
-        self.parent.progressBar.setValue(int(details[7]))
 
     def updateView(self, chromosomes):
         chromosomes.reverse()
@@ -152,7 +153,7 @@ class Generate:
                              pickle.HIGHEST_PROTOCOL))])
             conn.commit()
             conn.close()
-            self.parent.progressBar.setValue(100)
+            self.updateProgressBar(100)
         else:
             self.dialog.close()
 
@@ -165,6 +166,13 @@ class Generate:
             self.totalResource['memory'].append(resource[1][1])
         self.parent.lblCPU.setText('پردازنده: {}%'.format(resource[0]))
         self.parent.lblMemory.setText('حافظه رم:‌ {}% - {} MB'.format(resource[1][0], resource[1][1]))
+
+    def updateProgressBar(self, progress):
+        self.parent.progressBar.setValue(progress)
+
+    def updateProgressStatus(self, status):
+        self.parent.lblProgressStatus.setText("مرحله: {}".format(status))
+
 
 
 class ResourceTrackerWorker(QtCore.QThread):
