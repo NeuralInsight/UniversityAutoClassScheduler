@@ -23,6 +23,7 @@ class Subject:
         self.setupInstructors()
         parent.btnFinish.clicked.connect(self.finish)
         parent.btnCancel.clicked.connect(self.dialog.close)
+        parent.btnSave.clicked.connect(self.save)
         parent.txtSelectIns.textChanged.connect(lambda value: self.onSearchTextChanged(value))
 
         dialog.exec_()
@@ -77,9 +78,15 @@ class Subject:
             model.appendRow([id, availability, name])
 
     def finish(self):
+        if self.save():
+            self.dialog.close()
+
+    def save(self):
         if not self.parent.lineEditName.text():
+            self.error('لطفا نام درس را وارد کنید')
             return False
         if not self.parent.lineEditCode.text():
+            self.error('لطفا کد درس را وارد کنید')
             return False
         if not self.parent.lineEditHours.text() or float(self.parent.lineEditHours.text()) < 0 or float(
                 self.parent.lineEditHours.text()) > 12 or not (
@@ -104,10 +111,20 @@ class Subject:
         if not self.id:
             data.pop()
         self.insertSubject(data)
-        self.dialog.close()
+        self.parent.lineEditCode.clear()
+        return True
+
 
     def onSearchTextChanged(self, text):
         self.proxyModel.setFilterByColumn(text,2)
+
+    def error(self, message):
+        confirm = QtWidgets.QMessageBox()
+        confirm.setIcon(QtWidgets.QMessageBox.Warning)
+        confirm.setText(message)
+        confirm.setWindowTitle('خطا')
+        confirm.setStandardButtons(QtWidgets.QMessageBox.Ok)
+        confirm.exec_()
 
     @staticmethod
     def insertSubject(data):
@@ -240,3 +257,6 @@ class Tree:
             conn.commit()
             conn.close()
             self.display()
+
+    
+
