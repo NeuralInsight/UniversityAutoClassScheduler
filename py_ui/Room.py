@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file './qt_ui/room_3.ui'
+# Form implementation generated from reading ui file './qt_ui/room_fa.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.6
 #
@@ -17,6 +17,8 @@ class Ui_Dialog(object):
         Dialog.resize(712, 655)
         Dialog.setMinimumSize(QtCore.QSize(712, 655))
         Dialog.setMaximumSize(QtCore.QSize(712, 655))
+        Dialog.setLayoutDirection(QtCore.Qt.RightToLeft)
+        Dialog.setLocale(QtCore.QLocale(QtCore.QLocale.Persian, QtCore.QLocale.Iran))
         self.verticalLayout = QtWidgets.QVBoxLayout(Dialog)
         self.verticalLayout.setObjectName("verticalLayout")
         self.gridLayout = QtWidgets.QGridLayout()
@@ -71,12 +73,21 @@ class Ui_Dialog(object):
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Room"))
-        self.groupBox.setTitle(_translate("Dialog", "Type"))
-        self.radioLec.setText(_translate("Dialog", "Lecture"))
-        self.radioLab.setText(_translate("Dialog", "Laboratory"))
-        self.groupBox_2.setTitle(_translate("Dialog", "Name"))
-        self.lblName.setText(_translate("Dialog", "Name"))
-        self.btnFinish.setText(_translate("Dialog", "Finish"))
+        self.groupBox.setTitle(_translate("Dialog", "نوع کلاس"))
+        self.radioLec.setText(_translate("Dialog", "نظری"))
+        self.radioLab.setText(_translate("Dialog", "عملی"))
+        self.groupBox_2.setTitle(_translate("Dialog", "مشخصات"))
+        self.lblName.setText(_translate("Dialog", "کد کلاس"))
+        self.btnFinish.setText(_translate("Dialog", "ایجاد"))
         self.btnFinish.setShortcut(_translate("Dialog", "Ctrl+S"))
-        self.btnCancel.setText(_translate("Dialog", "Cancel"))
-        self.btnCancel.setShortcut(_translate("Dialog", "Esc"))
+        self.btnCancel.setText(_translate("Dialog", "بستن"))
+
+
+if __name__ == "__main__":
+    import sys
+    app = QtWidgets.QApplication(sys.argv)
+    Dialog = QtWidgets.QDialog()
+    ui = Ui_Dialog()
+    ui.setupUi(Dialog)
+    Dialog.show()
+    sys.exit(app.exec_())
