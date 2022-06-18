@@ -35,22 +35,20 @@ class PreviewTableModel(QtCore.QAbstractTableModel):
         return len(self.data)
 
     def columnCount(self, parent=None, *args, **kwargs):
-        table_logger.debug("columnCount: {}".format(len(self.data[0])))
         return len(self.data[0])
-##az in khat be bad  moshkel  dare
+
     def headerData(self, p_int, Qt_Orientation, role=None):
         if Qt_Orientation == QtCore.Qt.Horizontal and role == QtCore.Qt.DisplayRole:
-
-            return QtCore.QVariant(self.header[0][p_int]) 
-
+            table_logger.debug("Horizontal: {}".format(self.header[0][p_int]))
+            return QtCore.QVariant(self.header[0][p_int])
         elif Qt_Orientation == QtCore.Qt.Vertical and role == QtCore.Qt.DisplayRole:
-
+            table_logger.debug("Vertical: {}".format(self.header[0][p_int]))
             return QtCore.QVariant(self.header[1][p_int])
-
         return QtCore.QVariant()
-    def sort(self, column, order):
-        self.emit(QtCore.SIGNAL("layoutAboutToBeChanged()"))
-        self.data = sorted(self.data, key=lambda x: x[column])
-        if order == QtCore.Qt.DescendingOrder:
-            self.data.reverse()
-        self.emit(QtCore.SIGNAL("layoutChanged()"))
+
+    def setData(self, index, value, role=None):
+        if not index.isValid():
+            return False
+        self.data[index.row()][index.column()] = value
+        self.dataChanged.emit(index, index)
+        return True
