@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file './qt_ui/generate_2.ui'
+# Form implementation generated from reading ui file './qt_ui/generate_fa.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.6
 #
@@ -18,6 +18,7 @@ class Ui_Dialog(object):
         Dialog.setMinimumSize(QtCore.QSize(716, 553))
         Dialog.setMaximumSize(QtCore.QSize(16777215, 16777215))
         Dialog.setLayoutDirection(QtCore.Qt.RightToLeft)
+        Dialog.setLocale(QtCore.QLocale(QtCore.QLocale.Persian, QtCore.QLocale.Iran))
         self.verticalLayout_5 = QtWidgets.QVBoxLayout(Dialog)
         self.verticalLayout_5.setObjectName("verticalLayout_5")
         self.verticalLayout_2 = QtWidgets.QVBoxLayout()
@@ -101,11 +102,19 @@ class Ui_Dialog(object):
         self.tableSchedule = QtWidgets.QTableView(Dialog)
         self.tableSchedule.setObjectName("tableSchedule")
         self.verticalLayout_5.addWidget(self.tableSchedule)
-        self.progressBar = QtWidgets.QProgressBar(Dialog)
-        self.progressBar.setLayoutDirection(QtCore.Qt.LeftToRight)
+        self.groupBox_2 = QtWidgets.QGroupBox(Dialog)
+        self.groupBox_2.setMinimumSize(QtCore.QSize(0, 100))
+        self.groupBox_2.setObjectName("groupBox_2")
+        self.progressBar = QtWidgets.QProgressBar(self.groupBox_2)
+        self.progressBar.setGeometry(QtCore.QRect(0, 60, 981, 31))
+        self.progressBar.setLayoutDirection(QtCore.Qt.RightToLeft)
+        self.progressBar.setAutoFillBackground(False)
         self.progressBar.setProperty("value", 24)
         self.progressBar.setObjectName("progressBar")
-        self.verticalLayout_5.addWidget(self.progressBar)
+        self.lblProgressStatus = QtWidgets.QLabel(self.groupBox_2)
+        self.lblProgressStatus.setGeometry(QtCore.QRect(820, 30, 141, 20))
+        self.lblProgressStatus.setObjectName("lblProgressStatus")
+        self.verticalLayout_5.addWidget(self.groupBox_2)
 
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
@@ -114,27 +123,29 @@ class Ui_Dialog(object):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Generate"))
         self.groupBox_4.setTitle(_translate("Dialog", "عملیات"))
-        self.btnPause.setText(_translate("Dialog", "Pause Generation"))
-        self.btnStop.setText(_translate("Dialog", "Stop Generation"))
+        self.btnPause.setText(_translate("Dialog", "متوقف کردن اجرا"))
+        self.btnStop.setText(_translate("Dialog", "پایان اجرا"))
         self.groupBox_3.setTitle(_translate("Dialog", "پیش نمایش"))
         self.cmbSection.setItemText(0, _translate("Dialog", "Section 1"))
         self.cmbSection.setItemText(1, _translate("Dialog", "Section 2"))
         self.cmbSection.setItemText(2, _translate("Dialog", "Section 3"))
         self.cmbSection.setItemText(3, _translate("Dialog", "Section 4"))
         self.cmbSection.setItemText(4, _translate("Dialog", "Section 5"))
-        self.chkPreview.setText(_translate("Dialog", "Disable Preview"))
+        self.chkPreview.setText(_translate("Dialog", "غیرفعال کردن پیش نمایش"))
         self.groupBox.setTitle(_translate("Dialog", "وضعیت سیستم"))
-        self.lblCPU.setText(_translate("Dialog", "CPU Usage:"))
-        self.lblTime.setText(_translate("Dialog", "Elapsed Time:"))
-        self.lblMemory.setText(_translate("Dialog", "Memory Usage:"))
-        self.lblStatus.setText(_translate("Dialog", "Status:"))
-        self.boxGen.setTitle(_translate("Dialog", "Generation N"))
-        self.lblFitness.setText(_translate("Dialog", "Average Fitness:"))
-        self.lblPreviousFitness.setText(_translate("Dialog", "Previous Average Fitness:"))
-        self.lblPopulation.setText(_translate("Dialog", "Population:"))
-        self.lblMutation.setText(_translate("Dialog", "Mutation Rate:"))
-        self.lblHighestFitness.setText(_translate("Dialog", "Highest Fitness:"))
-        self.lblLowestFitness.setText(_translate("Dialog", "Lowest Fitness:"))
+        self.lblCPU.setText(_translate("Dialog", "پردازنده:"))
+        self.lblTime.setText(_translate("Dialog", "زمان سپری شده: "))
+        self.lblMemory.setText(_translate("Dialog", "حافظه رم :‌ "))
+        self.lblStatus.setText(_translate("Dialog", "وضعیت: "))
+        self.boxGen.setTitle(_translate("Dialog", "نسل"))
+        self.lblFitness.setText(_translate("Dialog", "میانگین فیتنس:"))
+        self.lblPreviousFitness.setText(_translate("Dialog", "میانگین فیتنس نسل قبل:"))
+        self.lblPopulation.setText(_translate("Dialog", "جمعیت :‌"))
+        self.lblMutation.setText(_translate("Dialog", "نرخ فعلی جهش:‌ "))
+        self.lblHighestFitness.setText(_translate("Dialog", "بالاترین فیتنس:"))
+        self.lblLowestFitness.setText(_translate("Dialog", "پایین ترین فیتنس:"))
+        self.groupBox_2.setTitle(_translate("Dialog", "پیشروی الگوریتم"))
+        self.lblProgressStatus.setText(_translate("Dialog", "مرحله: "))
 
 
 if __name__ == "__main__":
