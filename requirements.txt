@@ -3,3 +3,4 @@ PyQT5
 psutil
 logging
 xlsxwriter
+qtawesome

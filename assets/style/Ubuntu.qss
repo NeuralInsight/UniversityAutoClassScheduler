@@ -591,6 +591,7 @@ QPushButton#btnEdit,
 QPushButton#btnDelete {
     background: transparent;
     border: none;
+    color:rgb(236, 116, 64);
 }
 
 /* QTreeView::item{
@@ -598,8 +599,8 @@ QPushButton#btnDelete {
 } */
 
 QTreeView {
-    alternate-background-color: #f6fafb;
-    background: #e8f4fc;
+    alternate-background-color: rgb(250, 243, 240);
+    background: white;
 }
 
 QTreeView::item::selected{
