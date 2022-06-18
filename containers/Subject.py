@@ -48,13 +48,14 @@ class Subject:
     def setupInstructors(self):
         self.tree = tree = self.parent.treeSchedule
         self.model = model = QtGui.QStandardItemModel()
-        model.setHorizontalHeaderLabels(['ID', 'Available', 'Name'])
+        model.setHorizontalHeaderLabels(['ID', 'فعال', 'استاد'])
         self.proxyModel = proxyModel = SortFilterProxyModel(
             tree, recursiveFilteringEnabled=True
         )
         self.proxyModel.setSourceModel(model)
         tree.setModel(proxyModel)
         tree.setColumnHidden(0, True)
+        tree.header().setDefaultAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignVCenter)
         conn = db.getConnection()
         cursor = conn.cursor()
         cursor.execute('SELECT id, name FROM instructors WHERE active = 1')

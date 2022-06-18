@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file './qt_ui/subject_3.ui'
+# Form implementation generated from reading ui file './qt_ui/subject_fa.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.6
 #
@@ -20,8 +20,10 @@ class Ui_Dialog(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(Dialog.sizePolicy().hasHeightForWidth())
         Dialog.setSizePolicy(sizePolicy)
-        Dialog.setMinimumSize(QtCore.QSize(712, 655))
+        Dialog.setMinimumSize(QtCore.QSize(716, 585))
         Dialog.setMaximumSize(QtCore.QSize(16777215, 16777215))
+        Dialog.setLayoutDirection(QtCore.Qt.RightToLeft)
+        Dialog.setLocale(QtCore.QLocale(QtCore.QLocale.Persian, QtCore.QLocale.Iran))
         self.verticalLayout = QtWidgets.QVBoxLayout(Dialog)
         self.verticalLayout.setObjectName("verticalLayout")
         self.gridLayout = QtWidgets.QGridLayout()
@@ -46,6 +48,8 @@ class Ui_Dialog(object):
         self.lineEditDescription.setObjectName("lineEditDescription")
         self.gridLayout.addWidget(self.lineEditDescription, 1, 4, 1, 1)
         self.lblName = QtWidgets.QLabel(Dialog)
+        self.lblName.setLayoutDirection(QtCore.Qt.RightToLeft)
+        self.lblName.setLocale(QtCore.QLocale(QtCore.QLocale.Persian, QtCore.QLocale.Iran))
         self.lblName.setObjectName("lblName")
         self.gridLayout.addWidget(self.lblName, 0, 0, 1, 1)
         self.lblHours = QtWidgets.QLabel(Dialog)
@@ -92,9 +96,9 @@ class Ui_Dialog(object):
         self.btnFinish = QtWidgets.QPushButton(Dialog)
         self.btnFinish.setObjectName("btnFinish")
         self.horizontalLayout.addWidget(self.btnFinish)
-        self.pushButton = QtWidgets.QPushButton(Dialog)
-        self.pushButton.setObjectName("pushButton")
-        self.horizontalLayout.addWidget(self.pushButton)
+        self.btnSave = QtWidgets.QPushButton(Dialog)
+        self.btnSave.setObjectName("btnSave")
+        self.horizontalLayout.addWidget(self.btnSave)
         self.btnCancel = QtWidgets.QPushButton(Dialog)
         self.btnCancel.setObjectName("btnCancel")
         self.horizontalLayout.addWidget(self.btnCancel)
@@ -119,21 +123,21 @@ class Ui_Dialog(object):
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Subject"))
-        self.lblCode.setText(_translate("Dialog", "Code"))
-        self.lblDesc.setText(_translate("Dialog", "Description"))
-        self.lblName.setText(_translate("Dialog", "Name"))
-        self.lblHours.setText(_translate("Dialog", "Hours/Week"))
-        self.groupBox.setTitle(_translate("Dialog", "Type"))
-        self.radioAny.setText(_translate("Dialog", "Any"))
-        self.radioLec.setText(_translate("Dialog", "Lecture"))
-        self.radioLab.setText(_translate("Dialog", "Laboratory"))
-        self.groupBox_3.setTitle(_translate("Dialog", "Search"))
-        self.txtSelectIns.setPlaceholderText(_translate("Dialog", "Search ..."))
-        self.btnFinish.setText(_translate("Dialog", "Finish"))
+        self.lblCode.setText(_translate("Dialog", "کد درس"))
+        self.lblDesc.setText(_translate("Dialog", "توضیحات"))
+        self.lblName.setText(_translate("Dialog", "نام درس"))
+        self.lblHours.setText(_translate("Dialog", "تعداد واحد"))
+        self.groupBox.setTitle(_translate("Dialog", "نوع درس"))
+        self.radioAny.setText(_translate("Dialog", "هر دو"))
+        self.radioLec.setText(_translate("Dialog", "نظری"))
+        self.radioLab.setText(_translate("Dialog", "عملی"))
+        self.groupBox_3.setTitle(_translate("Dialog", "جست و جو"))
+        self.txtSelectIns.setPlaceholderText(_translate("Dialog", "جست و حو ..."))
+        self.btnFinish.setText(_translate("Dialog", "ایجاد و بستن"))
         self.btnFinish.setShortcut(_translate("Dialog", "Ctrl+S"))
-        self.pushButton.setText(_translate("Dialog", "Save and Copy"))
-        self.pushButton.setShortcut(_translate("Dialog", "Shift+S"))
-        self.btnCancel.setText(_translate("Dialog", "Cancel"))
+        self.btnSave.setText(_translate("Dialog", "ایجاد"))
+        self.btnSave.setShortcut(_translate("Dialog", "Shift+S"))
+        self.btnCancel.setText(_translate("Dialog", "بستن"))
         self.btnCancel.setShortcut(_translate("Dialog", "Ctrl+Z"))
 
 
