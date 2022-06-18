@@ -590,5 +590,5 @@ QTreeView::item::selected{
     color: white;
 }
 QTreeView::item{
-    margin:0px 0px;
+    height: 32px;
 }

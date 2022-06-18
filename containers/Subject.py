@@ -76,7 +76,8 @@ class Subject:
             name = QtGui.QStandardItem(str(entry[1]))
             name.setEditable(False)
             model.appendRow([id, availability, name])
-
+        self.tree.setSortingEnabled(True)
+        
     def finish(self):
         if self.save():
             self.dialog.close()
