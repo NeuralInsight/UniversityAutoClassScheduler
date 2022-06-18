@@ -23,7 +23,7 @@ logger = logging.getLogger()
 class Timetable:
     def __init__(self, table, data=False):
         self.table = table
-        header = [['Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday']]
+        header = [['شنبه', 'یکشنبه', 'دوشنبه', 'سه شنبه', 'چهارشنبه', 'پنجشنبه']]
         with open('timeslots.json') as json_file:
             timeslots = json.load(json_file)['timeslots']
         header.append(timeslots)
@@ -36,6 +36,7 @@ class Timetable:
         table.setModel(self.model)
         table.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Fixed)
         table.verticalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Fixed)
+        table.horizontalHeader().setDefaultAlignment(QtCore.Qt.AlignCenter)
         table.clicked.connect(self.toggleCells)
         table.horizontalHeader().sectionClicked.connect(self.multiToggleCells)
         table.verticalHeader().sectionClicked.connect(self.multiToggleCells)

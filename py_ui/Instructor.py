@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file './qt_ui/instructor_3.ui'
+# Form implementation generated from reading ui file './qt_ui/instructor_fa.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.6
 #
@@ -20,9 +20,11 @@ class Ui_Dialog(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(Dialog.sizePolicy().hasHeightForWidth())
         Dialog.setSizePolicy(sizePolicy)
-        Dialog.setMinimumSize(QtCore.QSize(712, 655))
+        Dialog.setMinimumSize(QtCore.QSize(712, 605))
         Dialog.setMaximumSize(QtCore.QSize(712, 655))
         Dialog.setFocusPolicy(QtCore.Qt.NoFocus)
+        Dialog.setLayoutDirection(QtCore.Qt.RightToLeft)
+        Dialog.setLocale(QtCore.QLocale(QtCore.QLocale.Persian, QtCore.QLocale.Iran))
         Dialog.setModal(False)
         self.verticalLayout = QtWidgets.QVBoxLayout(Dialog)
         self.verticalLayout.setObjectName("verticalLayout")
@@ -53,6 +55,8 @@ class Ui_Dialog(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.tableSchedule.sizePolicy().hasHeightForWidth())
         self.tableSchedule.setSizePolicy(sizePolicy)
+        self.tableSchedule.setLayoutDirection(QtCore.Qt.RightToLeft)
+        self.tableSchedule.setLocale(QtCore.QLocale(QtCore.QLocale.Persian, QtCore.QLocale.Iran))
         self.tableSchedule.setObjectName("tableSchedule")
         self.verticalLayout.addWidget(self.tableSchedule)
         self.horizontalLayout = QtWidgets.QHBoxLayout()
@@ -77,10 +81,20 @@ class Ui_Dialog(object):
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Instructor"))
-        self.groupBox_3.setTitle(_translate("Dialog", "Details"))
-        self.lblName.setText(_translate("Dialog", "Name"))
-        self.lblHours.setText(_translate("Dialog", "Available Hours"))
-        self.btnFinish.setText(_translate("Dialog", "Finish"))
+        self.groupBox_3.setTitle(_translate("Dialog", "مشخصات"))
+        self.lblName.setText(_translate("Dialog", "نام استاد"))
+        self.lblHours.setText(_translate("Dialog", "ساعات تدریس"))
+        self.btnFinish.setText(_translate("Dialog", "ایجاد"))
         self.btnFinish.setShortcut(_translate("Dialog", "Ctrl+S"))
-        self.btnCancel.setText(_translate("Dialog", "Cancel"))
+        self.btnCancel.setText(_translate("Dialog", "بستن"))
         self.btnCancel.setShortcut(_translate("Dialog", "Esc"))
+
+
+if __name__ == "__main__":
+    import sys
+    app = QtWidgets.QApplication(sys.argv)
+    Dialog = QtWidgets.QDialog()
+    ui = Ui_Dialog()
+    ui.setupUi(Dialog)
+    Dialog.show()
+    sys.exit(app.exec_())
