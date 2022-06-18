@@ -37,7 +37,7 @@ class PreviewTableModel(QtCore.QAbstractTableModel):
     def columnCount(self, parent=None, *args, **kwargs):
         table_logger.debug("columnCount: {}".format(len(self.data[0])))
         return len(self.data[0])
-
+##az in khat be bad  moshkel  dare
     def headerData(self, p_int, Qt_Orientation, role=None):
         if Qt_Orientation == QtCore.Qt.Horizontal and role == QtCore.Qt.DisplayRole:
 
@@ -54,5 +54,3 @@ class PreviewTableModel(QtCore.QAbstractTableModel):
         if order == QtCore.Qt.DescendingOrder:
             self.data.reverse()
         self.emit(QtCore.SIGNAL("layoutChanged()"))
-    def setData(self, index, value, role: int = ...) -> bool:
-        return super().setData(index, value, role)
