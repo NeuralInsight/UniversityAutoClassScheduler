@@ -504,13 +504,3 @@ class Ui_MainWindow(object):
         self.actionView_Results_2.setText(_translate("MainWindow", "View Results"))
         self.actionInstructions.setText(_translate("MainWindow", "Instructions"))
         self.actionAbout.setText(_translate("MainWindow", "About"))
-
-
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    MainWindow = QtWidgets.QMainWindow()
-    ui = Ui_MainWindow()
-    ui.setupUi(MainWindow)
-    MainWindow.show()
-    sys.exit(app.exec_())

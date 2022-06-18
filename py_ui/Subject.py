@@ -139,13 +139,3 @@ class Ui_Dialog(object):
         self.btnSave.setShortcut(_translate("Dialog", "Shift+S"))
         self.btnCancel.setText(_translate("Dialog", "بستن"))
         self.btnCancel.setShortcut(_translate("Dialog", "Ctrl+Z"))
-
-
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    Dialog = QtWidgets.QDialog()
-    ui = Ui_Dialog()
-    ui.setupUi(Dialog)
-    Dialog.show()
-    sys.exit(app.exec_())

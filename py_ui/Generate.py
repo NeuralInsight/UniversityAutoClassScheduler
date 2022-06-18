@@ -146,13 +146,3 @@ class Ui_Dialog(object):
         self.lblLowestFitness.setText(_translate("Dialog", "پایین ترین فیتنس:"))
         self.groupBox_2.setTitle(_translate("Dialog", "پیشروی الگوریتم"))
         self.lblProgressStatus.setText(_translate("Dialog", "مرحله: "))
-
-
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    Dialog = QtWidgets.QDialog()
-    ui = Ui_Dialog()
-    ui.setupUi(Dialog)
-    Dialog.show()
-    sys.exit(app.exec_())

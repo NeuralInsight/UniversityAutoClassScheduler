@@ -89,13 +89,3 @@ class Ui_Dialog(object):
         self.btnFinish.setText(_translate("Dialog", "ایجاد"))
         self.btnFinish.setShortcut(_translate("Dialog", "Ctrl+S"))
         self.btnCancel.setText(_translate("Dialog", "بستن"))
-
-
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    Dialog = QtWidgets.QDialog()
-    ui = Ui_Dialog()
-    ui.setupUi(Dialog)
-    Dialog.show()
-    sys.exit(app.exec_())
