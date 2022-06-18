@@ -146,13 +146,14 @@ class Tree:
     def __init__(self, tree):
         self.tree = tree
         self.model = model = QtGui.QStandardItemModel()
-        model.setHorizontalHeaderLabels(['ID', 'Code', 'Name', 'Type', 'Instructors', 'Operation'])
+        model.setHorizontalHeaderLabels(['ID', 'کد درس', 'نام درس', 'نوع درس', 'اساتید', 'عملیات'])
         self.proxyModel = proxyModel = SortFilterProxyModel(
             tree, recursiveFilteringEnabled=True
         )
         self.proxyModel.setSourceModel(self.model)
         tree.setModel(proxyModel)
         tree.setColumnHidden(0, True)
+        tree.header().setDefaultAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignVCenter)
         self.display()
 
     def display(self):

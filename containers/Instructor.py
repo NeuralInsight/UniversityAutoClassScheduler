@@ -86,13 +86,14 @@ class Tree:
     def __init__(self, tree):
         self.tree = tree
         self.model = model = QtGui.QStandardItemModel()
-        model.setHorizontalHeaderLabels(['ID', 'Available', 'Name', 'Hours', 'Operation'])
+        model.setHorizontalHeaderLabels(['id', 'دردسترس', 'نام', 'ساعات حضور', 'عملیات'])   
         self.proxyModel = proxyModel = SortFilterProxyModel(
             tree, recursiveFilteringEnabled=True
         )
         self.proxyModel.setSourceModel(self.model)
         tree.setModel(proxyModel)
         tree.setColumnHidden(0, True)
+        tree.header().setDefaultAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignVCenter)
         model.itemChanged.connect(lambda item: self.toggleAvailability(item))
         self.display()
         

@@ -126,9 +126,10 @@ class Tree:
     def __init__(self, tree):
         self.tree = tree
         self.model = model = QtGui.QStandardItemModel()
-        model.setHorizontalHeaderLabels(['ID', 'Available', 'Name', 'Operation'])
+        model.setHorizontalHeaderLabels(['ID', 'فعال', 'نام', 'عملیات'])
         tree.setModel(model)
         tree.setColumnHidden(0, True)
+        tree.header().setDefaultAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignVCenter)
         # tree.setColumnHidden(3, True)
         model.itemChanged.connect(lambda item: self.toggleAvailability(item))
         self.display()
