@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>820</width>
-    <height>859</height>
+    <width>800</width>
+    <height>635</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -22,7 +22,7 @@
   <property name="minimumSize">
    <size>
     <width>800</width>
-    <height>600</height>
+    <height>635</height>
    </size>
   </property>
   <property name="maximumSize">
@@ -75,7 +75,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>4</number>
       </property>
       <widget class="QWidget" name="tabInstructors">
        <property name="whatsThis">
@@ -109,45 +109,19 @@
          </widget>
         </item>
         <item>
-         <widget class="QGroupBox" name="groupBox_10">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>10</width>
-            <height>70</height>
-           </size>
-          </property>
+         <widget class="QGroupBox" name="groupBox_11">
           <property name="title">
            <string>Search</string>
           </property>
-          <widget class="QLineEdit" name="txtEditInsSearch">
-           <property name="geometry">
-            <rect>
-             <x>0</x>
-             <y>30</y>
-             <width>411</width>
-             <height>25</height>
-            </rect>
-           </property>
-          </widget>
-          <widget class="QLabel" name="lblInsSearch">
-           <property name="geometry">
-            <rect>
-             <x>580</x>
-             <y>40</y>
-             <width>67</width>
-             <height>17</height>
-            </rect>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
+          <layout class="QHBoxLayout" name="horizontalLayout_6">
+           <item>
+            <widget class="QLineEdit" name="txtEditInsSearch">
+             <property name="placeholderText">
+              <string>Search ...</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </widget>
         </item>
         <item>
@@ -197,6 +171,22 @@
          </widget>
         </item>
         <item>
+         <widget class="QGroupBox" name="groupBox_10">
+          <property name="title">
+           <string>Search</string>
+          </property>
+          <layout class="QHBoxLayout" name="horizontalLayout_8">
+           <item>
+            <widget class="QLineEdit" name="txtSearchRoom">
+             <property name="placeholderText">
+              <string>Search ...</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
          <widget class="QTreeView" name="treeRoom"/>
         </item>
        </layout>
@@ -223,6 +213,22 @@
             <widget class="QPushButton" name="btnSubjImport">
              <property name="text">
               <string>Import from Excel</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="groupBox_12">
+          <property name="title">
+           <string>Search</string>
+          </property>
+          <layout class="QHBoxLayout" name="horizontalLayout_9">
+           <item>
+            <widget class="QLineEdit" name="txtSearchSubject">
+             <property name="placeholderText">
+              <string>Search ...</string>
              </property>
             </widget>
            </item>
@@ -375,13 +381,20 @@
            <string>Genetic Algorithm Settings</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_3">
-           <item row="2" column="3">
-            <widget class="QLabel" name="label_20">
-             <property name="toolTip">
-              <string>The percent of population that would belong to elite.</string>
+           <item row="2" column="5">
+            <widget class="QSpinBox" name="editElite">
+             <property name="maximum">
+              <number>100</number>
              </property>
+             <property name="value">
+              <number>5</number>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="0">
+            <widget class="QLabel" name="label">
              <property name="text">
-              <string>Elite Population</string>
+              <string>Base Mutation Rate</string>
              </property>
             </widget>
            </item>
@@ -395,13 +408,113 @@
              </property>
             </widget>
            </item>
-           <item row="3" column="5">
-            <widget class="QSpinBox" name="editDev">
-             <property name="maximum">
-              <number>100</number>
+           <item row="2" column="3">
+            <widget class="QLabel" name="label_20">
+             <property name="toolTip">
+              <string>The percent of population that would belong to elite.</string>
              </property>
-             <property name="value">
-              <number>55</number>
+             <property name="text">
+              <string>Elite Population</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QSpinBox" name="editMaxGen">
+             <property name="minimum">
+              <number>50</number>
+             </property>
+             <property name="maximum">
+              <number>10000</number>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QSpinBox" name="editMinPop">
+             <property name="minimum">
+              <number>10</number>
+             </property>
+             <property name="maximum">
+              <number>10000</number>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="3">
+            <widget class="QLabel" name="label_11">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Triggers mutation rate change when the difference of average fitness falls to the specificied level.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>Mutation Rate Adjustment Trigger</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="3">
+            <widget class="QLabel" name="label_2">
+             <property name="text">
+              <string>Mutation Rate Step</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="label_9">
+             <property name="toolTip">
+              <string>Maximum amount of generations to be performed on solution generation.</string>
+             </property>
+             <property name="text">
+              <string>Maximum Generations</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QSpinBox" name="editMaxCreation">
+             <property name="minimum">
+              <number>1500</number>
+             </property>
+             <property name="maximum">
+              <number>30000</number>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="label_10">
+             <property name="toolTip">
+              <string>Maximum attempts for creating a valid chromosome.</string>
+             </property>
+             <property name="text">
+              <string>Maximum Creation Attempts</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="7">
+            <spacer name="horizontalSpacer_5">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_7">
+             <property name="toolTip">
+              <string>Starting point and lowest population count of the genetic algorithm.</string>
+             </property>
+             <property name="text">
+              <string>Minimum Population Count</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_8">
+             <property name="toolTip">
+              <string>Highest population count of the genetic algorithm.</string>
+             </property>
+             <property name="text">
+              <string>Maximum Population Count</string>
              </property>
             </widget>
            </item>
@@ -428,183 +541,12 @@
              </property>
             </widget>
            </item>
-           <item row="2" column="5">
-            <widget class="QSpinBox" name="editElite">
-             <property name="maximum">
-              <number>100</number>
-             </property>
+           <item row="4" column="1">
+            <widget class="QDoubleSpinBox" name="editBaseMut">
              <property name="value">
-              <number>5</number>
+              <double>0.100000000000000</double>
              </property>
             </widget>
-           </item>
-           <item row="0" column="7">
-            <spacer name="horizontalSpacer_3">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item row="2" column="1">
-            <widget class="QSpinBox" name="editMaxGen">
-             <property name="minimum">
-              <number>50</number>
-             </property>
-             <property name="maximum">
-              <number>10000</number>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="5">
-            <widget class="QSpinBox" name="editMaxFit">
-             <property name="maximum">
-              <number>100</number>
-             </property>
-             <property name="value">
-              <number>90</number>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="3">
-            <widget class="QLabel" name="label_11">
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Triggers mutation rate change when the difference of average fitness falls to the specificied level.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="text">
-              <string>Mutation Rate Adjustment Trigger</string>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="0">
-            <widget class="QLabel" name="label_10">
-             <property name="toolTip">
-              <string>Maximum attempts for creating a valid chromosome.</string>
-             </property>
-             <property name="text">
-              <string>Maximum Creation Attempts</string>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="0">
-            <widget class="QLabel" name="label_9">
-             <property name="toolTip">
-              <string>Maximum amount of generations to be performed on solution generation.</string>
-             </property>
-             <property name="text">
-              <string>Maximum Generations</string>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="1">
-            <widget class="QSpinBox" name="editMaxCreation">
-             <property name="minimum">
-              <number>1500</number>
-             </property>
-             <property name="maximum">
-              <number>30000</number>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="0">
-            <widget class="QLabel" name="label_7">
-             <property name="toolTip">
-              <string>Starting point and lowest population count of the genetic algorithm.</string>
-             </property>
-             <property name="text">
-              <string>Minimum Population Count</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="0">
-            <widget class="QLabel" name="label_8">
-             <property name="toolTip">
-              <string>Highest population count of the genetic algorithm.</string>
-             </property>
-             <property name="text">
-              <string>Maximum Population Count</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="1">
-            <widget class="QSpinBox" name="editMinPop">
-             <property name="minimum">
-              <number>10</number>
-             </property>
-             <property name="maximum">
-              <number>10000</number>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="11">
-            <spacer name="horizontalSpacer_5">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item row="0" column="10">
-            <spacer name="horizontalSpacer_6">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item row="0" column="2">
-            <spacer name="horizontalSpacer">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item row="0" column="9">
-            <spacer name="horizontalSpacer_4">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item row="0" column="8">
-            <spacer name="horizontalSpacer_7">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
            </item>
            <item row="0" column="5">
             <widget class="QDoubleSpinBox" name="editMut">
@@ -619,6 +561,46 @@
              </property>
             </widget>
            </item>
+           <item row="3" column="5">
+            <widget class="QSpinBox" name="editDev">
+             <property name="maximum">
+              <number>100</number>
+             </property>
+             <property name="value">
+              <number>55</number>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2">
+            <spacer name="horizontalSpacer">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="1" column="5">
+            <widget class="QSpinBox" name="editMaxFit">
+             <property name="maximum">
+              <number>100</number>
+             </property>
+             <property name="value">
+              <number>90</number>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="5">
+            <widget class="QDoubleSpinBox" name="editMutStep">
+             <property name="value">
+              <double>0.050000000000000</double>
+             </property>
+            </widget>
+           </item>
           </layout>
          </widget>
         </item>
@@ -628,6 +610,16 @@
            <string>Evaluation Matrix</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_4">
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_13">
+             <property name="toolTip">
+              <string>The weight of having all subjects placed.</string>
+             </property>
+             <property name="text">
+              <string>Subject Placement</string>
+             </property>
+            </widget>
+           </item>
            <item row="1" column="1">
             <widget class="QSpinBox" name="editIdle">
              <property name="maximum">
@@ -658,13 +650,10 @@
              </property>
             </widget>
            </item>
-           <item row="0" column="0">
-            <widget class="QLabel" name="label_13">
-             <property name="toolTip">
-              <string>The weight of having all subjects placed.</string>
-             </property>
+           <item row="3" column="0">
+            <widget class="QLabel" name="lblTotal">
              <property name="text">
-              <string>Subject Placement</string>
+              <string>TextLabel</string>
              </property>
             </widget>
            </item>
@@ -680,13 +669,6 @@
               </size>
              </property>
             </spacer>
-           </item>
-           <item row="3" column="0">
-            <widget class="QLabel" name="lblTotal">
-             <property name="text">
-              <string>TextLabel</string>
-             </property>
-            </widget>
            </item>
           </layout>
          </widget>
@@ -715,7 +697,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>820</width>
+     <width>800</width>
      <height>22</height>
     </rect>
    </property>
@@ -736,6 +718,7 @@
      <string>Help</string>
     </property>
     <addaction name="actionInstructions"/>
+    <addaction name="separator"/>
     <addaction name="actionAbout"/>
    </widget>
    <addaction name="menuFile"/>
@@ -868,6 +851,35 @@
    </property>
   </action>
  </widget>
+ <tabstops>
+  <tabstop>tabWidget</tabstop>
+  <tabstop>btnInstrAdd</tabstop>
+  <tabstop>btnInstrImport</tabstop>
+  <tabstop>txtEditInsSearch</tabstop>
+  <tabstop>treeInstr</tabstop>
+  <tabstop>btnRoomAdd</tabstop>
+  <tabstop>btnRoomImport</tabstop>
+  <tabstop>treeRoom</tabstop>
+  <tabstop>btnSubjAdd</tabstop>
+  <tabstop>btnSubjImport</tabstop>
+  <tabstop>treeSubj</tabstop>
+  <tabstop>btnSecAdd</tabstop>
+  <tabstop>treeSec</tabstop>
+  <tabstop>radioLunchYes</tabstop>
+  <tabstop>radioLunchNo</tabstop>
+  <tabstop>editMinPop</tabstop>
+  <tabstop>editMaxPop</tabstop>
+  <tabstop>editMaxGen</tabstop>
+  <tabstop>editMaxCreation</tabstop>
+  <tabstop>editMut</tabstop>
+  <tabstop>editMaxFit</tabstop>
+  <tabstop>editElite</tabstop>
+  <tabstop>editDev</tabstop>
+  <tabstop>editSbj</tabstop>
+  <tabstop>editIdle</tabstop>
+  <tabstop>btnScenGenerate</tabstop>
+  <tabstop>btnScenResult</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

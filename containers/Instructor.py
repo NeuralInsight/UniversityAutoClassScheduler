@@ -1,7 +1,10 @@
-from PyQt5 import QtWidgets, QtGui
+from PyQt5 import QtWidgets, QtGui, QtCore
 from components import Database as db, Timetable
 from py_ui import Instructor as Parent
 import json
+import os 
+
+icon_path = os.path.join(os.getcwd(), 'assets/icons')
 
 
 class Instructor:
@@ -60,16 +63,40 @@ class Instructor:
         conn.close()
         return True
 
+class SortFilterProxyModel(QtCore.QSortFilterProxyModel):
+    def __init__(self, *args, **kwargs):
+        QtCore.QSortFilterProxyModel.__init__(self, *args, **kwargs)
+        self.filters = {}
+
+    def setFilterByColumn(self, regex, column):
+        self.filters[column] = regex
+        self.invalidateFilter()
+
+    def filterAcceptsRow(self, source_row, source_parent):
+        for key, regex in self.filters.items():
+            ix = self.sourceModel().index(source_row, key, source_parent)
+            if ix.isValid():
+                text = self.sourceModel().data(ix)
+                if not regex in text:
+                    return False
+        return True
+
 
 class Tree:
     def __init__(self, tree):
         self.tree = tree
         self.model = model = QtGui.QStandardItemModel()
-        model.setHorizontalHeaderLabels(['ID', 'Available', 'Name', 'Hours', 'Operation'])
-        tree.setModel(model)
+        model.setHorizontalHeaderLabels(['id', 'دردسترس', 'نام', 'ساعات حضور', 'عملیات'])   
+        self.proxyModel = proxyModel = SortFilterProxyModel(
+            tree, recursiveFilteringEnabled=True
+        )
+        self.proxyModel.setSourceModel(self.model)
+        tree.setModel(proxyModel)
         tree.setColumnHidden(0, True)
+        tree.header().setDefaultAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignVCenter)
         model.itemChanged.connect(lambda item: self.toggleAvailability(item))
         self.display()
+        
 
     def toggleAvailability(self, item):
         # Get ID of toggled instructor
@@ -99,7 +126,8 @@ class Tree:
             availability.setCheckState(2 if instr[1] == 1 else 0)
             availability.setEditable(False)
             # Hours Item
-            hours = QtGui.QStandardItem(str(instr[2]))
+            hours = QtGui.QStandardItem()
+            hours.setData(instr[2], QtCore.Qt.DisplayRole)
             hours.setEditable(False)
             # Name Item
             name = QtGui.QStandardItem(instr[3])
@@ -110,17 +138,37 @@ class Tree:
             # Append items to model
             self.model.appendRow([id, availability, name, hours, edit])
             # Create a widget group for edit and delete buttons
+            # Edit buttons
             frameEdit = QtWidgets.QFrame()
-            btnEdit = QtWidgets.QPushButton('Edit', frameEdit)
+            btnEdit = QtWidgets.QPushButton('', frameEdit)
+            btnEdit.setObjectName("btnEdit")
+            btnEdit.setFlat(True)
+            btnEdit.setIcon(QtGui.QIcon(os.path.join(icon_path, 'icons8-edit-64.png')))
+            btnEdit.setIconSize(QtCore.QSize(32, 32))
+            btnEdit.setFixedSize(QtCore.QSize(50, 32))
             btnEdit.clicked.connect(lambda state, id=instr[0]: self.edit(id))
-            btnDelete = QtWidgets.QPushButton('Delete', frameEdit)
+            # Delete buttons
+            btnDelete = QtWidgets.QPushButton('', frameEdit)
+            btnDelete.setObjectName("btnDelete")
+            btnDelete.setFlat(True)
+            btnDelete.setIcon(QtGui.QIcon(os.path.join(icon_path, 'icons8-delete-64.png')))
+            btnDelete.setIconSize(QtCore.QSize(32, 32))
+            btnDelete.setFixedSize(QtCore.QSize(50, 32))
             btnDelete.clicked.connect(lambda state, id=instr[0]: self.delete(id))
+            
             frameLayout = QtWidgets.QHBoxLayout(frameEdit)
             frameLayout.setContentsMargins(0, 0, 0, 0)
             frameLayout.addWidget(btnEdit)
             frameLayout.addWidget(btnDelete)
             # Append the widget group to edit item
-            self.tree.setIndexWidget(edit.index(), frameEdit)
+            self.tree.setIndexWidget(self.proxyModel.mapFromSource(edit.index()), frameEdit)
+        
+        self.tree.setSortingEnabled(True) 
+        self.tree.setColumnWidth(2, 400)
+        
+    def onSearchTextChanged(self, text):
+        self.proxyModel.setFilterByColumn(text,2)
+        self.display()
 
     def edit(self, id):
         Instructor(id)

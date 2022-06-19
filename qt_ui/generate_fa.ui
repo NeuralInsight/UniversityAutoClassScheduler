@@ -28,6 +28,9 @@
   <property name="layoutDirection">
    <enum>Qt::RightToLeft</enum>
   </property>
+  <property name="locale">
+   <locale language="Persian" country="Iran"/>
+  </property>
   <layout class="QVBoxLayout" name="verticalLayout_5">
    <item>
     <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -42,14 +45,14 @@
           <item>
            <widget class="QPushButton" name="btnPause">
             <property name="text">
-             <string>Pause Generation</string>
+             <string>متوقف کردن اجرا</string>
             </property>
            </widget>
           </item>
           <item>
            <widget class="QPushButton" name="btnStop">
             <property name="text">
-             <string>Stop Generation</string>
+             <string>پایان اجرا</string>
             </property>
            </widget>
           </item>
@@ -94,7 +97,7 @@
           <item>
            <widget class="QCheckBox" name="chkPreview">
             <property name="text">
-             <string>Disable Preview</string>
+             <string>غیرفعال کردن پیش نمایش</string>
             </property>
            </widget>
           </item>
@@ -120,28 +123,28 @@
              <enum>Qt::RightToLeft</enum>
             </property>
             <property name="text">
-             <string>CPU Usage:</string>
+             <string>پردازنده:</string>
             </property>
            </widget>
           </item>
           <item row="0" column="0" colspan="2">
            <widget class="QLabel" name="lblTime">
             <property name="text">
-             <string>Elapsed Time:</string>
+             <string>زمان سپری شده: </string>
             </property>
            </widget>
           </item>
           <item row="2" column="1">
            <widget class="QLabel" name="lblMemory">
             <property name="text">
-             <string>Memory Usage:</string>
+             <string>حافظه رم :‌ </string>
             </property>
            </widget>
           </item>
           <item row="1" column="0" colspan="2">
            <widget class="QLabel" name="lblStatus">
             <property name="text">
-             <string>Status:</string>
+             <string>وضعیت: </string>
             </property>
            </widget>
           </item>
@@ -151,48 +154,48 @@
        <item>
         <widget class="QGroupBox" name="boxGen">
          <property name="title">
-          <string>Generation N</string>
+          <string>نسل</string>
          </property>
          <layout class="QGridLayout" name="gridLayout">
           <item row="2" column="0">
            <widget class="QLabel" name="lblFitness">
             <property name="text">
-             <string>Average Fitness:</string>
+             <string>میانگین فیتنس:</string>
             </property>
            </widget>
           </item>
           <item row="2" column="1">
            <widget class="QLabel" name="lblPreviousFitness">
             <property name="text">
-             <string>Previous Average Fitness:</string>
+             <string>میانگین فیتنس نسل قبل:</string>
             </property>
            </widget>
           </item>
           <item row="1" column="0">
            <widget class="QLabel" name="lblPopulation">
             <property name="text">
-             <string>Population:</string>
+             <string>جمعیت :‌</string>
             </property>
            </widget>
           </item>
           <item row="1" column="1">
            <widget class="QLabel" name="lblMutation">
             <property name="text">
-             <string>Mutation Rate:</string>
+             <string>نرخ فعلی جهش:‌ </string>
             </property>
            </widget>
           </item>
           <item row="3" column="0">
            <widget class="QLabel" name="lblHighestFitness">
             <property name="text">
-             <string>Highest Fitness:</string>
+             <string>بالاترین فیتنس:</string>
             </property>
            </widget>
           </item>
           <item row="3" column="1">
            <widget class="QLabel" name="lblLowestFitness">
             <property name="text">
-             <string>Lowest Fitness:</string>
+             <string>پایین ترین فیتنس:</string>
             </property>
            </widget>
           </item>
@@ -207,13 +210,48 @@
     <widget class="QTableView" name="tableSchedule"/>
    </item>
    <item>
-    <widget class="QProgressBar" name="progressBar">
-     <property name="layoutDirection">
-      <enum>Qt::LeftToRight</enum>
+    <widget class="QGroupBox" name="groupBox_2">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>100</height>
+      </size>
      </property>
-     <property name="value">
-      <number>24</number>
+     <property name="title">
+      <string>پیشروی الگوریتم</string>
      </property>
+     <widget class="QProgressBar" name="progressBar">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>60</y>
+        <width>981</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="layoutDirection">
+       <enum>Qt::RightToLeft</enum>
+      </property>
+      <property name="autoFillBackground">
+       <bool>false</bool>
+      </property>
+      <property name="value">
+       <number>24</number>
+      </property>
+     </widget>
+     <widget class="QLabel" name="lblProgressStatus">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>30</y>
+        <width>951</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>مرحله: </string>
+      </property>
+     </widget>
     </widget>
    </item>
   </layout>

@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>820</width>
-    <height>859</height>
+    <width>800</width>
+    <height>635</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -22,7 +22,7 @@
   <property name="minimumSize">
    <size>
     <width>800</width>
-    <height>600</height>
+    <height>635</height>
    </size>
   </property>
   <property name="maximumSize">
@@ -65,8 +65,14 @@
         <bold>false</bold>
        </font>
       </property>
+      <property name="layoutDirection">
+       <enum>Qt::RightToLeft</enum>
+      </property>
       <property name="styleSheet">
        <string notr="true"/>
+      </property>
+      <property name="locale">
+       <locale language="Persian" country="Iran"/>
       </property>
       <property name="tabPosition">
        <enum>QTabWidget::North</enum>
@@ -77,31 +83,34 @@
       <property name="currentIndex">
        <number>0</number>
       </property>
+      <property name="elideMode">
+       <enum>Qt::ElideNone</enum>
+      </property>
       <widget class="QWidget" name="tabInstructors">
        <property name="whatsThis">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <attribute name="title">
-        <string>Instructors</string>
+        <string>اساتید</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <item>
          <widget class="QGroupBox" name="groupBox">
           <property name="title">
-           <string>Operation</string>
+           <string>عملیات</string>
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout">
            <item>
             <widget class="QPushButton" name="btnInstrAdd">
              <property name="text">
-              <string>Add Instructor</string>
+              <string>اضافه کردن استاد جدید</string>
              </property>
             </widget>
            </item>
            <item>
             <widget class="QPushButton" name="btnInstrImport">
              <property name="text">
-              <string>Import from Excel</string>
+              <string>بارگذاری از فایل اکسل</string>
              </property>
             </widget>
            </item>
@@ -109,45 +118,19 @@
          </widget>
         </item>
         <item>
-         <widget class="QGroupBox" name="groupBox_10">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>10</width>
-            <height>70</height>
-           </size>
-          </property>
+         <widget class="QGroupBox" name="groupBox_11">
           <property name="title">
-           <string>Search</string>
+           <string>جست و جو</string>
           </property>
-          <widget class="QLineEdit" name="txtEditInsSearch">
-           <property name="geometry">
-            <rect>
-             <x>0</x>
-             <y>30</y>
-             <width>411</width>
-             <height>25</height>
-            </rect>
-           </property>
-          </widget>
-          <widget class="QLabel" name="lblInsSearch">
-           <property name="geometry">
-            <rect>
-             <x>580</x>
-             <y>40</y>
-             <width>67</width>
-             <height>17</height>
-            </rect>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
+          <layout class="QHBoxLayout" name="horizontalLayout_6">
+           <item>
+            <widget class="QLineEdit" name="txtEditInsSearch">
+             <property name="placeholderText">
+              <string>جست و حو ...</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </widget>
         </item>
         <item>
@@ -170,26 +153,42 @@
       </widget>
       <widget class="QWidget" name="tabRooms">
        <attribute name="title">
-        <string>Rooms</string>
+        <string>کلاس ها</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_3">
         <item>
          <widget class="QGroupBox" name="groupBox_2">
           <property name="title">
-           <string>Operation</string>
+           <string>عملیات</string>
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout_7">
            <item>
             <widget class="QPushButton" name="btnRoomAdd">
              <property name="text">
-              <string>Add Room</string>
+              <string>اضافه کردن کلاس جدید</string>
              </property>
             </widget>
            </item>
            <item>
             <widget class="QPushButton" name="btnRoomImport">
              <property name="text">
-              <string>Import from Excel</string>
+              <string>بارگذاری از فایل اکسل</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="groupBox_10">
+          <property name="title">
+           <string>جست و جو</string>
+          </property>
+          <layout class="QHBoxLayout" name="horizontalLayout_8">
+           <item>
+            <widget class="QLineEdit" name="txtSearchRoom">
+             <property name="placeholderText">
+              <string>جست و جو ...</string>
              </property>
             </widget>
            </item>
@@ -203,26 +202,42 @@
       </widget>
       <widget class="QWidget" name="tabSubjects">
        <attribute name="title">
-        <string>Subjects</string>
+        <string>واحد ها</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_4">
         <item>
          <widget class="QGroupBox" name="groupBox_3">
           <property name="title">
-           <string>Operation</string>
+           <string>عملیات</string>
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout_2">
            <item>
             <widget class="QPushButton" name="btnSubjAdd">
              <property name="text">
-              <string>Add Subject</string>
+              <string>اضافه کردن واحد جدید</string>
              </property>
             </widget>
            </item>
            <item>
             <widget class="QPushButton" name="btnSubjImport">
              <property name="text">
-              <string>Import from Excel</string>
+              <string>بارگذاری از فایل اکسل</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="groupBox_12">
+          <property name="title">
+           <string>جست و جو</string>
+          </property>
+          <layout class="QHBoxLayout" name="horizontalLayout_9">
+           <item>
+            <widget class="QLineEdit" name="txtSearchSubject">
+             <property name="placeholderText">
+              <string>جست و جو ...</string>
              </property>
             </widget>
            </item>
@@ -236,19 +251,19 @@
       </widget>
       <widget class="QWidget" name="tabSections">
        <attribute name="title">
-        <string>Sections</string>
+        <string>گروه ها</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_5">
         <item>
          <widget class="QGroupBox" name="groupBox_4">
           <property name="title">
-           <string>Operation</string>
+           <string>عملیات</string>
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout_3">
            <item>
             <widget class="QPushButton" name="btnSecAdd">
              <property name="text">
-              <string>Add Section</string>
+              <string>اضافه کردن گروه درسی جدید</string>
              </property>
             </widget>
            </item>
@@ -268,7 +283,7 @@
         </sizepolicy>
        </property>
        <attribute name="title">
-        <string>Scenario Manager</string>
+        <string>مدیریت سناریو</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_6" stretch="0,0,0,0,0">
         <property name="sizeConstraint">
@@ -277,20 +292,20 @@
         <item>
          <widget class="QGroupBox" name="groupBox_5">
           <property name="title">
-           <string>Operation</string>
+           <string>عملیات</string>
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout_4">
            <item>
             <widget class="QPushButton" name="btnScenGenerate">
              <property name="text">
-              <string>Generate</string>
+              <string>ایجاد برنامه ریزی جدید</string>
              </property>
             </widget>
            </item>
            <item>
             <widget class="QPushButton" name="btnScenResult">
              <property name="text">
-              <string>Export Results</string>
+              <string>دریافت خروجی اکسل</string>
              </property>
             </widget>
            </item>
@@ -300,7 +315,7 @@
         <item>
          <widget class="QGroupBox" name="groupBox_6">
           <property name="title">
-           <string>Operation Settings</string>
+           <string>تنظیمات عملیات</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_2">
            <item row="0" column="0">
@@ -309,7 +324,7 @@
               <string>Assess for lunch break for sections.</string>
              </property>
              <property name="text">
-              <string>Lunchbreak</string>
+              <string>تایم ناهار و نماز</string>
              </property>
             </widget>
            </item>
@@ -349,7 +364,7 @@
               <item>
                <widget class="QRadioButton" name="radioLunchYes">
                 <property name="text">
-                 <string>Yes</string>
+                 <string>بله</string>
                 </property>
                 <property name="checked">
                  <bool>true</bool>
@@ -359,7 +374,7 @@
               <item>
                <widget class="QRadioButton" name="radioLunchNo">
                 <property name="text">
-                 <string>No</string>
+                 <string>خیر</string>
                 </property>
                </widget>
               </item>
@@ -372,16 +387,99 @@
         <item>
          <widget class="QGroupBox" name="groupBox_8">
           <property name="title">
-           <string>Genetic Algorithm Settings</string>
+           <string>تنظیمات الگوریتم ژنتیک</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_3">
-           <item row="2" column="3">
-            <widget class="QLabel" name="label_20">
+           <item row="0" column="1">
+            <widget class="QSpinBox" name="editMinPop">
+             <property name="minimum">
+              <number>10</number>
+             </property>
+             <property name="maximum">
+              <number>10000</number>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="label_10">
              <property name="toolTip">
-              <string>The percent of population that would belong to elite.</string>
+              <string>Maximum attempts for creating a valid chromosome.</string>
              </property>
              <property name="text">
-              <string>Elite Population</string>
+              <string>حداکثر کروموزم جدید</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="3">
+            <widget class="QLabel" name="label_12">
+             <property name="toolTip">
+              <string>Stops the generation when a chromosome meets this.</string>
+             </property>
+             <property name="text">
+              <string>حداکثر فیتنس</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="5">
+            <widget class="QDoubleSpinBox" name="editMut">
+             <property name="maximum">
+              <double>100.000000000000000</double>
+             </property>
+             <property name="singleStep">
+              <double>0.010000000000000</double>
+             </property>
+             <property name="value">
+              <double>0.080000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="5">
+            <widget class="QSpinBox" name="editMaxFit">
+             <property name="maximum">
+              <number>100</number>
+             </property>
+             <property name="value">
+              <number>90</number>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="7">
+            <spacer name="horizontalSpacer_5">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="0" column="3">
+            <widget class="QLabel" name="label_11">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Triggers mutation rate change when the difference of average fitness falls to the specificied level.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>فعال کننده نرخ جهش</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="3">
+            <widget class="QLabel" name="label_2">
+             <property name="text">
+              <string>Mutation Rate Step</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QSpinBox" name="editMaxGen">
+             <property name="minimum">
+              <number>50</number>
+             </property>
+             <property name="maximum">
+              <number>10000</number>
              </property>
             </widget>
            </item>
@@ -395,13 +493,40 @@
              </property>
             </widget>
            </item>
-           <item row="3" column="5">
-            <widget class="QSpinBox" name="editDev">
+           <item row="4" column="0">
+            <widget class="QLabel" name="label">
+             <property name="text">
+              <string>نرخ پایه جهش</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2">
+            <spacer name="horizontalSpacer">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="2" column="5">
+            <widget class="QSpinBox" name="editElite">
              <property name="maximum">
               <number>100</number>
              </property>
              <property name="value">
-              <number>55</number>
+              <number>5</number>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="5">
+            <widget class="QDoubleSpinBox" name="editMutStep">
+             <property name="value">
+              <double>0.050000000000000</double>
              </property>
             </widget>
            </item>
@@ -418,76 +543,20 @@
              </property>
             </widget>
            </item>
-           <item row="1" column="3">
-            <widget class="QLabel" name="label_12">
-             <property name="toolTip">
-              <string>Stops the generation when a chromosome meets this.</string>
-             </property>
-             <property name="text">
-              <string>Maximum Fitness</string>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="5">
-            <widget class="QSpinBox" name="editElite">
+           <item row="3" column="5">
+            <widget class="QSpinBox" name="editDev">
              <property name="maximum">
               <number>100</number>
              </property>
              <property name="value">
-              <number>5</number>
+              <number>55</number>
              </property>
             </widget>
            </item>
-           <item row="0" column="7">
-            <spacer name="horizontalSpacer_3">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item row="2" column="1">
-            <widget class="QSpinBox" name="editMaxGen">
-             <property name="minimum">
-              <number>50</number>
-             </property>
-             <property name="maximum">
-              <number>10000</number>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="5">
-            <widget class="QSpinBox" name="editMaxFit">
-             <property name="maximum">
-              <number>100</number>
-             </property>
+           <item row="4" column="1">
+            <widget class="QDoubleSpinBox" name="editBaseMut">
              <property name="value">
-              <number>90</number>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="3">
-            <widget class="QLabel" name="label_11">
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Triggers mutation rate change when the difference of average fitness falls to the specificied level.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="text">
-              <string>Mutation Rate Adjustment Trigger</string>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="0">
-            <widget class="QLabel" name="label_10">
-             <property name="toolTip">
-              <string>Maximum attempts for creating a valid chromosome.</string>
-             </property>
-             <property name="text">
-              <string>Maximum Creation Attempts</string>
+              <double>0.100000000000000</double>
              </property>
             </widget>
            </item>
@@ -497,7 +566,17 @@
               <string>Maximum amount of generations to be performed on solution generation.</string>
              </property>
              <property name="text">
-              <string>Maximum Generations</string>
+              <string>حداکثر تعداد نسل ها</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_7">
+             <property name="toolTip">
+              <string>Starting point and lowest population count of the genetic algorithm.</string>
+             </property>
+             <property name="text">
+              <string>حداقل تعداد جمعیت</string>
              </property>
             </widget>
            </item>
@@ -511,111 +590,23 @@
              </property>
             </widget>
            </item>
-           <item row="0" column="0">
-            <widget class="QLabel" name="label_7">
-             <property name="toolTip">
-              <string>Starting point and lowest population count of the genetic algorithm.</string>
-             </property>
-             <property name="text">
-              <string>Minimum Population Count</string>
-             </property>
-            </widget>
-           </item>
            <item row="1" column="0">
             <widget class="QLabel" name="label_8">
              <property name="toolTip">
               <string>Highest population count of the genetic algorithm.</string>
              </property>
              <property name="text">
-              <string>Maximum Population Count</string>
+              <string>حداکثر تعداد جمعیت</string>
              </property>
             </widget>
            </item>
-           <item row="0" column="1">
-            <widget class="QSpinBox" name="editMinPop">
-             <property name="minimum">
-              <number>10</number>
+           <item row="2" column="3">
+            <widget class="QLabel" name="label_20">
+             <property name="toolTip">
+              <string>The percent of population that would belong to elite.</string>
              </property>
-             <property name="maximum">
-              <number>10000</number>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="11">
-            <spacer name="horizontalSpacer_5">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item row="0" column="10">
-            <spacer name="horizontalSpacer_6">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item row="0" column="2">
-            <spacer name="horizontalSpacer">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item row="0" column="9">
-            <spacer name="horizontalSpacer_4">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item row="0" column="8">
-            <spacer name="horizontalSpacer_7">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item row="0" column="5">
-            <widget class="QDoubleSpinBox" name="editMut">
-             <property name="maximum">
-              <double>100.000000000000000</double>
-             </property>
-             <property name="singleStep">
-              <double>0.010000000000000</double>
-             </property>
-             <property name="value">
-              <double>0.080000000000000</double>
+             <property name="text">
+              <string>تعداد جمعیت elite</string>
              </property>
             </widget>
            </item>
@@ -625,9 +616,19 @@
         <item>
          <widget class="QGroupBox" name="groupBox_9">
           <property name="title">
-           <string>Evaluation Matrix</string>
+           <string>ماتریس ارزیابی</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_4">
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_13">
+             <property name="toolTip">
+              <string>The weight of having all subjects placed.</string>
+             </property>
+             <property name="text">
+              <string>Subject Placement</string>
+             </property>
+            </widget>
+           </item>
            <item row="1" column="1">
             <widget class="QSpinBox" name="editIdle">
              <property name="maximum">
@@ -658,13 +659,10 @@
              </property>
             </widget>
            </item>
-           <item row="0" column="0">
-            <widget class="QLabel" name="label_13">
-             <property name="toolTip">
-              <string>The weight of having all subjects placed.</string>
-             </property>
+           <item row="3" column="0">
+            <widget class="QLabel" name="lblTotal">
              <property name="text">
-              <string>Subject Placement</string>
+              <string>TextLabel</string>
              </property>
             </widget>
            </item>
@@ -680,13 +678,6 @@
               </size>
              </property>
             </spacer>
-           </item>
-           <item row="3" column="0">
-            <widget class="QLabel" name="lblTotal">
-             <property name="text">
-              <string>TextLabel</string>
-             </property>
-            </widget>
            </item>
           </layout>
          </widget>
@@ -715,7 +706,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>820</width>
+     <width>800</width>
      <height>22</height>
     </rect>
    </property>
@@ -736,6 +727,7 @@
      <string>Help</string>
     </property>
     <addaction name="actionInstructions"/>
+    <addaction name="separator"/>
     <addaction name="actionAbout"/>
    </widget>
    <addaction name="menuFile"/>
@@ -868,6 +860,35 @@
    </property>
   </action>
  </widget>
+ <tabstops>
+  <tabstop>tabWidget</tabstop>
+  <tabstop>btnInstrAdd</tabstop>
+  <tabstop>btnInstrImport</tabstop>
+  <tabstop>txtEditInsSearch</tabstop>
+  <tabstop>treeInstr</tabstop>
+  <tabstop>btnRoomAdd</tabstop>
+  <tabstop>btnRoomImport</tabstop>
+  <tabstop>treeRoom</tabstop>
+  <tabstop>btnSubjAdd</tabstop>
+  <tabstop>btnSubjImport</tabstop>
+  <tabstop>treeSubj</tabstop>
+  <tabstop>btnSecAdd</tabstop>
+  <tabstop>treeSec</tabstop>
+  <tabstop>radioLunchYes</tabstop>
+  <tabstop>radioLunchNo</tabstop>
+  <tabstop>editMinPop</tabstop>
+  <tabstop>editMaxPop</tabstop>
+  <tabstop>editMaxGen</tabstop>
+  <tabstop>editMaxCreation</tabstop>
+  <tabstop>editMut</tabstop>
+  <tabstop>editMaxFit</tabstop>
+  <tabstop>editElite</tabstop>
+  <tabstop>editDev</tabstop>
+  <tabstop>editSbj</tabstop>
+  <tabstop>editIdle</tabstop>
+  <tabstop>btnScenGenerate</tabstop>
+  <tabstop>btnScenResult</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

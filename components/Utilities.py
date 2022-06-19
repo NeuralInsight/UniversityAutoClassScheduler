@@ -9,6 +9,85 @@ def colorGenerator():
 def textColor(rgb):
     return [0, 0, 0] if (((rgb[0] * 299) + (rgb[1] * 587) + (rgb[2] * 114)) / 1000) > 123 else [255, 255, 255]
 
+
+# function to find 1(None)*1 Pattern in the list
+def find_IdlPattern(timeslots):
+    for i in range(len(timeslots)):
+        if timeslots[i] == [1]:
+            if timeslots[i+1] == [1]:
+                continue
+            for j in range(i+1,len(timeslots)):
+                if timeslots[j] == False:
+                    break
+                elif timeslots[j] == [1]:
+                    yield timeslots[i:j+1]
+                    break
+    return []
+
+
+# function to find 1(None)*1 Pattern in the list
+def find_gapTimeSlot(timeslots):
+    gapTimeSlot = 0
+    for i in range(len(timeslots)):
+        if timeslots[i] == [1]:
+            if timeslots[i+1] == [1]:
+                continue
+            temp_gapTimeSlot = gapTimeSlot
+            for j in range(i+1,len(timeslots)):
+                if timeslots[j] == False :
+                    gapTimeSlot = temp_gapTimeSlot
+                    break
+                elif timeslots[j] == [1]:
+                    break
+                elif timeslots[j] == None:
+                  gapTimeSlot += 1
+
+    return gapTimeSlot
+
+def find_numberOfSubject(timeslots):
+    numberOfSubject = 0
+    for i in range(len(timeslots)):
+        if timeslots[i] == [1]:
+            if timeslots[i+1] == [1]:
+                continue
+            numberOfSubject += 1
+        if numberOfSubject == 2:
+            return True
+    return False
+
+def find_StartgapTimeSlot(timeslots):
+    temp = 0
+    gapTimeSlot = 0
+    for i in range(0, 4):
+        if timeslots[i] == [1]:
+            break
+        elif timeslots[i] == False:
+            continue
+        elif timeslots[i] == None:
+            temp += 1     
+            if timeslots[i+1] == [1]:
+                gapTimeSlot = temp
+                break
+            if timeslots[i+1] == False:
+                temp = 0
+                continue
+    temp = 0
+    for i in range(7, len(timeslots)-1):
+        if timeslots[i] == [1]:
+            break
+        elif timeslots[i] == False:
+            continue
+        elif timeslots[i] == None:
+            temp += 1     
+            if timeslots[i+1] == [1]:
+                gapTimeSlot = temp
+                break
+            if timeslots[i+1] == False:
+                temp = 0
+                continue
+    
+    return gapTimeSlot
+
 if __name__ == '__main__':
     for i in range(3):
         settings = []

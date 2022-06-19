@@ -1,7 +1,10 @@
-from PyQt5 import QtWidgets, QtGui
+from PyQt5 import QtWidgets, QtGui, QtCore
 from components import Database as db
 from py_ui import Subject as Parent
 import json
+import os 
+
+icon_path = os.path.join(os.getcwd(), 'assets/icons')
 
 
 class Subject:
@@ -14,31 +17,31 @@ class Subject:
         # Add parent to custom dialog
         parent.setupUi(dialog)
         parent.radioLec.setChecked(True)
-        parent.radioYes.setChecked(True)
+        #parent.radioYes.setChecked(True)
         if id:
             self.fillForm()
         self.setupInstructors()
         parent.btnFinish.clicked.connect(self.finish)
         parent.btnCancel.clicked.connect(self.dialog.close)
+        parent.btnSave.clicked.connect(self.save)
+        parent.txtSelectIns.textChanged.connect(lambda value: self.onSearchTextChanged(value))
+
         dialog.exec_()
+
 
     def fillForm(self):
         conn = db.getConnection()
         cursor = conn.cursor()
-        cursor.execute('SELECT name, hours, code, description, divisible, type FROM subjects WHERE id = ?', [self.id])
+        cursor.execute('SELECT name, hours, code, description, type FROM subjects WHERE id = ?', [self.id])
         result = cursor.fetchone()
         conn.close()
         self.parent.lineEditName.setText(str(result[0]))
         self.parent.lineEditHours.setText(str(result[1]))
         self.parent.lineEditCode.setText(str(result[2]))
         self.parent.lineEditDescription.setText(str(result[3]))
-        if result[4]:
-            self.parent.radioYes.setChecked(True)
-        else:
-            self.parent.radioNo.setChecked(True)
-        if result[5] == 'lec':
+        if result[4] == 'lec':
             self.parent.radioLec.setChecked(True)
-        elif result[5] == 'lab':
+        elif result[4] == 'lab':
             self.parent.radioLab.setChecked(True)
         else:
             self.parent.radioAny.setChecked(True)
@@ -46,9 +49,14 @@ class Subject:
     def setupInstructors(self):
         self.tree = tree = self.parent.treeSchedule
         self.model = model = QtGui.QStandardItemModel()
-        model.setHorizontalHeaderLabels(['ID', 'Available', 'Name'])
-        tree.setModel(model)
+        model.setHorizontalHeaderLabels(['ID', 'فعال', 'استاد'])
+        self.proxyModel = proxyModel = SortFilterProxyModel(
+            tree, recursiveFilteringEnabled=True
+        )
+        self.proxyModel.setSourceModel(model)
+        tree.setModel(proxyModel)
         tree.setColumnHidden(0, True)
+        tree.header().setDefaultAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignVCenter)
         conn = db.getConnection()
         cursor = conn.cursor()
         cursor.execute('SELECT id, name FROM instructors WHERE active = 1')
@@ -70,9 +78,15 @@ class Subject:
             model.appendRow([id, availability, name])
 
     def finish(self):
+        if self.save():
+            self.dialog.close()
+
+    def save(self):
         if not self.parent.lineEditName.text():
+            self.error('لطفا نام درس را وارد کنید')
             return False
         if not self.parent.lineEditCode.text():
+            self.error('لطفا کد درس را وارد کنید')
             return False
         if not self.parent.lineEditHours.text() or float(self.parent.lineEditHours.text()) < 0 or float(
                 self.parent.lineEditHours.text()) > 12 or not (
@@ -87,42 +101,77 @@ class Subject:
         code = self.parent.lineEditCode.text()
         hours = self.parent.lineEditHours.text()
         description = self.parent.lineEditDescription.text()
-        divisible = 1 if self.parent.radioYes.isChecked() else 0
         if self.parent.radioLec.isChecked():
             type = 'lec'
         elif self.parent.radioLab.isChecked():
             type = 'lab'
         else:
             type = 'any'
-        data = [name, hours, code, description, json.dumps(instructors), divisible, type, self.id]
+        data = [name, hours, code, description, json.dumps(instructors), type, self.id]
         if not self.id:
             data.pop()
         self.insertSubject(data)
-        self.dialog.close()
+        self.parent.lineEditCode.clear()
+        return True
+
+
+    def onSearchTextChanged(self, text):
+        self.proxyModel.setFilterByColumn(text,2)
+
+    def error(self, message):
+        confirm = QtWidgets.QMessageBox()
+        confirm.setIcon(QtWidgets.QMessageBox.Warning)
+        confirm.setText(message)
+        confirm.setWindowTitle('خطا')
+        confirm.setStandardButtons(QtWidgets.QMessageBox.Ok)
+        confirm.exec_()
 
     @staticmethod
     def insertSubject(data):
         conn = db.getConnection()
         cursor = conn.cursor()
-        if len(data) > 7:
+        if len(data) > 6:
             cursor.execute(
-                'UPDATE subjects SET name = ?, hours = ?, code = ?, description = ?, instructors = ?, divisible = ?, type = ? WHERE id = ?',
+                'UPDATE subjects SET name = ?, hours = ?, code = ?, description = ?, instructors = ?, type = ? WHERE id = ?',
                 data)
         else:
             cursor.execute(
-                'INSERT INTO subjects (name, hours, code, description, instructors, divisible, type) VALUES (?, ?, ?, ?, ?, ?, ?)',
+                'INSERT INTO subjects (name, hours, code, description, instructors, type) VALUES (?, ?, ?, ?, ?, ?)',
                 data)
         conn.commit()
         conn.close()
 
 
+class SortFilterProxyModel(QtCore.QSortFilterProxyModel):
+    def __init__(self, *args, **kwargs):
+        QtCore.QSortFilterProxyModel.__init__(self, *args, **kwargs)
+        self.filters = {}
+
+    def setFilterByColumn(self, regex, column):
+        self.filters[column] = regex
+        self.invalidateFilter()
+
+    def filterAcceptsRow(self, source_row, source_parent):
+        for key, regex in self.filters.items():
+            ix = self.sourceModel().index(source_row, key, source_parent)
+            if ix.isValid():
+                text = self.sourceModel().data(ix)
+                if not regex in text:
+                    return False
+        return True
+
 class Tree:
     def __init__(self, tree):
         self.tree = tree
         self.model = model = QtGui.QStandardItemModel()
-        model.setHorizontalHeaderLabels(['ID', 'Code', 'Name', 'Type', 'Instructors', 'Operation'])
-        tree.setModel(model)
+        model.setHorizontalHeaderLabels(['ID', 'کد درس', 'نام درس', 'نوع درس', 'اساتید', 'عملیات'])
+        self.proxyModel = proxyModel = SortFilterProxyModel(
+            tree, recursiveFilteringEnabled=True
+        )
+        self.proxyModel.setSourceModel(self.model)
+        tree.setModel(proxyModel)
         tree.setColumnHidden(0, True)
+        tree.header().setDefaultAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignVCenter)
         self.display()
 
     def display(self):
@@ -157,16 +206,38 @@ class Tree:
             edit = QtGui.QStandardItem()
             edit.setEditable(False)
             self.model.appendRow([id, code, name, type, instructors, edit])
+            # Edit buttons
             frameEdit = QtWidgets.QFrame()
-            btnEdit = QtWidgets.QPushButton('Edit', frameEdit)
+            btnEdit = QtWidgets.QPushButton('', frameEdit)
+            btnEdit.setObjectName("btnEdit")
+            btnEdit.setFlat(True)
+            btnEdit.setIcon(QtGui.QIcon(os.path.join(icon_path, 'icons8-edit-64.png')))
+            btnEdit.setIconSize(QtCore.QSize(32, 32))
+            btnEdit.setFixedSize(QtCore.QSize(50, 32))
             btnEdit.clicked.connect(lambda state, id=entry[0]: self.edit(id))
-            btnDelete = QtWidgets.QPushButton('Delete', frameEdit)
+            # Delete buttons
+            btnDelete = QtWidgets.QPushButton('', frameEdit)
+            btnDelete.setObjectName("btnDelete")
+            btnDelete.setFlat(True)
+            btnDelete.setIcon(QtGui.QIcon(os.path.join(icon_path, 'icons8-delete-64.png')))
+            btnDelete.setIconSize(QtCore.QSize(32, 32))
+            btnDelete.setFixedSize(QtCore.QSize(50, 32))
             btnDelete.clicked.connect(lambda state, id=entry[0]: self.delete(id))
+            
             frameLayout = QtWidgets.QHBoxLayout(frameEdit)
             frameLayout.setContentsMargins(0, 0, 0, 0)
             frameLayout.addWidget(btnEdit)
             frameLayout.addWidget(btnDelete)
-            self.tree.setIndexWidget(edit.index(), frameEdit)
+            # Append the widget group to edit item
+            self.tree.setIndexWidget(self.proxyModel.mapFromSource(edit.index()), frameEdit)
+        
+        self.tree.setSortingEnabled(True)
+        self.tree.setColumnWidth(4, 280)
+        self.tree.resizeColumnToContents(2)
+
+    def onSearchTextChanged(self, text):
+        self.proxyModel.setFilterByColumn(text,2)
+        self.display()
 
     def edit(self, id):
         Subject(id)
@@ -186,3 +257,6 @@ class Tree:
             conn.commit()
             conn.close()
             self.display()
+
+    
+
