@@ -530,6 +530,9 @@ class GeneticAlgorithm(QtCore.QThread):
             self.generateSubjectPlacement([mutating[1]], mutating[2])
             self.chromosomes[index] = copy.deepcopy(self.tempChromosome)
 
+    def __del__(self):
+        self.wait()
+
     def run(self):
         self.progressBarSignal.emit(0)
         self.statusSignal.emit('آماده سازی')
@@ -539,6 +542,7 @@ class GeneticAlgorithm(QtCore.QThread):
         runThread = True
         while (runThread):
             if self.running:
+                QtCore.QCoreApplication.processEvents()
                 generation += 1
                 self.statusSignal.emit('آماده شدن برای ارزیابی')
                 self.progressSignal.emit('آماده شدن برای ارزیابی')

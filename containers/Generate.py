@@ -1,10 +1,26 @@
 from PyQt5 import QtCore, QtWidgets
-from components import Database as db, ResourceTracker, ScheduleParser, ScenarioComposer, GeneticAlgorithm
+from components import Database as db, ResourceTracker, PreviewScheduleParser, ScenarioComposer, GeneticAlgorithm, Settings
 from py_ui import Generate as Parent
 from sqlite3 import Binary
 from numpy import mean
 import pickle
 import copy
+import logging as preview_log_engine
+
+Log_Format = "%(levelname)s %(asctime)s - %(message)s"
+
+
+preview_log_engine.basicConfig(filename = "previewlog.log",
+                    filemode = "w",
+                    format = Log_Format, 
+                    level = preview_log_engine.DEBUG,
+                    encoding='utf-8')
+
+# Logging Level = debug, info, warning, error
+
+preview_logger = preview_log_engine.getLogger()
+
+preview_logger.info("init PreviewTableModel")
 
 
 class Generate:
@@ -26,6 +42,7 @@ class Generate:
         self.meta = []
         self.preview = True
         self.sectionKeys = []
+        self.settings = settings = Settings.getSettings()
         composer = ScenarioComposer.ScenarioComposer()
         composer = composer.getScenarioData()
         self.data.update(composer)
@@ -102,20 +119,29 @@ class Generate:
         sections = self.topChromosomes[0][0].data['sections']
         rawData = self.data
         subjects = sections[self.sectionKeys[index]]['details']
+        timeslot_size = int(self.settings['ending_time'] - self.settings['starting_time'] + 1)
         for subject, details in subjects.items():
             if not len(details):
                 continue
+            preview_logger.debug("Preview detail: {}".format(details))
             instructor = '' if not details[1] else rawData['instructors'][details[1]][0]
+            instances = []
+            for day in details[2]:
+                column = (int(day)*timeslot_size)+details[3]
+                row = details[0]
+                span_size = details[4]
+                instances.append([row, column, span_size])
             data.append({'color': None, 'text': '{} \n {} \n {}'.format(rawData['subjects'][subject][0],
                                                                         rawData['rooms'][details[0]][0],
                                                                         instructor),
-                         'instances': [[day, details[3], details[3] + details[4]] for day in details[2]]})
-        self.loadTable(data)
+                         'instances': instances})
+        preview_logger.debug("Preview data: {}".format(data))
+        self.loadTable(data, rawData)
 
-    def loadTable(self, data=[]):
+    def loadTable(self, data=[], rawData=[]):
         self.table.reset()
         self.table.clearSpans()
-        ScheduleParser.ScheduleParser(self.table, data)
+        PreviewScheduleParser.PreviewScheduleParser(self.table, data, rawData)
 
     def updateOperation(self, type):
         if type == 1:
@@ -126,10 +152,11 @@ class Generate:
         self.parent.lblTime.setText('زمان سپری شده: {}'.format(self.time.toString('hh:mm:ss')))
 
     def stopOperation(self):
-        self.toggleState(False)
+        self.geneticAlgorithm.terminate()
+        self.geneticAlgorithm.runThread = False
         self.resourceWorker.terminate()
         self.resourceWorker.runThread = False
-        self.geneticAlgorithm.terminate()
+        self.toggleState(False)
         self.timer.stop()
         if len(self.topChromosomes):
             self.parent.btnStop.setText('بستن')
