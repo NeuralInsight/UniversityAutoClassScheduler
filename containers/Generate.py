@@ -127,7 +127,7 @@ class Generate:
             instructor = '' if not details[1] else rawData['instructors'][details[1]][0]
             instances = []
             for day in details[2]:
-                column = day*timeslot_size+details[3]
+                column = (int(day)*timeslot_size)+details[3]
                 row = details[0]
                 span_size = details[4]
                 instances.append([row, column, span_size])
