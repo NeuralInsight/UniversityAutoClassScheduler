@@ -30,8 +30,10 @@ first of all install all the requirements using
 
 ### GUI
 - [X] fix tableView toggle bug
-- [ ] fix Class tree
-- [ ] Add sorting to Header Labels of class tree
-- [ ] add search 
+- [x] fix Class tree
+- [x] Add sorting to Header Labels of class tree
+- [x] add search 
 - [ ] fix database, some data should be unique 
-- [ ] add some qss file :)
+- [x] add some qss file :)
+- [x] add icons
+- [x] add Alternating Row Colors
