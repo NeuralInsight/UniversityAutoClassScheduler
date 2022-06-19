@@ -41,6 +41,7 @@ class Room:
 
     def finish(self):
         if not self.parent.lineEditName.text():
+            self.error('لطفا نام کلاس را وارد کنید!')
             return False
         name = self.parent.lineEditName.text()
         type = 'lec' if self.parent.radioLec.isChecked() else 'lab'
@@ -49,6 +50,14 @@ class Room:
             data.pop()
         self.insertRoom(data)
         self.dialog.close()
+
+    def error(self, message):
+        confirm = QtWidgets.QMessageBox()
+        confirm.setIcon(QtWidgets.QMessageBox.Warning)
+        confirm.setText(message)
+        confirm.setWindowTitle('خطا')
+        confirm.setStandardButtons(QtWidgets.QMessageBox.Ok)
+        confirm.exec_()
 
     @staticmethod
     def insertRoom(data):

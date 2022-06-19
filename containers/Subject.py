@@ -86,10 +86,13 @@ class Subject:
 
     def save(self):
         if not self.parent.lineEditName.text():
-            self.error('لطفا نام درس را وارد کنید')
+            self.error('لطفا نام درس را وارد کنید!')
             return False
         if not self.parent.lineEditCode.text():
-            self.error('لطفا کد درس را وارد کنید')
+            self.error('لطفا کد درس را وارد کنید!')
+            return False
+        if not self.parent.lineEditHours.text():
+            self.error('لطفا ساعت درس را وارد کنید!')
             return False
         if not self.parent.lineEditHours.text() or float(self.parent.lineEditHours.text()) < 0 or float(
                 self.parent.lineEditHours.text()) > 12 or not (

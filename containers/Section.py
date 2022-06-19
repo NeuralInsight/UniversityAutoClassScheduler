@@ -101,13 +101,17 @@ class Section:
 
     def finish(self):
         if not self.parent.lineEditName.text():
+            self.error('لطفا نام گروه را وارد کنید!')
             return False
-        name = self.parent.lineEditName.text()
         schedule = json.dumps(self.table.getData())
         subjects = []
         for row in range(self.model.rowCount()):
             if self.model.item(row, 1).checkState() == 2:
                 subjects.append(self.model.item(row, 0).text())
+        if not subjects:
+            self.error('لطفا حداقل یک درس را انتخاب کنید!')
+            return False
+        name = self.parent.lineEditName.text()
         subjects = json.dumps(subjects)
         conn = db.getConnection()
         cursor = conn.cursor()
@@ -120,6 +124,14 @@ class Section:
         conn.commit()
         conn.close()
         self.dialog.close()
+
+    def error(self, message):
+        confirm = QtWidgets.QMessageBox()
+        confirm.setIcon(QtWidgets.QMessageBox.Warning)
+        confirm.setText(message)
+        confirm.setWindowTitle('خطا')
+        confirm.setStandardButtons(QtWidgets.QMessageBox.Ok)
+        confirm.exec_()
 
     def onSearchTextChanged(self, text):
         self.proxyModel.setFilterByColumn(text,3)

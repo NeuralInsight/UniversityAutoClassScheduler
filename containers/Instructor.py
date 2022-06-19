@@ -38,19 +38,30 @@ class Instructor:
     def finish(self):
         # Verification of input
         if not self.parent.lineEditName.text():
+            self.error('لطفا نام استاد را وارد کنید!')
             return False
         name = self.parent.lineEditName.text()
         try:
             hours = int(self.parent.lineEditHours.text())
             if hours <= 0 or hours > 100 or hours % .5 != 0:
+                self.error('لطفا میزان ساعت فعالیت استاد در هفته را در بازه مجاز وارد کنید!')    
                 return False
         except:
+            self.error('لطفا میزان ساعت فعالیت استاد در هفته را مشخص کنید!')
             return False
         data = [name, hours, json.dumps(self.table.getData()), self.id]
         if not self.id:
             data.pop()
         self.insertInstructor(data)
         self.dialog.close()
+        
+    def error(self, message):
+        confirm = QtWidgets.QMessageBox()
+        confirm.setIcon(QtWidgets.QMessageBox.Warning)
+        confirm.setText(message)
+        confirm.setWindowTitle('خطا')
+        confirm.setStandardButtons(QtWidgets.QMessageBox.Ok)
+        confirm.exec_()
 
     @staticmethod
     def insertInstructor(data):
@@ -174,7 +185,7 @@ class Tree:
     def onSearchTextChanged(self, text):
         self.proxyModel.setFilterByColumn(text,2)
         self.display()
-
+    
     def edit(self, id):
         Instructor(id)
         self.display()
