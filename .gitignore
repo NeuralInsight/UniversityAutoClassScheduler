@@ -5,3 +5,4 @@ gas.db
 *.xlsx
 __pycache__
 settings.json
+test.py
