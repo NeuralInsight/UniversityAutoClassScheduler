@@ -149,5 +149,4 @@ class Ui_Dialog(object):
         self.lblMutation.setText(_translate("Dialog", "نرخ فعلی جهش:‌ "))
         self.lblHighestFitness.setText(_translate("Dialog", "بالاترین فیتنس:"))
         self.lblLowestFitness.setText(_translate("Dialog", "پایین ترین فیتنس:"))
-        self.groupBox_5.setTitle(_translate("Dialog", "پیشرو الگوریتم"))
         self.lblProgressStatus.setText(_translate("Dialog", "مرحله: "))

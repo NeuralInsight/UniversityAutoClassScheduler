@@ -2,7 +2,8 @@ from PyQt5 import QtWidgets, QtGui, QtCore
 from components import Database as db
 from py_ui import Subject as Parent
 import json
-import os 
+import os
+import qtawesome as qta
 
 icon_path = os.path.join(os.getcwd(), 'assets/icons')
 
@@ -177,6 +178,8 @@ class Tree:
         self.display()
 
     def display(self):
+        btnEditIcon = qta.icon('fa.edit', color='#EC7440',color_active='#E25417')
+        deletEditIcon = qta.icon('mdi.delete', color='#EC7440',color_active='#E25417')
         self.model.removeRows(0, self.model.rowCount())
         conn = db.getConnection()
         cursor = conn.cursor()
@@ -210,18 +213,16 @@ class Tree:
             self.model.appendRow([id, code, name, type, instructors, edit])
             # Edit buttons
             frameEdit = QtWidgets.QFrame()
-            btnEdit = QtWidgets.QPushButton('', frameEdit)
+            btnEdit = QtWidgets.QPushButton(btnEditIcon,'')
             btnEdit.setObjectName("btnEdit")
             btnEdit.setFlat(True)
-            btnEdit.setIcon(QtGui.QIcon(os.path.join(icon_path, 'icons8-edit-64.png')))
             btnEdit.setIconSize(QtCore.QSize(32, 32))
             btnEdit.setFixedSize(QtCore.QSize(50, 32))
             btnEdit.clicked.connect(lambda state, id=entry[0]: self.edit(id))
             # Delete buttons
-            btnDelete = QtWidgets.QPushButton('', frameEdit)
+            btnDelete = QtWidgets.QPushButton(deletEditIcon,'')
             btnDelete.setObjectName("btnDelete")
             btnDelete.setFlat(True)
-            btnDelete.setIcon(QtGui.QIcon(os.path.join(icon_path, 'icons8-delete-64.png')))
             btnDelete.setIconSize(QtCore.QSize(32, 32))
             btnDelete.setFixedSize(QtCore.QSize(50, 32))
             btnDelete.clicked.connect(lambda state, id=entry[0]: self.delete(id))
