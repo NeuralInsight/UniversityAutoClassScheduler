@@ -542,6 +542,7 @@ class GeneticAlgorithm(QtCore.QThread):
         runThread = True
         while (runThread):
             if self.running:
+                QtCore.QCoreApplication.processEvents()
                 generation += 1
                 self.statusSignal.emit('آماده شدن برای ارزیابی')
                 self.progressSignal.emit('آماده شدن برای ارزیابی')

@@ -1,20 +1,5 @@
 from PyQt5 import QtCore
-import logging as log_engine
 
-Log_Format = "%(levelname)s %(asctime)s - %(message)s"
-
-
-log_engine.basicConfig(filename = "tablelog.log",
-                    filemode = "w",
-                    format = Log_Format, 
-                    level = log_engine.DEBUG,
-                    encoding='utf-8')
-
-# Logging Level = debug, info, warning, error
-
-table_logger = log_engine.getLogger()
-
-table_logger.info("init PreviewTableModel")
 
 # Standard table model requires 2D header and complete dataset
 class PreviewTableModel(QtCore.QAbstractTableModel):
@@ -31,7 +16,6 @@ class PreviewTableModel(QtCore.QAbstractTableModel):
         return self.data[index.row()][index.column()]
 
     def rowCount(self, parent=None, *args, **kwargs):
-        table_logger.debug("rowCount: {}".format(len(self.data)))
         return len(self.data)
 
     def columnCount(self, parent=None, *args, **kwargs):
@@ -39,10 +23,8 @@ class PreviewTableModel(QtCore.QAbstractTableModel):
 
     def headerData(self, p_int, Qt_Orientation, role=None):
         if Qt_Orientation == QtCore.Qt.Horizontal and role == QtCore.Qt.DisplayRole:
-            table_logger.debug("Horizontal: {}".format(self.header[0][p_int]))
             return QtCore.QVariant(self.header[0][p_int])
         elif Qt_Orientation == QtCore.Qt.Vertical and role == QtCore.Qt.DisplayRole:
-            table_logger.debug("Vertical: {}".format(self.header[0][p_int]))
             return QtCore.QVariant(self.header[1][p_int])
         return QtCore.QVariant()
 
