@@ -15,8 +15,8 @@ class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
         Dialog.resize(712, 655)
-        Dialog.setMinimumSize(QtCore.QSize(712, 655))
-        Dialog.setMaximumSize(QtCore.QSize(712, 655))
+        Dialog.setMinimumSize(QtCore.QSize(712, 657))
+        Dialog.setMaximumSize(QtCore.QSize(712, 657))
         Dialog.setLayoutDirection(QtCore.Qt.RightToLeft)
         Dialog.setLocale(QtCore.QLocale(QtCore.QLocale.Persian, QtCore.QLocale.Iran))
         self.verticalLayout = QtWidgets.QVBoxLayout(Dialog)
@@ -49,6 +49,7 @@ class Ui_Dialog(object):
         self.gridLayout.addWidget(self.groupBox_2, 0, 2, 1, 1)
         self.verticalLayout.addLayout(self.gridLayout)
         self.tableSchedule = QtWidgets.QTableView(Dialog)
+        self.tableSchedule.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.tableSchedule.setObjectName("tableSchedule")
         self.verticalLayout.addWidget(self.tableSchedule)
         self.horizontalLayout = QtWidgets.QHBoxLayout()

@@ -38,8 +38,10 @@ class Timetable:
         table.verticalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Fixed)
         table.horizontalHeader().setDefaultAlignment(QtCore.Qt.AlignCenter)
         table.clicked.connect(self.toggleCells)
-        table.horizontalHeader().sectionClicked.connect(self.multiToggleCells)
-        table.verticalHeader().sectionClicked.connect(self.multiToggleCells)
+        table.horizontalHeader().sectionClicked.connect(self.mutiUnavilable)
+        table.horizontalHeader().sectionDoubleClicked.connect(self.mutiAvilable)
+        table.verticalHeader().sectionClicked.connect(self.mutiUnavilable)
+        table.verticalHeader().sectionDoubleClicked.connect(self.mutiAvilable)
         table.findChild(QtWidgets.QAbstractButton).clicked.connect(self.multiToggleCells)
         
     # Toggles the availability and changes UI color to appropriate color
@@ -61,7 +63,21 @@ class Timetable:
                 value = 'Available'
                 self.table.setStyleSheet('selection-background-color: rgb(46, 204, 113); selection-color: black;')
                 self.model.setData(i, value)
-                     
+      
+    def mutiAvilable(self):
+        indexes = self.table.selectionModel().selectedIndexes()
+        for i in indexes:
+                value = 'Available'
+                self.table.setStyleSheet('selection-background-color: rgb(46, 204, 113); selection-color: black;')
+                self.model.setData(i, value)
+
+    def mutiUnavilable(self):
+        indexes = self.table.selectionModel().selectedIndexes()
+        for i in indexes:
+                value = 'Unavailable'
+                self.table.setStyleSheet('selection-background-color: rgb(231, 76, 60); selection-color: black;')
+                self.model.setData(i, value)
+
     # Toggles the availability and changes UI color to appropriate color
     def toggleCells(self):
         indexe = self.table.selectionModel().selectedIndexes()

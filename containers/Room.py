@@ -148,6 +148,7 @@ class Tree:
         
         self.tree.setSortingEnabled(True)
         self.tree.setColumnWidth(2, 500)
+        self.tree.setAlternatingRowColors(True)
 
     def onSearchTextChanged(self, text):
         self.proxyModel.setFilterByColumn(text,2)

@@ -76,7 +76,9 @@ class Subject:
             name = QtGui.QStandardItem(str(entry[1]))
             name.setEditable(False)
             model.appendRow([id, availability, name])
-
+        self.tree.setSortingEnabled(True)
+        self.tree.setAlternatingRowColors(True)
+        
     def finish(self):
         if self.save():
             self.dialog.close()
@@ -234,6 +236,7 @@ class Tree:
         self.tree.setSortingEnabled(True)
         self.tree.setColumnWidth(4, 280)
         self.tree.resizeColumnToContents(2)
+        self.tree.setAlternatingRowColors(True)
 
     def onSearchTextChanged(self, text):
         self.proxyModel.setFilterByColumn(text,2)
