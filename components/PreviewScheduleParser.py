@@ -38,8 +38,8 @@ class PreviewScheduleParser:
         header.append(horizontal_header)  
 
         temporaryData = []
-        temporary_row = ['' for i in vertical_header]
         for i in range(rooms_size):
+            temporary_row = ['' for i in vertical_header]
             temporaryData.append(temporary_row)
         self.model = PreviewScheduleParserModel(header, temporaryData)
         table.setModel(self.model)
@@ -80,7 +80,7 @@ class PreviewScheduleParserModel(PreviewTableModel.PreviewTableModel):
             return False
         elif role is None:
             self.data[index.row()][index.column()] = value
-        self.dataChanged.emit(index, index)
+        self.dataChanged.emit(index, index, [])
         return True
 
     def data(self, index, role):
