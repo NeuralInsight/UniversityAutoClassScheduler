@@ -152,10 +152,11 @@ class Generate:
         self.parent.lblTime.setText('زمان سپری شده: {}'.format(self.time.toString('hh:mm:ss')))
 
     def stopOperation(self):
-        self.toggleState(False)
+        self.geneticAlgorithm.terminate()
+        self.geneticAlgorithm.runThread = False
         self.resourceWorker.terminate()
         self.resourceWorker.runThread = False
-        self.geneticAlgorithm.terminate()
+        self.toggleState(False)
         self.timer.stop()
         if len(self.topChromosomes):
             self.parent.btnStop.setText('بستن')
