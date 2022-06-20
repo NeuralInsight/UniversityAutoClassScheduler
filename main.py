@@ -8,7 +8,7 @@ if __name__ == '__main__':
     if not db.checkSetup():
         db.setup()
     app = QtWidgets.QApplication(sys.argv)
-    app.setStyleSheet(open('assets/style/Ubuntu.qss').read())
+    app.setStyleSheet(open('assets/style/AmirDark.qss').read())
     parent = QtWidgets.QMainWindow()
     Main.MainWindow(parent)
     parent.show()
