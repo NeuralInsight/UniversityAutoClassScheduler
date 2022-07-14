@@ -19,7 +19,7 @@ QTreeView::indicator {
 }
 
 QCheckBox {
-    padding: 5px;
+    padding: 1px;
 }
 
 QTreeView::indicator:hover,QCheckBox:hover {
@@ -71,6 +71,24 @@ QDoubleSpinBox,
 QFontComboBox {
     color: rgb(81, 72, 65);
     background-color: #ffffff;
+}
+
+QLineEdit{
+    padding:3px;
+    border-radius: 5px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #bfbfbf;
+}
+
+QLineEdit:focus {
+    border-width: 1px;
+    border-radius: 5px;
+    border-top-color: rgb(255, 150, 60);
+    border-right-color: qlineargradient(spread: pad, x1: 0, y1: 1, x2: 1, y2: 0, stop: 0 rgba(200, 70, 20, 255), stop: 1 rgba(255, 150, 60, 255));
+    border-left-color: qlineargradient(spread: pad, x1: 1, y1: 0, x2: 0, y2: 0, stop: 0 rgba(200, 70, 20, 255), stop: 1 rgba(255, 150, 60, 255));
+    border-bottom-color: rgb(200, 70, 20);
+    border-style: solid;
 }
 
 QDialog {
@@ -173,7 +191,7 @@ QPushButton {
     border-left-color: rgb(165, 165, 165);
     border-top-color: rgb(180, 180, 180);
     border-style: solid;
-    padding: 4px;
+    padding:5px 15px;
     background-color: qlineargradient(spread: pad, x1: 0.5, y1: 1, x2: 0.5, y2: 0, stop: 0 rgba(220, 220, 220, 255), stop: 1 rgba(255, 255, 255, 255));
 }
 

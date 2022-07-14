@@ -83,7 +83,7 @@ class Ui_Dialog(object):
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
-        Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
+        Dialog.setWindowTitle(_translate("Dialog", "Section"))
         self.lblName_2.setText(_translate("Dialog", "نام گروه"))
         self.groupBox.setTitle(_translate("Dialog", "جست و جو در واحد ها"))
         self.txtSelectSubject.setPlaceholderText(_translate("Dialog", "جست و جو ..."))
