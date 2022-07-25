@@ -1,10 +1,12 @@
 # University Timetable Scheduling Using Adaptive-Elitist Genetic Algorithm
 
-![alt text](https://upload.wikimedia.org/wikipedia/fa/3/39/Tehranshomallogo.png)
+<img src="https://upload.wikimedia.org/wikipedia/fa/3/39/Tehranshomallogo.png" width="150" />
+
 ### Bachelor's final project
+The purpose of this project is to use genetic algorithm to solve university class scheduling problems.
 
 # Installation & Run
-- Install [`Python 3.7`](https://www.python.org/downloads/)
+- Install [`Python 3.9`](https://www.python.org/downloads/)
 - Create a new virtual environment
 ```
     python3 -m venv venv
@@ -22,7 +24,11 @@
 ```
     python3 main.py
 ```
-### Usage:
+
+# Documentation
+Full documentation and program instructions and statistics in Persian language 
+- [`Download PDF file`](Documentation/AutoUniversityScheduler.pdf)
+# GUI Usage:
 1. Add instructors
 2. Add rooms
 3. Add subjects
@@ -30,12 +36,18 @@
 5. Generate solution
 6. Export or View Result
 
-### Dependencies:
-1. Numpy
-2. PyQT5
-3. psutil
-4. logging
-5. xlsxwriter
+# Dependencies:
+1. numpy==1.23.1
+2. packaging==21.3
+3. psutil==5.9.1
+4. pyparsing==3.0.9
+5. PyQt5==5.15.7
+6. PyQt5-Qt5==5.15.2
+7. PyQt5-sip==12.11.0
+8. QtAwesome==1.1.1
+9. QtPy==2.1.0
+10. XlsxWriter==3.0.3
+
 
 
 ## TODO:
