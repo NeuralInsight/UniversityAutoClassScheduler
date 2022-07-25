@@ -5,7 +5,7 @@ import json
 import os
 import qtawesome as qta
 
-icon_path = os.path.join(os.getcwd(), 'assets/icons')
+
 
 class SortFilterProxyModel(QtCore.QSortFilterProxyModel):
     def __init__(self, *args, **kwargs):
