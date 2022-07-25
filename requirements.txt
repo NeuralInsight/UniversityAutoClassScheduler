@@ -1,6 +1,10 @@
-Numpy
-PyQT5
-psutil
-logging
-xlsxwriter
-qtawesome
+numpy==1.23.1
+packaging==21.3
+psutil==5.9.1
+pyparsing==3.0.9
+PyQt5==5.15.7
+PyQt5-Qt5==5.15.2
+PyQt5-sip==12.11.0
+QtAwesome==1.1.1
+QtPy==2.1.0
+XlsxWriter==3.0.3

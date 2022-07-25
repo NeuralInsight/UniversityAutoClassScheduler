@@ -1,11 +1,27 @@
 # University Timetable Scheduling Using Adaptive-Elitist Genetic Algorithm
 
+![alt text](https://upload.wikimedia.org/wikipedia/fa/3/39/Tehranshomallogo.png)
+### Bachelor's final project
 
-# Installation
-first of all install all the requirements using
-    
+# Installation & Run
+- Install [`Python 3.7`](https://www.python.org/downloads/)
+- Create a new virtual environment
+```
+    python3 -m venv venv
+```
+- Activate the virtual environment
+```
+    source venv/bin/activate
+```
+- Install all the requirements using
+```
     pip install -r requirements.txt 
-
+```
+- To use sample Data copy the file 'sample_gas.db' to main directory and rename it to 'gas.db'
+- Run the program using
+```
+    python3 main.py
+```
 ### Usage:
 1. Add instructors
 2. Add rooms
@@ -33,7 +49,7 @@ first of all install all the requirements using
 - [x] fix Class tree
 - [x] Add sorting to Header Labels of class tree
 - [x] add search 
-- [ ] fix database, some data should be unique 
 - [x] add some qss file :)
 - [x] add icons
 - [x] add Alternating Row Colors
+- [ ] fix database, some data should be unique 
