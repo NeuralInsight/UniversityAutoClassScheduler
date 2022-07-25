@@ -126,7 +126,7 @@ class Ui_Dialog(object):
         self.lblCode.setText(_translate("Dialog", "کد درس"))
         self.lblDesc.setText(_translate("Dialog", "توضیحات"))
         self.lblName.setText(_translate("Dialog", "نام درس"))
-        self.lblHours.setText(_translate("Dialog", "تعداد واحد"))
+        self.lblHours.setText(_translate("Dialog", "ساعات درسی"))
         self.groupBox.setTitle(_translate("Dialog", "نوع درس"))
         self.radioAny.setText(_translate("Dialog", "هر دو"))
         self.radioLec.setText(_translate("Dialog", "نظری"))
