@@ -65,3 +65,6 @@ Full documentation and program instructions and statistics in Persian language
 - [x] add icons
 - [x] add Alternating Row Colors
 - [ ] fix database, some data should be unique 
+
+
+Special thanks to Dr. Mobasheri

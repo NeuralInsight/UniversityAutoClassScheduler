@@ -45,14 +45,6 @@ class MainWindow(Main.Ui_MainWindow):
             self.result = pickle.loads(result[0])
             result = self.result
             self.rawData = copy.deepcopy(result['rawData'])
-        else:
-            messageBox = QtWidgets.QMessageBox()
-            messageBox.setWindowTitle('No Data')
-            messageBox.setIcon(QtWidgets.QMessageBox.Information)
-            messageBox.setText('You haven\'t generated a solution yet!')
-            messageBox.setStandardButtons(QtWidgets.QMessageBox.Ok)
-            messageBox.exec_()
-            self.run = False
 
     # Connect Main component buttons to respective actions
     def connectButtons(self):
@@ -68,7 +60,7 @@ class MainWindow(Main.Ui_MainWindow):
         self.actionSave_As.triggered.connect(self.saveAs)
         self.actionOpen.triggered.connect(self.load)
         self.actionSettings.triggered.connect(lambda: self.tabWidget.setCurrentIndex(4))
-        self.actionExit.triggered.connect(exit)
+        # self.actionExit.triggered.connect(exit)
         self.actionNew.triggered.connect(lambda: self.new())
 
     # Initialize trees and tables

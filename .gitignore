@@ -11,3 +11,7 @@ test.py
 .env
 env
 venv
+dist
+build
+*.spec
+*.ico
